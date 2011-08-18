@@ -108,7 +108,6 @@ option(WITH_FFTW3         "Enable FFTW3 support (Used for smoke and audio effect
 option(WITH_BULLET        "Enable Bullet (Physics Engine)" ON)
 option(WITH_GAMEENGINE    "Enable Game Engine" ON)
 option(WITH_PLAYER        "Build Player" OFF)
-option(WITH_FBT           "Enable BGE converted file saving/loading" ON)
 
 # GHOST Windowing Library Options
 option(WITH_GHOST_DEBUG   "Enable debugging output for the GHOST library" OFF)
@@ -223,10 +222,6 @@ endif()
 
 if(NOT WITH_GAMEENGINE AND WITH_PLAYER)
 	message(FATAL_ERROR "WITH_PLAYER requires WITH_GAMEENGINE")
-endif()
-
-if(NOT WITH_GAMEENGINE AND WITH_FBT)
-	message(FATAL_ERROR "WITH_FBT requires WITH_GAMEENGINE")
 endif()
 
 if(NOT WITH_AUDASPACE AND (WITH_OPENAL OR WITH_SDL OR WITH_JACK))
@@ -532,12 +527,12 @@ elseif(WIN32)
 	# this file is included anyway when building under Windows with cl.exe
 	#  include(${CMAKE_ROOT}/Modules/Platform/Windows-cl.cmake)
 
-	set(LIBDIR ${CMAKE_SOURCE_DIR}/../../BlenderSVN/lib/windows)
+	set(LIBDIR ${CMAKE_SOURCE_DIR}/../lib/windows)
 
 	# Setup 64bit and 64bit windows systems
 	if(CMAKE_CL_64)
 		message("64 bit compiler detected.")
-		set(LIBDIR ${CMAKE_SOURCE_DIR}/../../BlenderSVN/lib/windows)
+		set(LIBDIR ${CMAKE_SOURCE_DIR}/../lib/win64)
 	endif()
 	
 	add_definitions(-DWIN32)
@@ -1361,7 +1356,6 @@ if(FIRST_RUN)
 	info_cfg_option(WITH_INTERNATIONAL)
 	info_cfg_option(WITH_INPUT_NDOF)
 
-	info_cfg_option(WITH_FBT)
 	info_cfg_text("Compiler Options:")
 	info_cfg_option(WITH_BUILDINFO)
 	info_cfg_option(WITH_OPENMP)
