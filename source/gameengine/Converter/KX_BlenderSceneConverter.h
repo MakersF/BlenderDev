@@ -41,6 +41,10 @@
 #include "KX_ISceneConverter.h"
 #include "KX_IpoConvert.h"
 
+#ifdef WITH_FBT
+	#include "KX_FileInterface.h"
+#endif
+
 class KX_WorldInfo;
 class SCA_IActuator;
 class SCA_IController;
