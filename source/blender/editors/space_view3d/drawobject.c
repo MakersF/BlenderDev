@@ -1,5 +1,5 @@
 /*
- * $Id: drawobject.c 38552 2011-07-21 01:30:26Z campbellbarton $
+ * $Id: drawobject.c 39447 2011-08-16 13:46:51Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -5477,7 +5477,7 @@ static void drawObjectSelect(Scene *scene, View3D *v3d, ARegion *ar, Base *base)
 		}
 	}
 	else if(ob->type==OB_ARMATURE) {
-		if(!(ob->mode & OB_MODE_POSE))
+		if(!(ob->mode & OB_MODE_POSE && base == scene->basact))
 			draw_armature(scene, v3d, ar, base, OB_WIRE, FALSE, TRUE);
 	}
 
@@ -5734,7 +5734,7 @@ void draw_object(Scene *scene, ARegion *ar, View3D *v3d, Base *base, int flag)
 	/* if( ((int)ob->ctime) != F_(scene->r.cfra)) where_is_object(scene, ob); */
 	
 	/* draw motion paths (in view space) */
-	if (ob->mpath) {
+	if (ob->mpath && (v3d->flag2 & V3D_RENDER_OVERRIDE)==0) {
 		bAnimVizSettings *avs= &ob->avs;
 		
 		/* setup drawing environment for paths */

@@ -1,5 +1,5 @@
 /*
- * $Id: DerivedMesh.c 36485 2011-05-04 13:15:42Z nazgul $
+ * $Id: DerivedMesh.c 39344 2011-08-12 18:17:28Z blendix $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -1050,6 +1050,7 @@ static void emDM_drawMappedFacesGLSL(DerivedMesh *dm,
 			glEnd();
 		}
 	}
+#undef PASSATTRIB
 }
 
 static void emDM_drawFacesGLSL(DerivedMesh *dm,
@@ -1883,7 +1884,9 @@ static void mesh_calc_modifiers(Scene *scene, Object *ob, float (*inputVertexCos
 			
 			/* set the DerivedMesh to only copy needed data */
 			mask= (CustomDataMask)GET_INT_FROM_POINTER(curr->link);
-			DM_set_only_copy(dm, mask);
+			/* needMapping check here fixes bug [#28112], otherwise its
+			 * possible that it wont be copied */
+			DM_set_only_copy(dm, mask | (needMapping ? CD_MASK_ORIGINDEX : 0));
 			
 			/* add cloth rest shape key if need */
 			if(mask & CD_MASK_CLOTH_ORCO)
@@ -2765,6 +2768,7 @@ void DM_vertex_attributes_from_gpu(DerivedMesh *dm, GPUVertexAttribs *gattribs, 
 				attribs->tface[a].array = tfdata->layers[layer].data;
 				attribs->tface[a].emOffset = tfdata->layers[layer].offset;
 				attribs->tface[a].glIndex = gattribs->layer[b].glindex;
+				attribs->tface[a].glTexco = gattribs->layer[b].gltexco;
 			}
 		}
 		else if(gattribs->layer[b].type == CD_MCOL) {
@@ -2805,6 +2809,7 @@ void DM_vertex_attributes_from_gpu(DerivedMesh *dm, GPUVertexAttribs *gattribs, 
 				attribs->orco.array = vdata->layers[layer].data;
 				attribs->orco.emOffset = vdata->layers[layer].offset;
 				attribs->orco.glIndex = gattribs->layer[b].glindex;
+				attribs->orco.glTexco = gattribs->layer[b].gltexco;
 			}
 		}
 	}

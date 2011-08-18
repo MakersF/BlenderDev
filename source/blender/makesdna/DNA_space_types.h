@@ -1,5 +1,5 @@
 /*
- * $Id: DNA_space_types.h 37891 2011-06-28 09:42:17Z campbellbarton $ 
+ * $Id: DNA_space_types.h 39016 2011-08-04 11:27:13Z campbellbarton $ 
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -703,7 +703,7 @@ enum FileSortTypeE {
 #define FILE_HIDE_DOT		(1<<3)
 #define FILE_AUTOSELECT		(1<<4)
 #define FILE_ACTIVELAY		(1<<5)
-#define FILE_ATCURSOR		(1<<6)
+/* #define FILE_ATCURSOR	(1<<6) */ /* deprecated */
 #define FILE_DIRSEL_ONLY	(1<<7)
 #define FILE_FILTER			(1<<8)
 #define FILE_BOOKMARKS		(1<<9)

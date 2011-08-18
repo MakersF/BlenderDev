@@ -1,5 +1,5 @@
 /*
- * $Id: rna_curve.c 38323 2011-07-12 09:30:40Z blendix $
+ * $Id: rna_curve.c 39214 2011-08-09 14:50:40Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -651,7 +651,7 @@ static char *rna_TextBox_path(PointerRNA *ptr)
 	int index= (int)(tb - cu->tb);
 
 	if (index >= 0 && index < cu->totbox)
-		return BLI_sprintfN("textboxes[%d]", index);
+		return BLI_sprintfN("text_boxes[%d]", index);
 	else
 		return BLI_strdup("");
 }

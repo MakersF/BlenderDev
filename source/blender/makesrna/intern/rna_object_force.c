@@ -1,5 +1,5 @@
 /*
- * $Id: rna_object_force.c 38235 2011-07-08 13:22:58Z blendix $
+ * $Id: rna_object_force.c 39491 2011-08-17 13:04:28Z dingto $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -770,7 +770,6 @@ static void rna_def_pointcache(BlenderRNA *brna)
 	prop= RNA_def_property(srna, "compression", PROP_ENUM, PROP_NONE);
 	RNA_def_property_enum_items(prop, point_cache_compress_items);
 	RNA_def_property_ui_text(prop, "Cache Compression", "Compression method to be used");
-	RNA_def_property_update(prop, 0, NULL);
 
 	/* flags */
 	prop= RNA_def_property(srna, "is_baked", PROP_BOOLEAN, PROP_NONE);

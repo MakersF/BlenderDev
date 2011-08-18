@@ -1,5 +1,5 @@
 /*
- * $Id: filelist.c 37552 2011-06-16 15:01:22Z campbellbarton $
+ * $Id: filelist.c 39421 2011-08-15 16:18:04Z blendix $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -600,28 +600,6 @@ void filelist_imgsize(struct FileList* filelist, short w, short h)
 short filelist_changed(struct FileList* filelist)
 {
 	return filelist->changed;
-}
-
-static struct ImBuf * filelist_loadimage(struct FileList* filelist, int index)
-{
-	ImBuf *imb = NULL;
-	int fidx = 0;
-	
-	if ( (index < 0) || (index >= filelist->numfiltered) ) {
-		return NULL;
-	}
-	fidx = filelist->fidx[index];
-	imb = filelist->filelist[fidx].image;
-	if (!imb)
-	{
-		if ( (filelist->filelist[fidx].flags & IMAGEFILE) || (filelist->filelist[fidx].flags & MOVIEFILE) ) {
-			imb = IMB_thumb_read(filelist->filelist[fidx].path, THB_NORMAL);
-		} 
-		if (imb) {
-			filelist->filelist[fidx].image = imb;
-		} 
-	}
-	return imb;
 }
 
 struct ImBuf * filelist_getimage(struct FileList* filelist, int index)

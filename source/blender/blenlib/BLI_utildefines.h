@@ -1,5 +1,5 @@
 /*
- * $Id: BLI_utildefines.h 37276 2011-06-06 22:10:05Z psy-fi $
+ * $Id: BLI_utildefines.h 39421 2011-08-15 16:18:04Z blendix $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -181,6 +181,12 @@
 #  define UNUSED(x) UNUSED_ ## x __attribute__((__unused__))
 #else
 #  define UNUSED(x) UNUSED_ ## x
+#endif
+
+#ifdef __GNUC__
+#  define UNUSED_FUNCTION(x) __attribute__((__unused__)) UNUSED_ ## x
+#else
+#  define UNUSED_FUNCTION(x) UNUSED_ ## x
 #endif
 
 #ifdef __GNUC__

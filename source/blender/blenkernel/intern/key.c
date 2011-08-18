@@ -2,7 +2,7 @@
 /*  key.c      
  *  
  * 
- * $Id: key.c 37987 2011-06-30 15:43:38Z campbellbarton $
+ * $Id: key.c 38887 2011-08-01 02:58:44Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -474,20 +474,20 @@ static int setkeys(float fac, ListBase *lb, KeyBlock *k[], float *t, int cycl)
 
 }
 
-static void flerp(int aantal, float *in, float *f0, float *f1, float *f2, float *f3, float *t)	
+static void flerp(int tot, float *in, float *f0, float *f1, float *f2, float *f3, float *t)
 {
 	int a;
 
-	for(a=0; a<aantal; a++) {
+	for(a=0; a<tot; a++) {
 		in[a]= t[0]*f0[a]+t[1]*f1[a]+t[2]*f2[a]+t[3]*f3[a];
 	}
 }
 
-static void rel_flerp(int aantal, float *in, float *ref, float *out, float fac)
+static void rel_flerp(int tot, float *in, float *ref, float *out, float fac)
 {
 	int a;
 	
-	for(a=0; a<aantal; a++) {
+	for(a=0; a<tot; a++) {
 		in[a]-= fac*(ref[a]-out[a]);
 	}
 }

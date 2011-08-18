@@ -1,5 +1,5 @@
 /*
- * $Id: editmesh_mods.c 37806 2011-06-25 06:54:11Z campbellbarton $
+ * $Id: editmesh_mods.c 39421 2011-08-15 16:18:04Z blendix $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -1697,7 +1697,7 @@ void EM_mesh_copy_face_layer(EditMesh *em, wmOperator *op, short type)
 
 
 /* ctrl+c in mesh editmode */
-static void mesh_copy_menu(EditMesh *em, wmOperator *op)
+static void UNUSED_FUNCTION(mesh_copy_menu)(EditMesh *em, wmOperator *op)
 {
 	EditSelection *ese;
 	int ret;

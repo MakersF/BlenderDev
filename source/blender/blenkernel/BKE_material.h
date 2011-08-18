@@ -1,5 +1,5 @@
 /*
- * $Id: BKE_material.h 36332 2011-04-26 07:17:21Z campbellbarton $
+ * $Id: BKE_material.h 38879 2011-07-31 11:12:38Z dfelinto $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -78,7 +78,7 @@ int object_remove_material_slot(struct Object *ob);
 
 /* rna api */
 void material_append_id(struct ID *id, struct Material *ma);
-struct Material *material_pop_id(struct ID *id, int index);
+struct Material *material_pop_id(struct ID *id, int index, int remove_material_slot);
 
 /* rendering */
 

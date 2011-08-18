@@ -1,5 +1,5 @@
 /*
-* $Id: sequencer.c 38500 2011-07-19 01:36:59Z campbellbarton $
+* $Id: sequencer.c 39398 2011-08-14 14:43:11Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -699,6 +699,7 @@ void reload_sequence_new_file(Scene *scene, Sequence * seq, int lock_range)
 			seq->len = 0;
 		}
 		seq->strip->len = seq->len;
+		break;
 	case SEQ_SOUND:
 #ifdef WITH_AUDASPACE
 		if(!seq->sound)

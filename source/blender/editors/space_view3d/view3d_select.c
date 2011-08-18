@@ -1,5 +1,5 @@
 /*
- * $Id: view3d_select.c 37327 2011-06-09 03:56:32Z campbellbarton $
+ * $Id: view3d_select.c 39475 2011-08-16 22:44:12Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -889,14 +889,14 @@ static unsigned int samplerect(unsigned int *buf, int size, unsigned int dontdo)
 {
 	Base *base;
 	unsigned int *bufmin,*bufmax;
-	int a,b,rc,tel,aantal,dirvec[4][2],maxob;
+	int a,b,rc,tel,len,dirvec[4][2],maxob;
 	unsigned int retval=0;
 	
 	base= LASTBASE;
 	if(base==0) return 0;
 	maxob= base->selcol;
 
-	aantal= (size-1)/2;
+	len= (size-1)/2;
 	rc= 0;
 
 	dirvec[0][0]= 1;
@@ -910,7 +910,7 @@ static unsigned int samplerect(unsigned int *buf, int size, unsigned int dontdo)
 
 	bufmin= buf;
 	bufmax= buf+ size*size;
-	buf+= aantal*size+ aantal;
+	buf+= len*size+ len;
 
 	for(tel=1;tel<=size;tel++) {
 
@@ -1335,9 +1335,9 @@ static int mouse_select(bContext *C, const int mval[2], short extend, short obce
 			if(oldbasact != basact) {
 				ED_base_object_activate(C, basact); /* adds notifier */
 			}
-
-			WM_event_add_notifier(C, NC_SCENE|ND_OB_SELECT, scene);
 		}
+
+		WM_event_add_notifier(C, NC_SCENE|ND_OB_SELECT, scene);
 	}
 
 	return retval;
@@ -1841,8 +1841,8 @@ static int view3d_select_invoke(bContext *C, wmOperator *op, wmEvent *event)
 	int	retval = 0;
 
 	view3d_operator_needs_opengl(C);
-	
-	if(obedit) {
+
+	if(obedit && center==FALSE) {
 		if(obedit->type==OB_MESH)
 			retval = mouse_mesh(C, event->mval, extend);
 		else if(obedit->type==OB_ARMATURE)
@@ -1889,7 +1889,7 @@ void VIEW3D_OT_select(wmOperatorType *ot)
 	
 	/* properties */
 	RNA_def_boolean(ot->srna, "extend", 0, "Extend", "Extend selection instead of deselecting everything first.");
-	RNA_def_boolean(ot->srna, "center", 0, "Center", "Use the object center when selecting (object mode only).");
+	RNA_def_boolean(ot->srna, "center", 0, "Center", "Use the object center when selecting, in editmode used to extend object selection.");
 	RNA_def_boolean(ot->srna, "enumerate", 0, "Enumerate", "List objects under the mouse (object mode only).");
 }
 

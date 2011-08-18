@@ -1,4 +1,4 @@
- /* $Id: editmesh_tools.c 37413 2011-06-11 17:05:20Z campbellbarton $
+ /* $Id: editmesh_tools.c 39421 2011-08-15 16:18:04Z blendix $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -3895,7 +3895,7 @@ void MESH_OT_edge_rotate(wmOperatorType *ot)
 
   /* XXX old bevel not ported yet */
 
-static void bevel_menu(EditMesh *em)
+static void UNUSED_FUNCTION(bevel_menu)(EditMesh *em)
 {
 	BME_Mesh *bm;
 	BME_TransData_Head *td;

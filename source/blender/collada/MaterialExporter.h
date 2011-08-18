@@ -1,5 +1,5 @@
 /*
- * $Id: MaterialExporter.h 38079 2011-07-04 08:59:28Z jesterking $
+ * $Id: MaterialExporter.h 38770 2011-07-28 00:08:03Z jesterking $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -51,6 +51,9 @@ public:
 	MaterialsExporter(COLLADASW::StreamWriter *sw);
 	void exportMaterials(Scene *sce, bool export_selected);
 	void operator()(Material *ma, Object *ob);
+
+private:
+	bool hasMaterials(Scene *sce);
 };
 
 // used in forEachMaterialInScene

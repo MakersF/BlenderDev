@@ -1,5 +1,5 @@
 /*
- * $Id: UI_resources.h 35530 2011-03-14 03:34:57Z campbellbarton $
+ * $Id: UI_resources.h 39015 2011-08-04 10:05:14Z jbakker $
  *
  * ***** BEGIN GPL/BL DUAL LICENSE BLOCK *****
  *
@@ -242,7 +242,9 @@ enum {
 
 	TH_DRAWEXTRA_EDGELEN,
 	TH_DRAWEXTRA_FACEAREA,
-	TH_DRAWEXTRA_FACEANG
+	TH_DRAWEXTRA_FACEANG,
+
+	TH_NODE_CURVING
 };
 /* XXX WARNING: previous is saved in file, so do not change order! */
 

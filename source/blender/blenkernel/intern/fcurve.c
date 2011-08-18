@@ -1,5 +1,5 @@
 /*
- * $Id: fcurve.c 36779 2011-05-19 12:39:57Z campbellbarton $
+ * $Id: fcurve.c 39390 2011-08-14 10:28:18Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -1002,7 +1002,7 @@ static float dtar_get_prop_val (ChannelDriver *driver, DriverTarget *dtar)
 	
 	/* get property to read from, and get value as appropriate */
 	if (RNA_path_resolve_full(&id_ptr, dtar->rna_path, &ptr, &prop, &index)) {
-		if(RNA_property_array_check(&ptr, prop)) {
+		if(RNA_property_array_check(prop)) {
 			/* array */
 			if (index < RNA_property_array_length(&ptr, prop)) {	
 				switch (RNA_property_type(prop)) {

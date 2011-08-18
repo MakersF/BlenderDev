@@ -1,5 +1,5 @@
 /*
- * $Id: GPU_extensions.h 35376 2011-03-06 23:12:12Z campbellbarton $
+ * $Id: GPU_extensions.h 39344 2011-08-12 18:17:28Z blendix $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -178,6 +178,7 @@ typedef struct GPUVertexAttribs {
 	struct {
 		int type;
 		int glindex;
+		int gltexco;
 		char name[32];
 	} layer[GPU_MAX_ATTRIB];
 

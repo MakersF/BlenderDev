@@ -1,5 +1,5 @@
 /*
- * $Id: screen_ops.c 37339 2011-06-09 15:26:05Z ton $
+ * $Id: screen_ops.c 38855 2011-07-30 15:45:27Z ton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -301,7 +301,7 @@ int ED_operator_object_active_editable(bContext *C)
 int ED_operator_object_active_editable_mesh(bContext *C)
 {
 	Object *ob = ED_object_active_context(C);
-	return ((ob != NULL) && !(ob->id.lib) && !(ob->restrictflag & OB_RESTRICT_VIEW) && ob->type == OB_MESH);
+	return ((ob != NULL) && !(ob->id.lib) && !(ob->restrictflag & OB_RESTRICT_VIEW) && ob->type == OB_MESH && !(((ID *)ob->data)->lib));
 }
 
 int ED_operator_object_active_editable_font(bContext *C)

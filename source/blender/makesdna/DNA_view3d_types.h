@@ -1,5 +1,5 @@
 /*
- * $Id: DNA_view3d_types.h 36787 2011-05-20 04:14:29Z campbellbarton $ 
+ * $Id: DNA_view3d_types.h 38908 2011-08-02 04:28:05Z merwin $ 
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -130,7 +130,11 @@ typedef struct RegionView3D {
 	
 	float twangle[3];
 
-	float padf;
+	/* active rotation from NDOF or elsewhere */
+	float rot_angle;
+	float rot_axis[3];
+	
+	char pad2[4];
 
 } RegionView3D;
 
@@ -190,11 +194,10 @@ typedef struct View3D {
 	/* drawflags, denoting state */
 	short zbuf, transp, xray;
 
-	char ndofmode;			/* mode of transform for 6DOF devices -1 not found, 0 normal, 1 fly, 2 ob transform */
-	char ndoffilter;		/* filter for 6DOF devices 0 normal, 1 dominant */
-	
+	char pad3[2];
+
 	void *properties_storage;	/* Nkey panel stores stuff here (runtime only!) */
-	
+
 	/* XXX depricated? */
 	struct bGPdata *gpd;		/* Grease-Pencil Data (annotation layers) */
 

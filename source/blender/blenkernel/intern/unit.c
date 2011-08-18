@@ -1,5 +1,5 @@
 /*
- * $Id: unit.c 36220 2011-04-19 10:35:24Z campbellbarton $
+ * $Id: unit.c 39297 2011-08-11 08:24:56Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -136,7 +136,7 @@ static struct bUnitDef buImperialLenDef[] = {
 	{"yard", "yards",		"yd", NULL, "Yards",	UN_SC_YD, 0.0,	B_UNIT_DEF_NONE},
 	{"foot", "feet",		"'", "ft", "Feet",		UN_SC_FT, 0.0,	B_UNIT_DEF_NONE}, /* base unit */
 	{"inch", "inches",		"\"", "in", "Inches",	UN_SC_IN, 0.0,	B_UNIT_DEF_NONE},
-	{"thou", "thous",		"mil", NULL, "Thous",	UN_SC_MIL, 0.0,	B_UNIT_DEF_NONE},
+	{"thou", "thou",		"thou", "mil", "Thou",	UN_SC_MIL, 0.0,	B_UNIT_DEF_NONE}, /* plural for thou has no 's' */
 	{NULL, NULL, NULL, NULL, NULL, 0.0, 0.0}
 };
 static struct bUnitCollection buImperialLenCollecton = {buImperialLenDef, 4, 0, sizeof(buImperialLenDef)/sizeof(bUnitDef)};

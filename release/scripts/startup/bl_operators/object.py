@@ -16,13 +16,14 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
-# <pep8 compliant>
+# <pep8-80 compliant>
 
 import bpy
+from bpy.types import Operator
 from bpy.props import StringProperty, BoolProperty, EnumProperty, IntProperty
 
 
-class SelectPattern(bpy.types.Operator):
+class SelectPattern(Operator):
     '''Select object matching a naming pattern'''
     bl_idname = "object.select_pattern"
     bl_label = "Select Pattern"
@@ -54,21 +55,35 @@ class SelectPattern(bpy.types.Operator):
         else:
             pattern_match = (lambda a, b:
                                  fnmatch.fnmatchcase(a.upper(), b.upper()))
-
+        is_ebone = False
         obj = context.object
         if obj and obj.mode == 'POSE':
             items = obj.data.bones
+            if not self.extend:
+                bpy.ops.pose.select_all(action='DESELECT')
         elif obj and obj.type == 'ARMATURE' and obj.mode == 'EDIT':
             items = obj.data.edit_bones
+            if not self.extend:
+                bpy.ops.armature.select_all(action='DESELECT')
+            is_ebone = True
         else:
             items = context.visible_objects
+            if not self.extend:
+                bpy.ops.object.select_all(action='DESELECT')
 
         # Can be pose bones or objects
         for item in items:
             if pattern_match(item.name, self.pattern):
                 item.select = True
-            elif not self.extend:
-                item.select = False
+
+                # hrmf, perhaps there should be a utility function for this.
+                if is_ebone:
+                    item.select_head = True
+                    item.select_tail = True
+                    if item.use_connect:
+                        item_parent = item.parent
+                        if item_parent is not None:
+                            item_parent.select_tail = True
 
         return {'FINISHED'}
 
@@ -85,7 +100,7 @@ class SelectPattern(bpy.types.Operator):
         row.prop(self, "extend")
 
 
-class SelectCamera(bpy.types.Operator):
+class SelectCamera(Operator):
     '''Select object matching a naming pattern'''
     bl_idname = "object.select_camera"
     bl_label = "Select Camera"
@@ -106,8 +121,9 @@ class SelectCamera(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class SelectHierarchy(bpy.types.Operator):
-    '''Select object relative to the active objects position in the hierarchy'''
+class SelectHierarchy(Operator):
+    '''Select object relative to the active objects position''' \
+    '''in the hierarchy'''
     bl_idname = "object.select_hierarchy"
     bl_label = "Select Hierarchy"
     bl_options = {'REGISTER', 'UNDO'}
@@ -172,7 +188,7 @@ class SelectHierarchy(bpy.types.Operator):
         return {'CANCELLED'}
 
 
-class SubdivisionSet(bpy.types.Operator):
+class SubdivisionSet(Operator):
     '''Sets a Subdivision Surface Level (1-5)'''
 
     bl_idname = "object.subdivision_set"
@@ -248,7 +264,7 @@ class SubdivisionSet(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class ShapeTransfer(bpy.types.Operator):
+class ShapeTransfer(Operator):
     '''Copy another selected objects active shape to this one by ''' \
     '''applying the relative offsets'''
 
@@ -332,53 +348,90 @@ class ShapeTransfer(bpy.types.Operator):
             ob_add_shape(ob_other, orig_key_name)
 
             # editing the final coords, only list that stores wrapped coords
-            target_shape_coords = [v.co for v in ob_other.active_shape_key.data]
+            target_shape_coords = [v.co for v in
+                                   ob_other.active_shape_key.data]
 
             median_coords = [[] for i in range(len(me.vertices))]
 
             # Method 1, edge
             if mode == 'OFFSET':
                 for i, vert_cos in enumerate(median_coords):
-                    vert_cos.append(target_coords[i] + (orig_shape_coords[i] - orig_coords[i]))
+                    vert_cos.append(target_coords[i] +
+                                    (orig_shape_coords[i] - orig_coords[i]))
 
             elif mode == 'RELATIVE_FACE':
                 for face in me.faces:
                     i1, i2, i3, i4 = face.vertices_raw
                     if i4 != 0:
                         pt = barycentric_transform(orig_shape_coords[i1],
-                            orig_coords[i4], orig_coords[i1], orig_coords[i2],
-                            target_coords[i4], target_coords[i1], target_coords[i2])
+                                                   orig_coords[i4],
+                                                   orig_coords[i1],
+                                                   orig_coords[i2],
+                                                   target_coords[i4],
+                                                   target_coords[i1],
+                                                   target_coords[i2],
+                                                   )
                         median_coords[i1].append(pt)
 
                         pt = barycentric_transform(orig_shape_coords[i2],
-                            orig_coords[i1], orig_coords[i2], orig_coords[i3],
-                            target_coords[i1], target_coords[i2], target_coords[i3])
+                                                   orig_coords[i1],
+                                                   orig_coords[i2],
+                                                   orig_coords[i3],
+                                                   target_coords[i1],
+                                                   target_coords[i2],
+                                                   target_coords[i3],
+                                                   )
                         median_coords[i2].append(pt)
 
                         pt = barycentric_transform(orig_shape_coords[i3],
-                            orig_coords[i2], orig_coords[i3], orig_coords[i4],
-                            target_coords[i2], target_coords[i3], target_coords[i4])
+                                                   orig_coords[i2],
+                                                   orig_coords[i3],
+                                                   orig_coords[i4],
+                                                   target_coords[i2],
+                                                   target_coords[i3],
+                                                   target_coords[i4],
+                                                   )
                         median_coords[i3].append(pt)
 
                         pt = barycentric_transform(orig_shape_coords[i4],
-                            orig_coords[i3], orig_coords[i4], orig_coords[i1],
-                            target_coords[i3], target_coords[i4], target_coords[i1])
+                                                   orig_coords[i3],
+                                                   orig_coords[i4],
+                                                   orig_coords[i1],
+                                                   target_coords[i3],
+                                                   target_coords[i4],
+                                                   target_coords[i1],
+                                                   )
                         median_coords[i4].append(pt)
 
                     else:
                         pt = barycentric_transform(orig_shape_coords[i1],
-                            orig_coords[i3], orig_coords[i1], orig_coords[i2],
-                            target_coords[i3], target_coords[i1], target_coords[i2])
+                                                   orig_coords[i3],
+                                                   orig_coords[i1],
+                                                   orig_coords[i2],
+                                                   target_coords[i3],
+                                                   target_coords[i1],
+                                                   target_coords[i2],
+                                                   )
                         median_coords[i1].append(pt)
 
                         pt = barycentric_transform(orig_shape_coords[i2],
-                            orig_coords[i1], orig_coords[i2], orig_coords[i3],
-                            target_coords[i1], target_coords[i2], target_coords[i3])
+                                                   orig_coords[i1],
+                                                   orig_coords[i2],
+                                                   orig_coords[i3],
+                                                   target_coords[i1],
+                                                   target_coords[i2],
+                                                   target_coords[i3],
+                                                   )
                         median_coords[i2].append(pt)
 
                         pt = barycentric_transform(orig_shape_coords[i3],
-                            orig_coords[i2], orig_coords[i3], orig_coords[i1],
-                            target_coords[i2], target_coords[i3], target_coords[i1])
+                                                   orig_coords[i2],
+                                                   orig_coords[i3],
+                                                   orig_coords[i1],
+                                                   target_coords[i2],
+                                                   target_coords[i3],
+                                                   target_coords[i1],
+                                                   )
                         median_coords[i3].append(pt)
 
             elif mode == 'RELATIVE_EDGE':
@@ -416,7 +469,8 @@ class ShapeTransfer(bpy.types.Operator):
                     if use_clamp:
                         # clamp to the same movement as the original
                         # breaks copy between different scaled meshes.
-                        len_from = (orig_shape_coords[i] - orig_coords[i]).length
+                        len_from = (orig_shape_coords[i] -
+                                    orig_coords[i]).length
                         ofs = co - target_coords[i]
                         ofs.length = len_from
                         co = target_coords[i] + ofs
@@ -454,7 +508,7 @@ class ShapeTransfer(bpy.types.Operator):
         return self._main(ob_act, objects, self.mode, self.use_clamp)
 
 
-class JoinUVs(bpy.types.Operator):
+class JoinUVs(Operator):
     '''Copy UV Layout to objects with matching geometry'''
     bl_idname = "object.join_uvs"
     bl_label = "Join as UVs"
@@ -498,7 +552,13 @@ class JoinUVs(bpy.types.Operator):
                             mesh_other.tag = True
 
                             if len(mesh_other.faces) != len_faces:
-                                self.report({'WARNING'}, "Object: %s, Mesh: '%s' has %d faces, expected %d\n" % (obj_other.name, mesh_other.name, len(mesh_other.faces), len_faces))
+                                self.report({'WARNING'}, "Object: %s, Mesh: "
+                                            "'%s' has %d faces, expected %d\n"
+                                            % (obj_other.name,
+                                               mesh_other.name,
+                                               len(mesh_other.faces),
+                                               len_faces),
+                                               )
                             else:
                                 uv_other = mesh_other.uv_textures.active
                                 if not uv_other:
@@ -516,7 +576,7 @@ class JoinUVs(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class MakeDupliFace(bpy.types.Operator):
+class MakeDupliFace(Operator):
     '''Make linked objects into dupli-faces'''
     bl_idname = "object.make_dupli_face"
     bl_label = "Make Dupli-Face"
@@ -590,7 +650,7 @@ class MakeDupliFace(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class IsolateTypeRender(bpy.types.Operator):
+class IsolateTypeRender(Operator):
     '''Hide unselected render objects of same type as active ''' \
     '''by setting the hide render flag'''
     bl_idname = "object.isolate_type_render"
@@ -611,7 +671,7 @@ class IsolateTypeRender(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class ClearAllRestrictRender(bpy.types.Operator):
+class ClearAllRestrictRender(Operator):
     '''Reveal all render objects by setting the hide render flag'''
     bl_idname = "object.hide_render_clear_all"
     bl_label = "Clear All Restrict Render"

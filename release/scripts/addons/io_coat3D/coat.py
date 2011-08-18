@@ -322,7 +322,7 @@ class SCENE_OT_import(bpy.types.Operator):
                         
                     bpy.ops.object.transform_apply(rotation=True)
                     proxy_mat = obj_proxy.material_slots[0].material
-                    obj_proxy.data.materials.pop(0)
+                    obj_proxy.data.materials.pop(0,1)
                     proxy_mat.user_clear()
                     bpy.data.materials.remove(proxy_mat)
                     bpy.ops.object.select_all(action='TOGGLE')
@@ -625,7 +625,8 @@ class VIEW3D_MT_ExtraMenu(bpy.types.Menu):
 def register():
     bpy.utils.register_module(__name__)
 
-    km = bpy.context.window_manager.keyconfigs.default.keymaps['3D View']
+    wm = bpy.context.window_manager
+    km = wm.keyconfigs.addon.keymaps.new(name='3D View', space_type='VIEW_3D')
     kmi = km.keymap_items.new('wm.call_menu2', 'Q', 'PRESS')
     kmi.properties.name = "VIEW3D_MT_Coat_Dynamic_Menu"
 
@@ -633,7 +634,8 @@ def register():
 def unregister():
     bpy.utils.unregister_module(__name__)
 
-    km = bpy.context.window_manager.keyconfigs.default.keymaps['3D View']
+    wm = bpy.context.window_manager
+    km = wm.keyconfigs.addon.keymaps['3D View']
     for kmi in km.keymap_items:
         if kmi.idname == '':
             if kmi.properties.name == "VIEW3D_MT_Coat_Dynamic_Menu":

@@ -1,7 +1,7 @@
 /* anim.c
  *
  *
- * $Id: anim.c 38141 2011-07-06 10:05:27Z blendix $
+ * $Id: anim.c 39515 2011-08-18 02:12:23Z jhk $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -1245,6 +1245,8 @@ static void new_particle_duplilist(ListBase *lb, ID *id, Scene *scene, Object *p
 		sim.ob= par;
 		sim.psys= psys;
 		sim.psmd= psys_get_modifier(par, psys);
+		/* make sure emitter imat is in global coordinates instead of render view coordinates */
+		invert_m4_m4(par->imat, par->obmat);
 
 		/* first check for loops (particle system object used as dupli object) */
 		if(part->ren_as == PART_DRAW_OB) {

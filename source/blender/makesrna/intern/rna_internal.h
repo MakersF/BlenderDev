@@ -1,5 +1,5 @@
 /*
- * $Id: rna_internal.h 37078 2011-06-01 16:17:38Z blendix $
+ * $Id: rna_internal.h 39084 2011-08-05 20:45:26Z blendix $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -238,9 +238,12 @@ void RNA_api_image(struct StructRNA *srna);
 void RNA_api_operator(struct StructRNA *srna);
 void RNA_api_macro(struct StructRNA *srna);
 void RNA_api_keyconfig(struct StructRNA *srna);
+void RNA_api_keyconfigs(struct StructRNA *srna);
 void RNA_api_keyingset(struct StructRNA *srna);
 void RNA_api_keymap(struct StructRNA *srna);
+void RNA_api_keymaps(struct StructRNA *srna);
 void RNA_api_keymapitem(struct StructRNA *srna);
+void RNA_api_keymapitems(struct StructRNA *srna);
 void RNA_api_area(struct StructRNA *srna);
 void RNA_api_main(struct StructRNA *srna);
 void RNA_api_material(StructRNA *srna);

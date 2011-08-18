@@ -1,5 +1,5 @@
 /*
- * $Id: MOD_util.c 38300 2011-07-11 09:15:20Z blendix $
+ * $Id: MOD_util.c 38866 2011-07-31 02:24:06Z nicholasbishop $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *

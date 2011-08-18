@@ -1,5 +1,5 @@
 /*
- * $Id: space_outliner.c 35242 2011-02-27 20:29:51Z jesterking $
+ * $Id: space_outliner.c 39291 2011-08-11 05:46:18Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -175,6 +175,13 @@ static void outliner_main_area_listener(ARegion *ar, wmNotifier *wmn)
 			switch(wmn->data) {
 				case ND_DATA:
 					/* needed for vertex groups only, no special notifier atm so use NC_GEOM|ND_DATA */
+					ED_region_tag_redraw(ar);
+					break;
+			}
+			break;
+		case NC_ANIMATION:
+			switch(wmn->data) {
+				case ND_NLA_ACTCHANGE:
 					ED_region_tag_redraw(ar);
 					break;
 			}

@@ -1,5 +1,5 @@
 /*
- * $Id: creator.c 38290 2011-07-10 18:54:02Z campbellbarton $
+ * $Id: creator.c 38804 2011-07-29 01:24:03Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -434,9 +434,12 @@ static int playback_mode(int UNUSED(argc), const char **UNUSED(argv), void *UNUS
 {
 	/* not if -b was given first */
 	if (G.background == 0) {
-
-// XXX				playanim(argc, argv); /* not the same argc and argv as before */
+#if 0	/* TODO, bring player back? */
+		playanim(argc, argv); /* not the same argc and argv as before */
+#else
+		fprintf(stderr, "Playback mode not supported in blender 2.5x\n");
 		exit(0);
+#endif
 	}
 
 	return -2;

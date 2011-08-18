@@ -1,5 +1,5 @@
 /*
- * $Id: BKE_global.h 37098 2011-06-02 12:44:59Z elubie $ 
+ * $Id: BKE_global.h 38908 2011-08-02 04:28:05Z merwin $ 
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -92,9 +92,6 @@ typedef struct Global {
     
 	/* save the allowed windowstate of blender when using -W or -w */
 	int windowstate;
-
-	/* ndof device found ? */
-	int ndofdevice;
 } Global;
 
 /* **************** GLOBAL ********************* */
@@ -174,5 +171,3 @@ extern Global G;
 #endif
 	
 #endif
-
-

@@ -1,5 +1,5 @@
 /*
- * $Id: ED_object.h 36644 2011-05-12 16:47:36Z campbellbarton $
+ * $Id: ED_object.h 39175 2011-08-08 08:22:01Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -108,7 +108,7 @@ int ED_object_add_generic_get_opts(struct bContext *C, struct wmOperator *op, fl
 struct Object *ED_object_add_type(struct bContext *C, int type, float *loc, float *rot, int enter_editmode, unsigned int layer);
 
 void ED_object_single_users(struct Main *bmain, struct Scene *scene, int full);
-
+void ED_object_single_user(struct Scene *scene, struct Object *ob);
 
 /* object motion paths */
 void ED_objects_clear_paths(struct bContext *C);

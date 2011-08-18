@@ -1,5 +1,5 @@
 /*
- * $Id: poseSlide.c 36297 2011-04-23 11:09:24Z aligorith $
+ * $Id: poseSlide.c 39390 2011-08-14 10:28:18Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -1000,7 +1000,7 @@ static short pose_propagate_get_refVal (Object *ob, FCurve *fcu, float *value)
 	
 	/* resolve the property... */
 	if (RNA_path_resolve(&id_ptr, fcu->rna_path, &ptr, &prop)) {
-		if (RNA_property_array_check(&ptr, prop)) {
+		if (RNA_property_array_check(prop)) {
 			/* array */
 			if (fcu->array_index < RNA_property_array_length(&ptr, prop)) {
 				found= TRUE;

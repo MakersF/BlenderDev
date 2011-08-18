@@ -1,5 +1,5 @@
 /*
- * $Id: RNA_types.h 37295 2011-06-07 10:54:57Z campbellbarton $
+ * $Id: RNA_types.h 39403 2011-08-15 03:41:31Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -281,7 +281,7 @@ typedef struct ParameterList {
 
 typedef struct ParameterIterator {
 	struct ParameterList *parms;
-	PointerRNA funcptr;
+	/* PointerRNA funcptr; */ /*UNUSED*/
 	void *data;
 	int size, offset;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: node_header.c 38452 2011-07-17 16:14:52Z lukastoenne $
+ * $Id: node_header.c 39346 2011-08-12 18:27:48Z blendix $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -64,6 +64,8 @@
 
 static void do_node_add(bContext *C, void *UNUSED(arg), int event)
 {
+	Main *bmain= CTX_data_main(C);
+	Scene *scene= CTX_data_scene(C);
 	SpaceNode *snode= CTX_wm_space_node(C);
 	ScrArea *sa= CTX_wm_area(C);
 	ARegion *ar;
@@ -87,7 +89,7 @@ static void do_node_add(bContext *C, void *UNUSED(arg), int event)
 		else node->flag &= ~NODE_TEST;
 	}
 	
-	node= node_add_node(snode, CTX_data_scene(C), event, snode->mx, snode->my);
+	node= node_add_node(snode, bmain, scene, event, snode->mx, snode->my);
 	
 	/* select previous selection before autoconnect */
 	for(node= snode->edittree->nodes.first; node; node= node->next) {

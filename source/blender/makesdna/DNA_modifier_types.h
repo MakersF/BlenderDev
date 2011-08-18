@@ -1,5 +1,5 @@
 /*
- * $Id: DNA_modifier_types.h 36414 2011-05-01 15:16:59Z campbellbarton $ 
+ * $Id: DNA_modifier_types.h 39385 2011-08-14 06:43:58Z campbellbarton $ 
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -624,6 +624,7 @@ typedef struct MultiresModifierData {
 
 typedef enum {
 	eMultiresModifierFlag_ControlEdges = (1<<0),
+	eMultiresModifierFlag_PlainUv = (1<<1),
 } MultiresModifierFlag;
 
 typedef struct FluidsimModifierData {
@@ -711,16 +712,16 @@ typedef struct ShapeKeyModifierData {
 typedef struct SolidifyModifierData {
 	ModifierData modifier;
 
-	char defgrp_name[32];		/* name of vertex group to use */
+	char defgrp_name[32];	/* name of vertex group to use */
 	float offset;			/* new surface offset level*/
 	float offset_fac;		/* midpoint of the offset  */
+	float offset_fac_vg;	/* factor for the minimum weight to use when vgroups are used, avoids 0.0 weights giving duplicate geometry */
 	float crease_inner;
 	float crease_outer;
 	float crease_rim;
 	int flag;
 	short mat_ofs;
 	short mat_ofs_rim;
-	int pad;
 } SolidifyModifierData;
 
 #define MOD_SOLIDIFY_RIM			(1<<0)

@@ -1,5 +1,5 @@
 /*
- * $Id: interface_intern.h 37244 2011-06-06 09:12:03Z campbellbarton $
+ * $Id: interface_intern.h 39392 2011-08-14 11:38:17Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -213,7 +213,7 @@ struct uiBut {
 
 	BIFIconID icon;
 	char lock;
-	char dt;
+	char dt; /* drawtype: UI_EMBOSS, UI_EMBOSSN ... etc, copied from the block */
 	char changed; /* could be made into a single flag */
 	unsigned char unit_type; /* so buttons can support unit systems which are not RNA */
 	short modifier_key;
@@ -306,7 +306,8 @@ struct uiBlock {
 	void *drawextra_arg2;
 
 	int flag;
-	char direction, dt;
+	char direction;
+	char dt; /* drawtype: UI_EMBOSS, UI_EMBOSSN ... etc, copied to buttons */
 	short auto_open;
 	double auto_open_last;
 

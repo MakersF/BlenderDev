@@ -1,5 +1,5 @@
 /*
- * $Id: outliner_ops.c 35242 2011-02-27 20:29:51Z jesterking $
+ * $Id: outliner_ops.c 39292 2011-08-11 05:50:05Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -57,6 +57,13 @@ void outliner_operatortypes(void)
 	WM_operatortype_append(OUTLINER_OT_group_operation);
 	WM_operatortype_append(OUTLINER_OT_id_operation);
 	WM_operatortype_append(OUTLINER_OT_data_operation);
+	WM_operatortype_append(OUTLINER_OT_animdata_operation);
+
+#if 0 // GSOC_PEPPER
+
+	WM_operatortype_append(OUTLINER_OT_action_set);
+
+#endif // GSOC_PEPPER
 
 	WM_operatortype_append(OUTLINER_OT_show_one_level);
 	WM_operatortype_append(OUTLINER_OT_show_active);

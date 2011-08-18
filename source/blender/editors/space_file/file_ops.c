@@ -1,5 +1,5 @@
 /*
- * $Id: file_ops.c 37746 2011-06-23 06:13:21Z campbellbarton $
+ * $Id: file_ops.c 39404 2011-08-15 04:11:55Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -64,6 +64,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 
 /* for events */
 #define NOTACTIVEFILE			0
@@ -1079,8 +1080,18 @@ static void file_expand_directory(bContext *C)
 		}
 
 #ifdef WIN32
-		if (sfile->params->dir[0] == '\0')
+		if (sfile->params->dir[0] == '\0') {
 			get_default_root(sfile->params->dir);
+		}
+		/* change "C:" --> "C:\", [#28102] */
+		else if (   (isalpha(sfile->params->dir[0]) &&
+		            (sfile->params->dir[1] == ':')) &&
+		            (sfile->params->dir[2] == '\0')
+
+		) {
+			sfile->params->dir[2]= '\\';
+			sfile->params->dir[3]= '\0';
+		}
 #endif
 	}
 }
@@ -1148,6 +1159,13 @@ int file_filename_exec(bContext *C, wmOperator *UNUSED(unused))
 	return OPERATOR_FINISHED;
 }
 
+/* TODO, directory operator is non-functional while a library is loaded
+ * until this is properly supported just disable it. */
+static int file_directory_poll(bContext *C)
+{
+	return ED_operator_file_active(C) && filelist_lib(CTX_wm_space_file(C)->files) == NULL;
+}
+
 void FILE_OT_directory(struct wmOperatorType *ot)
 {
 	/* identifiers */
@@ -1158,7 +1176,7 @@ void FILE_OT_directory(struct wmOperatorType *ot)
 	/* api callbacks */
 	ot->invoke= file_directory_invoke;
 	ot->exec= file_directory_exec;
-	ot->poll= ED_operator_file_active; /* <- important, handler is on window level */
+	ot->poll= file_directory_poll; /* <- important, handler is on window level */
 }
 
 void FILE_OT_refresh(struct wmOperatorType *ot)

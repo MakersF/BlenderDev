@@ -1,5 +1,5 @@
 /*
- * $Id: RNA_access.h 37543 2011-06-16 06:47:54Z campbellbarton $
+ * $Id: RNA_access.h 39390 2011-08-14 10:28:18Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -392,6 +392,7 @@ extern StructRNA RNA_Scene;
 extern StructRNA RNA_SceneGameData;
 extern StructRNA RNA_SceneRenderLayer;
 extern StructRNA RNA_SceneSequence;
+extern StructRNA RNA_SceneObjects;
 extern StructRNA RNA_Scopes;
 extern StructRNA RNA_Screen;
 extern StructRNA RNA_ScrewModifier;
@@ -653,7 +654,7 @@ int RNA_property_flag(PropertyRNA *prop);
 void *RNA_property_py_data_get(PropertyRNA *prop);
 
 int RNA_property_array_length(PointerRNA *ptr, PropertyRNA *prop);
-int RNA_property_array_check(PointerRNA *ptr, PropertyRNA *prop);
+int RNA_property_array_check(PropertyRNA *prop);
 int RNA_property_multi_array_length(PointerRNA *ptr, PropertyRNA *prop, int dimension);
 int RNA_property_array_dimension(PointerRNA *ptr, PropertyRNA *prop, int length[]);
 char RNA_property_array_item_char(PropertyRNA *prop, int index);

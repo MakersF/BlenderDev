@@ -1,5 +1,5 @@
 /*
- * $Id: MOD_modifiertypes.h 36414 2011-05-01 15:16:59Z campbellbarton $
+ * $Id: MOD_modifiertypes.h 38866 2011-07-31 02:24:06Z nicholasbishop $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *

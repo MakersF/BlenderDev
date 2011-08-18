@@ -1,7 +1,7 @@
 /*
  * anim.c
  *
- * $Id: anim_movie.c 36960 2011-05-27 23:33:40Z schlaile $
+ * $Id: anim_movie.c 39398 2011-08-14 14:43:11Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -355,7 +355,7 @@ struct anim * IMB_open_anim( const char * name, int ib_flags) {
 
 	anim = (struct anim*)MEM_callocN(sizeof(struct anim), "anim struct");
 	if (anim != NULL) {
-		strcpy(anim->name, name);  /* fixme: possible buffer overflow here? */
+		BLI_strncpy(anim->name, name, sizeof(anim->name));
 		anim->ib_flags = ib_flags;
 	}
 	return(anim);

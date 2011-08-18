@@ -1,5 +1,5 @@
 /*
- * $Id: nla_edit.c 36222 2011-04-19 13:01:50Z aligorith $
+ * $Id: nla_edit.c 39421 2011-08-15 16:18:04Z blendix $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -951,7 +951,7 @@ static int nlaedit_bake_exec (bContext *C, wmOperator *UNUSED(op))
 	return OPERATOR_FINISHED;
 }
 
-static void NLA_OT_bake (wmOperatorType *ot)
+void NLA_OT_bake (wmOperatorType *ot)
 {
 	/* identifiers */
 	ot->name= "Bake Strips";

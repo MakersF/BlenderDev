@@ -1,5 +1,5 @@
 /*
- * $Id: DNA_customdata_types.h 34941 2011-02-17 20:48:12Z jesterking $
+ * $Id: DNA_customdata_types.h 38866 2011-07-31 02:24:06Z nicholasbishop $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *

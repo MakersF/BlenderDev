@@ -1,5 +1,5 @@
 /*
- * $Id: rna_action.c 36222 2011-04-19 13:01:50Z aligorith $
+ * $Id: rna_action.c 38907 2011-08-02 02:28:37Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -191,8 +191,9 @@ static void rna_Action_active_pose_marker_index_range(PointerRNA *ptr, int *min,
 
 
 static void rna_Action_frame_range_get(PointerRNA *ptr,float *values)
-{
-	calc_action_range(ptr->id.data, values, values+1, 1);
+{	/* don't include modifiers because they too easily can have very large
+	 * ranges: MINAFRAMEF to MAXFRAMEF. */
+	calc_action_range(ptr->id.data, values, values+1, FALSE);
 }
 
 

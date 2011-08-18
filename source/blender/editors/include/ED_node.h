@@ -1,5 +1,5 @@
 /*
- * $Id: ED_node.h 38609 2011-07-22 15:28:50Z ton $
+ * $Id: ED_node.h 39346 2011-08-12 18:27:48Z blendix $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -33,12 +33,14 @@
 #ifndef ED_NODE_H
 #define ED_NODE_H
 
+struct ID;
+struct Main;
 struct Material;
 struct Scene;
 struct Tex;
 struct bContext;
 struct bNode;
-struct ID;
+struct bNodeTree;
 struct ScrArea;
 
 /* drawnode.c */
@@ -54,6 +56,8 @@ void ED_node_composit_default(struct Scene *sce);
 void ED_node_texture_default(struct Tex *tex);
 void ED_node_link_intersect_test(struct ScrArea *sa, int test);
 void ED_node_link_insert(struct ScrArea *sa);
+
+void ED_node_set_active(struct Main *bmain, struct bNodeTree *ntree, struct bNode *node);
 
 /* node ops.c */
 void ED_operatormacros_node(void);

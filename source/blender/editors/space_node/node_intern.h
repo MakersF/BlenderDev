@@ -1,5 +1,5 @@
 /*
- * $Id: node_intern.h 38344 2011-07-12 18:59:54Z jbakker $
+ * $Id: node_intern.h 39346 2011-08-12 18:27:48Z blendix $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -43,6 +43,7 @@ struct wmWindowManager;
 struct bNode;
 struct bNodeSocket;
 struct bNodeLink;
+struct Main;
 
 /* temp data to pass on to modal */
 typedef struct bNodeLinkDrag
@@ -97,10 +98,9 @@ void node_tree_from_ID(ID *id, bNodeTree **ntree, bNodeTree **edittree, int *tre
 void snode_notify(bContext *C, SpaceNode *snode);
 void snode_dag_update(bContext *C, SpaceNode *snode);
 bNode *next_node(bNodeTree *ntree);
-bNode *node_add_node(SpaceNode *snode, Scene *scene, int type, float locx, float locy);
+bNode *node_add_node(SpaceNode *snode, struct Main *bmain, Scene *scene, int type, float locx, float locy);
 void snode_set_context(SpaceNode *snode, Scene *scene);
 void snode_make_group_editable(SpaceNode *snode, bNode *gnode);
-void node_set_active(SpaceNode *snode, bNode *node);
 void node_deselectall(SpaceNode *snode);
 int node_select_same_type(SpaceNode *snode);
 int node_select_same_type_np(SpaceNode *snode, int dir);

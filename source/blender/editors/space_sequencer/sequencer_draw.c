@@ -1,5 +1,5 @@
 /*
- * $Id: sequencer_draw.c 38151 2011-07-06 13:15:22Z blendix $
+ * $Id: sequencer_draw.c 39421 2011-08-15 16:18:04Z blendix $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -639,6 +639,25 @@ static void draw_seq_strip(Scene *scene, ARegion *ar, Sequence *seq, int outline
 	/* draw sound wave */
 	if(seq->type == SEQ_SOUND) drawseqwave(scene, seq, x1, y1, x2, y2, (ar->v2d.cur.xmax - ar->v2d.cur.xmin)/ar->winx);
 
+	/* draw lock */
+	if(seq->flag & SEQ_LOCK) {
+		glEnable(GL_POLYGON_STIPPLE);
+		glEnable(GL_BLEND);
+
+		/* light stripes */
+		glColor4ub(255, 255, 255, 32);
+		glPolygonStipple(stipple_diag_stripes_pos);
+		glRectf(x1, y1, x2, y2);
+
+		/* dark stripes */
+		glColor4ub(0, 0, 0, 32);
+		glPolygonStipple(stipple_diag_stripes_neg);
+		glRectf(x1, y1, x2, y2);
+
+		glDisable(GL_POLYGON_STIPPLE);
+		glDisable(GL_BLEND);
+	}
+
 	get_seq_color3ubv(scene, seq, col);
 	if (G.moving && (seq->flag & SELECT)) {
 		if(seq->flag & SEQ_OVERLAP) {
@@ -683,7 +702,7 @@ static void draw_seq_strip(Scene *scene, ARegion *ar, Sequence *seq, int outline
 
 static Sequence *special_seq_update= 0;
 
-static void set_special_seq_update(int val)
+static void UNUSED_FUNCTION(set_special_seq_update)(int val)
 {
 //	int x;
 

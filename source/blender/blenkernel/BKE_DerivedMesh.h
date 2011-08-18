@@ -1,5 +1,5 @@
 /*
- * $Id: BKE_DerivedMesh.h 35646 2011-03-20 13:35:35Z blendix $
+ * $Id: BKE_DerivedMesh.h 39344 2011-08-12 18:17:28Z blendix $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -526,7 +526,7 @@ void weight_to_rgb(float input, float *fr, float *fg, float *fb);
 typedef struct DMVertexAttribs {
 	struct {
 		struct MTFace *array;
-		int emOffset, glIndex;
+		int emOffset, glIndex, glTexco;
 	} tface[MAX_MTFACE];
 
 	struct {
@@ -541,7 +541,7 @@ typedef struct DMVertexAttribs {
 
 	struct {
 		float (*array)[3];
-		int emOffset, glIndex;
+		int emOffset, glIndex, glTexco;
 	} orco;
 
 	int tottface, totmcol, tottang, totorco;

@@ -1,5 +1,5 @@
 /*
- * $Id: rna_modifier.c 37746 2011-06-23 06:13:21Z campbellbarton $
+ * $Id: rna_modifier.c 39385 2011-08-14 06:43:58Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -804,6 +804,11 @@ static void rna_def_modifier_multires(BlenderRNA *brna)
 	prop= RNA_def_property(srna, "show_only_control_edges", PROP_BOOLEAN, PROP_NONE);
 	RNA_def_property_boolean_sdna(prop, NULL, "flags", eMultiresModifierFlag_ControlEdges);
 	RNA_def_property_ui_text(prop, "Optimal Display", "Skip drawing/rendering of interior subdivided edges");
+	RNA_def_property_update(prop, 0, "rna_Modifier_update");
+
+	prop= RNA_def_property(srna, "use_subsurf_uv", PROP_BOOLEAN, PROP_NONE);
+	RNA_def_property_boolean_negative_sdna(prop, NULL, "flags", eMultiresModifierFlag_PlainUv);
+	RNA_def_property_ui_text(prop, "Subdivide UVs", "Use subsurf to subdivide UVs");
 	RNA_def_property_update(prop, 0, "rna_Modifier_update");
 }
 
@@ -2258,6 +2263,13 @@ static void rna_def_modifier_solidify(BlenderRNA *brna)
 	RNA_def_property_range(prop, -FLT_MAX, FLT_MAX);
 	RNA_def_property_ui_range(prop, -10, 10, 0.1, 4);
 	RNA_def_property_ui_text(prop, "Thickness", "Thickness of the shell");
+	RNA_def_property_update(prop, 0, "rna_Modifier_update");
+
+	prop= RNA_def_property(srna, "thickness_vertex_group", PROP_FLOAT, PROP_FACTOR);
+	RNA_def_property_float_sdna(prop, NULL, "offset_fac_vg");
+	RNA_def_property_range(prop, 0.0, 1.0);
+	RNA_def_property_ui_range(prop, 0, 1, 0.1, 3);
+	RNA_def_property_ui_text(prop, "Vertex Group Factor", "Thickness factor to use for zero vertex group influence");
 	RNA_def_property_update(prop, 0, "rna_Modifier_update");
 
 	prop= RNA_def_property(srna, "offset", PROP_FLOAT, PROP_FACTOR);

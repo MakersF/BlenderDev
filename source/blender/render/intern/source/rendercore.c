@@ -1,5 +1,5 @@
 /*
- * $Id: rendercore.c 38654 2011-07-24 10:26:22Z nazgul $
+ * $Id: rendercore.c 38964 2011-08-03 05:32:07Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -730,7 +730,7 @@ static void atm_tile(RenderPart *pa, RenderLayer *rl)
 	
 	if(zpass==NULL) return;
 
-	/* check for at least one sun lamp that its atmosphere flag is is enabled */
+	/* check for at least one sun lamp that its atmosphere flag is enabled */
 	for(go=R.lights.first; go; go= go->next) {
 		lar= go->lampren;
 		if(lar->type==LA_SUN && lar->sunsky && (lar->sunsky->effect_type & LA_SUN_EFFECT_AP))
