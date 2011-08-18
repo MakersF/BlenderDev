@@ -281,6 +281,8 @@ void init_controller(bController *cont)
 	case CONT_PYTHON:
 		cont->data= MEM_callocN(sizeof(bPythonCont), "pycont");
 		break;
+	case CONT_CLIBRARY:
+		cont->data= MEM_callocN(sizeof(bCLibCont), "clibcont");
 	}
 }
 

@@ -99,6 +99,7 @@
 #include "SCA_PythonController.h"
 #include "SCA_RandomActuator.h"
 #include "SCA_IController.h"
+#include "KX_SCA_CLibraryController.h"
 
 static void PyType_Attr_Set(PyGetSetDef *attr_getset, PyAttributeDef *attr)
 {
@@ -250,6 +251,7 @@ void initPyTypes(void)
 		PyType_Ready_Attr(dict, SCA_IController, init_getset);
 		PyType_Ready_Attr(dict, SCA_PythonKeyboard, init_getset);
 		PyType_Ready_Attr(dict, SCA_PythonMouse, init_getset);
+		PyType_Ready_Attr(dict, KX_SCA_CLibraryController, init_getset);
 	}
 
 

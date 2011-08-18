@@ -1028,6 +1028,9 @@ static void write_controllers(WriteData *wd, ListBase *lb)
 		case CONT_PYTHON:
 			writestruct(wd, DATA, "bPythonCont", 1, cont->data);
 			break;
+		case CONT_CLIBRARY:
+			writestruct(wd, DATA, "bCLibCont", 1, cont->data);
+			break;
 		default:
 			; /* error: don't know how to write this file */
 		}

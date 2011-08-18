@@ -45,6 +45,7 @@ EnumPropertyItem controller_type_items[] ={
 	{CONT_LOGIC_XNOR, "LOGIC_XNOR", 0, "Xnor", "Logic Xnor"},
 	{CONT_EXPRESSION, "EXPRESSION", 0, "Expression", ""},
 	{CONT_PYTHON, "PYTHON", 0, "Python", ""},
+	{CONT_CLIBRARY, "CLIBRARY", 0, "C Library", "C Library"},
 	{0, NULL, 0, NULL, NULL}};
 
 #ifdef RNA_RUNTIME
@@ -72,6 +73,8 @@ static struct StructRNA* rna_Controller_refine(struct PointerRNA *ptr)
 		return &RNA_ExpressionController;
 	case CONT_PYTHON:
 		return &RNA_PythonController;
+	case CONT_CLIBRARY:
+		return &RNA_CLibraryController;
 	default:
 		return &RNA_Controller;
 	}
@@ -253,6 +256,24 @@ void RNA_def_controller(BlenderRNA *brna)
 	prop= RNA_def_property(srna, "use_debug", PROP_BOOLEAN, PROP_NONE);
 	RNA_def_property_boolean_sdna(prop, NULL, "flag", CONT_PY_DEBUG);
 	RNA_def_property_ui_text(prop, "D", "Continuously reload the module from disk for editing external modules without restarting");
+	RNA_def_property_update(prop, NC_LOGIC, NULL);
+
+	/*C Library Controller*/
+	srna = RNA_def_struct(brna, "CLibraryController", "Controller");
+	RNA_def_struct_sdna_from(srna, "bCLibCont", "data");
+	RNA_def_struct_ui_text(srna, "C Library Controller", "Controller executing C/C++ extern module function");
+
+	prop= RNA_def_property(srna, "libpath", PROP_STRING, PROP_NONE);
+	RNA_def_property_ui_text(prop, "Library Path", "Path to the library. It may be both relative or absolute. You can omit the extension of the file, it will automatically loaded according to the OS");
+	RNA_def_property_update(prop, NC_LOGIC, NULL);
+
+	prop= RNA_def_property(srna, "funcname", PROP_STRING, PROP_NONE);
+	RNA_def_property_ui_text(prop, "Function Name", "The name of the function to call");
+	RNA_def_property_update(prop, NC_LOGIC, NULL);
+
+	prop= RNA_def_property(srna, "use_debug", PROP_BOOLEAN, PROP_NONE);
+	RNA_def_property_boolean_sdna(prop, NULL, "flag", CONT_PY_DEBUG);
+	RNA_def_property_ui_text(prop, "D", "Continuously reload the module and function from disk for editing external modules without restarting");
 	RNA_def_property_update(prop, NC_LOGIC, NULL);
 
 	/* Other Controllers */

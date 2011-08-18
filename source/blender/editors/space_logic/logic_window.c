@@ -664,13 +664,15 @@ static const char *controller_name(int type)
 		return "Expression";
 	case CONT_PYTHON:
 		return "Python";
+	case CONT_CLIBRARY:
+		return "C Library";
 	}
 	return "unknown";
 }
 
 static const char *controller_pup(void)
 {
-	return "Controllers   %t|AND %x0|OR %x1|XOR %x6|NAND %x4|NOR %x5|XNOR %x7|Expression %x2|Python %x3";
+	return "Controllers   %t|AND %x0|OR %x1|XOR %x6|NAND %x4|NOR %x5|XNOR %x7|Expression %x2|Python %x3|C Library %x8";
 }
 
 static const char *actuator_name(int type)
@@ -1669,9 +1671,11 @@ static short draw_controllerbuttons(bController *cont, uiBlock *block, short xco
 {
 	bExpressionCont *ec;
 	bPythonCont *pc;
+	bCLibCont *cc;
 	short ysize;
 	
 	switch (cont->type) {
+
 	case CONT_EXPRESSION:
 		ysize= 28;
 
@@ -1688,6 +1692,7 @@ static short draw_controllerbuttons(bController *cont, uiBlock *block, short xco
 		
 		yco-= ysize;
 		break;
+
 	case CONT_PYTHON:
 		ysize= 28;
 		
@@ -1711,7 +1716,29 @@ static short draw_controllerbuttons(bController *cont, uiBlock *block, short xco
 		
 		yco-= ysize;
 		break;
+
+	case CONT_CLIBRARY:
+		ysize= 28;
 		
+		if(cont->data==NULL) init_controller(cont);
+		cc= cont->data;
+		
+		UI_ThemeColor(TH_PANEL);
+		glRects(xco, yco-ysize, xco+width, yco);
+		uiEmboss((float)xco, (float)yco-ysize, (float)xco+width, (float)yco, 1);
+
+	
+		uiBlockBeginAlign(block);
+
+		uiDefBut(block, TEX, 1, "", xco+70,yco-23,(width-70)-25, 19, cc->libpath, 0, 63, 0, 0, "Path to the library. It may be both relative or absolute. You can omit the extension of the file, it will automatically loaded according to the OS");
+		uiDefBut(block, TEX, 1, "", xco+70,yco-23,(width-70)-25, 19, cc->funcname, 0, 31, 0, 0, "The name of the function to call");
+		uiDefButBitI(block, TOG, CONT_PY_DEBUG, B_REDR, "D", (xco+width)-25, yco-23, 19, 19, &cc->flag, 0, 0, 0, 0, "Continuously reload the module and function from disk for editing external modules without restarting");
+		
+		uiBlockEndAlign(block);
+		
+		yco-= ysize;
+		break;
+	
 	default:
 		ysize= 4;
 
@@ -3604,6 +3631,15 @@ static void draw_controller_python(uiLayout *layout, PointerRNA *ptr)
 	}
 }
 
+static void draw_controller_clibrary(uiLayout *layout, PointerRNA *ptr)
+{
+	uiLayout *split;
+	split = uiLayoutSplit(layout,0.8, 0);
+	uiItemR(split, ptr, "libpath", 0, "Library Path", ICON_NONE);
+	uiItemR(split, ptr, "use_debug", UI_ITEM_R_TOGGLE, NULL, ICON_NONE);
+	uiItemR(layout, ptr, "funcname", 0, "Function Name", ICON_NONE);
+}
+
 static void draw_controller_state(uiLayout *UNUSED(layout), PointerRNA *UNUSED(ptr))
 {
 
@@ -3630,6 +3666,9 @@ static void draw_brick_controller(uiLayout *layout, PointerRNA *ptr)
 			break;
 		case CONT_PYTHON:
 			draw_controller_python(box, ptr);
+			break;
+		case CONT_CLIBRARY:
+			draw_controller_clibrary(box, ptr);
 			break;
 		case CONT_LOGIC_NAND:
 			break;

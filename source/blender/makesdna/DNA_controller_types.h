@@ -50,6 +50,12 @@ typedef struct bPythonCont {
 	int flag; /* only used for debug now */
 } bPythonCont;
 
+typedef struct bCLibCont {
+	char libpath[64];
+	char funcname[32];
+	int	flag;/* only used for degub now*/
+} bCLibCont;
+
 typedef struct bController {
 	struct bController *next, *prev, *mynew;
 	short type, flag, inputs, totlinks;
@@ -75,6 +81,7 @@ typedef struct bController {
 #define CONT_LOGIC_NOR	5
 #define CONT_LOGIC_XOR	6
 #define CONT_LOGIC_XNOR	7
+#define CONT_CLIBRARY	8
 
 /* controller->flag */
 #define CONT_SHOW		1

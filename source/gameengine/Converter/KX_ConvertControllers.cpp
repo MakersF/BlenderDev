@@ -46,6 +46,7 @@
 #include "SCA_XNORController.h"
 #include "SCA_PythonController.h"
 #include "SCA_ExpressionController.h"
+#include "KX_SCA_CLibraryController.h"
 
 #include "SCA_LogicManager.h"
 #include "KX_GameObject.h"
@@ -151,6 +152,19 @@ void BL_ConvertControllers(
 				{
 					gamecontroller = new SCA_ExpressionController(gameobj,expressiontext);
 				}
+				break;
+			}
+			case CONT_CLIBRARY:
+			{
+				bCLibCont* clibcont = (bCLibCont*) bcontr->data;
+				KX_SCA_CLibraryController* clctrl = new KX_SCA_CLibraryController(gameobj);
+				gamecontroller = clctrl;
+				if (clibcont->flag){
+					clctrl->SetDebug(true); /*false by default*/
+					printf("\nDebuging \"%s\", module for object %s\n\texpect worse performance.\n", clctrl->GetModulePath().Ptr(), blenderobject->id.name+2);
+				}
+				clctrl->SetModulePath(STR_String(clibcont->libpath));
+				clctrl->SetFunctiontName(STR_String(clibcont->funcname));
 				break;
 			}
 			case CONT_PYTHON:

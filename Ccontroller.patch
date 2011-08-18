@@ -1,0 +1,666 @@
+Index: source/blender/blenkernel/intern/sca.c
+===================================================================
+--- source/blender/blenkernel/intern/sca.c	(revisione 39522)
++++ source/blender/blenkernel/intern/sca.c	(copia locale)
+@@ -281,6 +281,8 @@
+ 	case CONT_PYTHON:
+ 		cont->data= MEM_callocN(sizeof(bPythonCont), "pycont");
+ 		break;
++	case CONT_CLIBRARY:
++		cont->data= MEM_callocN(sizeof(bCLibCont), "clibcont");
+ 	}
+ }
+ 
+Index: source/blender/blenloader/intern/writefile.c
+===================================================================
+--- source/blender/blenloader/intern/writefile.c	(revisione 39522)
++++ source/blender/blenloader/intern/writefile.c	(copia locale)
+@@ -1028,6 +1028,9 @@
+ 		case CONT_PYTHON:
+ 			writestruct(wd, DATA, "bPythonCont", 1, cont->data);
+ 			break;
++		case CONT_CLIBRARY:
++			writestruct(wd, DATA, "bCLibCont", 1, cont->data);
++			break;
+ 		default:
+ 			; /* error: don't know how to write this file */
+ 		}
+Index: source/blender/editors/space_logic/logic_window.c
+===================================================================
+--- source/blender/editors/space_logic/logic_window.c	(revisione 39522)
++++ source/blender/editors/space_logic/logic_window.c	(copia locale)
+@@ -664,13 +664,15 @@
+ 		return "Expression";
+ 	case CONT_PYTHON:
+ 		return "Python";
++	case CONT_CLIBRARY:
++		return "C Library";
+ 	}
+ 	return "unknown";
+ }
+ 
+ static const char *controller_pup(void)
+ {
+-	return "Controllers   %t|AND %x0|OR %x1|XOR %x6|NAND %x4|NOR %x5|XNOR %x7|Expression %x2|Python %x3";
++	return "Controllers   %t|AND %x0|OR %x1|XOR %x6|NAND %x4|NOR %x5|XNOR %x7|Expression %x2|Python %x3|C Library %x8";
+ }
+ 
+ static const char *actuator_name(int type)
+@@ -1669,9 +1671,11 @@
+ {
+ 	bExpressionCont *ec;
+ 	bPythonCont *pc;
++	bCLibCont *cc;
+ 	short ysize;
+ 	
+ 	switch (cont->type) {
++
+ 	case CONT_EXPRESSION:
+ 		ysize= 28;
+ 
+@@ -1688,6 +1692,7 @@
+ 		
+ 		yco-= ysize;
+ 		break;
++
+ 	case CONT_PYTHON:
+ 		ysize= 28;
+ 		
+@@ -1711,7 +1716,29 @@
+ 		
+ 		yco-= ysize;
+ 		break;
++
++	case CONT_CLIBRARY:
++		ysize= 28;
+ 		
++		if(cont->data==NULL) init_controller(cont);
++		cc= cont->data;
++		
++		UI_ThemeColor(TH_PANEL);
++		glRects(xco, yco-ysize, xco+width, yco);
++		uiEmboss((float)xco, (float)yco-ysize, (float)xco+width, (float)yco, 1);
++
++	
++		uiBlockBeginAlign(block);
++
++		uiDefBut(block, TEX, 1, "", xco+70,yco-23,(width-70)-25, 19, cc->libpath, 0, 63, 0, 0, "Path to the library. It may be both relative or absolute. You can omit the extension of the file, it will automatically loaded according to the OS");
++		uiDefBut(block, TEX, 1, "", xco+70,yco-23,(width-70)-25, 19, cc->funcname, 0, 31, 0, 0, "The name of the function to call");
++		uiDefButBitI(block, TOG, CONT_PY_DEBUG, B_REDR, "D", (xco+width)-25, yco-23, 19, 19, &cc->flag, 0, 0, 0, 0, "Continuously reload the module and function from disk for editing external modules without restarting");
++		
++		uiBlockEndAlign(block);
++		
++		yco-= ysize;
++		break;
++	
+ 	default:
+ 		ysize= 4;
+ 
+@@ -3604,6 +3631,15 @@
+ 	}
+ }
+ 
++static void draw_controller_clibrary(uiLayout *layout, PointerRNA *ptr)
++{
++	uiLayout *split;
++	split = uiLayoutSplit(layout,0.8, 0);
++	uiItemR(split, ptr, "libpath", 0, "Library Path", ICON_NONE);
++	uiItemR(split, ptr, "use_debug", UI_ITEM_R_TOGGLE, NULL, ICON_NONE);
++	uiItemR(layout, ptr, "funcname", 0, "Function Name", ICON_NONE);
++}
++
+ static void draw_controller_state(uiLayout *UNUSED(layout), PointerRNA *UNUSED(ptr))
+ {
+ 
+@@ -3631,6 +3667,9 @@
+ 		case CONT_PYTHON:
+ 			draw_controller_python(box, ptr);
+ 			break;
++		case CONT_CLIBRARY:
++			draw_controller_clibrary(box, ptr);
++			break;
+ 		case CONT_LOGIC_NAND:
+ 			break;
+ 		case CONT_LOGIC_NOR:
+Index: source/blender/makesdna/DNA_controller_types.h
+===================================================================
+--- source/blender/makesdna/DNA_controller_types.h	(revisione 39522)
++++ source/blender/makesdna/DNA_controller_types.h	(copia locale)
+@@ -50,6 +50,12 @@
+ 	int flag; /* only used for debug now */
+ } bPythonCont;
+ 
++typedef struct bCLibCont {
++	char libpath[64];
++	char funcname[32];
++	int	flag;/* only used for degub now*/
++} bCLibCont;
++
+ typedef struct bController {
+ 	struct bController *next, *prev, *mynew;
+ 	short type, flag, inputs, totlinks;
+@@ -75,6 +81,7 @@
+ #define CONT_LOGIC_NOR	5
+ #define CONT_LOGIC_XOR	6
+ #define CONT_LOGIC_XNOR	7
++#define CONT_CLIBRARY	8
+ 
+ /* controller->flag */
+ #define CONT_SHOW		1
+Index: source/blender/makesrna/intern/rna_controller.c
+===================================================================
+--- source/blender/makesrna/intern/rna_controller.c	(revisione 39522)
++++ source/blender/makesrna/intern/rna_controller.c	(copia locale)
+@@ -45,6 +45,7 @@
+ 	{CONT_LOGIC_XNOR, "LOGIC_XNOR", 0, "Xnor", "Logic Xnor"},
+ 	{CONT_EXPRESSION, "EXPRESSION", 0, "Expression", ""},
+ 	{CONT_PYTHON, "PYTHON", 0, "Python", ""},
++	{CONT_CLIBRARY, "CLIBRARY", 0, "C Library", "C Library"},
+ 	{0, NULL, 0, NULL, NULL}};
+ 
+ #ifdef RNA_RUNTIME
+@@ -72,6 +73,8 @@
+ 		return &RNA_ExpressionController;
+ 	case CONT_PYTHON:
+ 		return &RNA_PythonController;
++	case CONT_CLIBRARY:
++		return &RNA_CLibraryController;
+ 	default:
+ 		return &RNA_Controller;
+ 	}
+@@ -255,6 +258,24 @@
+ 	RNA_def_property_ui_text(prop, "D", "Continuously reload the module from disk for editing external modules without restarting");
+ 	RNA_def_property_update(prop, NC_LOGIC, NULL);
+ 
++	/*C Library Controller*/
++	srna = RNA_def_struct(brna, "CLibraryController", "Controller");
++	RNA_def_struct_sdna_from(srna, "bCLibCont", "data");
++	RNA_def_struct_ui_text(srna, "C Library Controller", "Controller executing C/C++ extern module function");
++
++	prop= RNA_def_property(srna, "libpath", PROP_STRING, PROP_NONE);
++	RNA_def_property_ui_text(prop, "Library Path", "Path to the library. It may be both relative or absolute. You can omit the extension of the file, it will automatically loaded according to the OS");
++	RNA_def_property_update(prop, NC_LOGIC, NULL);
++
++	prop= RNA_def_property(srna, "funcname", PROP_STRING, PROP_NONE);
++	RNA_def_property_ui_text(prop, "Function Name", "The name of the function to call");
++	RNA_def_property_update(prop, NC_LOGIC, NULL);
++
++	prop= RNA_def_property(srna, "use_debug", PROP_BOOLEAN, PROP_NONE);
++	RNA_def_property_boolean_sdna(prop, NULL, "flag", CONT_PY_DEBUG);
++	RNA_def_property_ui_text(prop, "D", "Continuously reload the module and function from disk for editing external modules without restarting");
++	RNA_def_property_update(prop, NC_LOGIC, NULL);
++
+ 	/* Other Controllers */
+ 	srna= RNA_def_struct(brna, "AndController", "Controller");
+ 	RNA_def_struct_ui_text(srna, "And Controller", "Controller passing on events based on a logical AND operation");
+Index: source/gameengine/Converter/KX_ConvertControllers.cpp
+===================================================================
+--- source/gameengine/Converter/KX_ConvertControllers.cpp	(revisione 39522)
++++ source/gameengine/Converter/KX_ConvertControllers.cpp	(copia locale)
+@@ -46,6 +46,7 @@
+ #include "SCA_XNORController.h"
+ #include "SCA_PythonController.h"
+ #include "SCA_ExpressionController.h"
++#include "KX_SCA_CLibraryController.h"
+ 
+ #include "SCA_LogicManager.h"
+ #include "KX_GameObject.h"
+@@ -153,6 +154,19 @@
+ 				}
+ 				break;
+ 			}
++			case CONT_CLIBRARY:
++			{
++				bCLibCont* clibcont = (bCLibCont*) bcontr->data;
++				KX_SCA_CLibraryController* clctrl = new KX_SCA_CLibraryController(gameobj);
++				gamecontroller = clctrl;
++				if (clibcont->flag){
++					clctrl->SetDebug(true); /*false by default*/
++					printf("\nDebuging \"%s\", module for object %s\n\texpect worse performance.\n", clctrl->GetModulePath().Ptr(), blenderobject->id.name+2);
++				}
++				clctrl->SetModulePath(STR_String(clibcont->libpath));
++				clctrl->SetFunctiontName(STR_String(clibcont->funcname));
++				break;
++			}
+ 			case CONT_PYTHON:
+ 			{
+ 				bPythonCont* pycont = (bPythonCont*) bcontr->data;
+Index: source/gameengine/Ketsji/CMakeLists.txt
+===================================================================
+--- source/gameengine/Ketsji/CMakeLists.txt	(revisione 39522)
++++ source/gameengine/Ketsji/CMakeLists.txt	(copia locale)
+@@ -106,6 +106,7 @@
+ 	KX_RayEventManager.cpp
+ 	KX_RaySensor.cpp
+ 	KX_SCA_AddObjectActuator.cpp
++	KX_SCA_CLibraryController.cpp
+ 	KX_SCA_DynamicActuator.cpp
+ 	KX_SCA_EndObjectActuator.cpp
+ 	KX_SCA_ReplaceMeshActuator.cpp
+@@ -183,6 +184,7 @@
+ 	KX_RayEventManager.h
+ 	KX_RaySensor.h
+ 	KX_SCA_AddObjectActuator.h
++	KX_SCA_CLibraryController.h
+ 	KX_SCA_DynamicActuator.h
+ 	KX_SCA_EndObjectActuator.h
+ 	KX_SCA_ReplaceMeshActuator.h
+Index: source/gameengine/Ketsji/KX_PythonInitTypes.cpp
+===================================================================
+--- source/gameengine/Ketsji/KX_PythonInitTypes.cpp	(revisione 39522)
++++ source/gameengine/Ketsji/KX_PythonInitTypes.cpp	(copia locale)
+@@ -99,6 +99,7 @@
+ #include "SCA_PythonController.h"
+ #include "SCA_RandomActuator.h"
+ #include "SCA_IController.h"
++#include "KX_SCA_CLibraryController.h"
+ 
+ static void PyType_Attr_Set(PyGetSetDef *attr_getset, PyAttributeDef *attr)
+ {
+@@ -250,6 +251,7 @@
+ 		PyType_Ready_Attr(dict, SCA_IController, init_getset);
+ 		PyType_Ready_Attr(dict, SCA_PythonKeyboard, init_getset);
+ 		PyType_Ready_Attr(dict, SCA_PythonMouse, init_getset);
++		PyType_Ready_Attr(dict, KX_SCA_CLibraryController, init_getset);
+ 	}
+ 
+ 
+Index: source/gameengine/Ketsji/KX_SCA_CLibraryController.cpp
+===================================================================
+--- source/gameengine/Ketsji/KX_SCA_CLibraryController.cpp	(revisione 0)
++++ source/gameengine/Ketsji/KX_SCA_CLibraryController.cpp	(revisione 0)
+@@ -0,0 +1,286 @@
++/*
++ * Execute C Library 
++ *
++ * $Id: KX_SCA_CLibraryController.cpp 2011-08-03 11:17:25Z Makers_F $
++ *
++ * ***** BEGIN GPL LICENSE BLOCK *****
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ *
++ * The Original Code is Copyright (C) 2001-2002 by NaN Holding BV.
++ * All rights reserved.
++ *
++ * The Original Code is: all of this file.
++ *
++ * Contributor(s): none yet.
++ *
++ * ***** END GPL LICENSE BLOCK *****
++ */
++
++/** \file gameengine/Ketsji/SCA_CLibraryController.cpp
++ *  \ingroup ketsji
++ */
++
++#include "KX_SCA_CLibraryController.h"
++#include "SCA_LogicManager.h"
++#include "SCA_ISensor.h"
++#include "SCA_IActuator.h"
++#include "PyObjectPlus.h"
++#include "STR_String.h"
++extern "C" {
++#include "BLI_path_util.h"
++#include "BKE_global.h"
++#include "BKE_main.h"
++#include "BLI_string.h"
++}
++
++// initialize static member variables
++KX_SCA_CLibraryController* KX_SCA_CLibraryController::m_sCurrentController = NULL;
++
++KX_SCA_CLibraryController::KX_SCA_CLibraryController(SCA_IObject* gameobj)
++	: SCA_IController(gameobj),
++	m_library(NULL),
++	m_function(NULL),
++	m_debug(false),
++	m_modifiedPath(true),
++	m_modifiedFunction(true)
++{
++	
++}
++
++KX_SCA_CLibraryController::~KX_SCA_CLibraryController()
++{
++	FreeCLibrary();
++}
++
++CValue* KX_SCA_CLibraryController::GetReplica()
++{
++	KX_SCA_CLibraryController* replica = new KX_SCA_CLibraryController(*this);
++	// this will copy properties and so on...
++	replica->ProcessReplica();
++	return replica;
++}
++
++void KX_SCA_CLibraryController::SetModulePath(const STR_String& text)
++{
++	m_libraryPath = text;
++	m_modifiedPath = true;
++}
++
++void KX_SCA_CLibraryController::SetFunctiontName(const STR_String& name)
++{
++	m_functionName = name;
++	m_modifiedFunction = true;
++}
++
++STR_String KX_SCA_CLibraryController::ResolvePath(STR_String path)
++{
++
++	/*size of start path + size of abs path + extension dimension + 8 bonus char for safeness*/
++#ifdef WIN32
++	int totlen = (path.Length() + strlen(G.main->name) + 5 + 8);
++	char *temp = (char*) malloc(sizeof(char)*totlen);
++#else
++	int totlen = (path.Length() + strlen(G.main->name) + 4 + 8);
++	char *temp = (char*) malloc(sizeof(char)*totlen);
++#endif
++
++	strncpy(temp, path.Ptr(), totlen);
++	/*make the pat absolute*/
++	BLI_path_abs(temp, G.main->name);
++
++	/*add the right extension*/
++#ifdef WIN32
++	BLI_replace_extension(temp, totlen, ".dll");
++#else
++	BLI_replace_extension(temp, totlen, ".so");
++#endif
++
++	STR_String retstring = STR_String(temp);
++	free(temp);
++
++	return retstring;
++}
++
++
++int KX_SCA_CLibraryController::LoadCLibrary()
++{
++
++	STR_String resolvedpath = ResolvePath(m_libraryPath);
++	m_library = (*BLI_dynlib_open)(resolvedpath.Ptr());
++
++	if(m_library!=NULL)
++	{
++		m_modifiedPath = false;
++		return 1;
++	}
++	else
++	{
++		printf("Failed to load %s library.",resolvedpath.Ptr());
++		ErrorPrint(NULL);
++		return 0; 
++	}
++}
++
++void KX_SCA_CLibraryController::FreeCLibrary()
++{
++	if(m_library)
++		BLI_dynlib_close(m_library);
++}
++
++int KX_SCA_CLibraryController::LoadFunction()
++{
++	if(!m_library) 
++	{	
++		ErrorPrint("The library was not loaded!");
++		return 0;
++	}
++	
++	m_function = (moduleFunction)(*BLI_dynlib_find_symbol)(m_library, m_functionName.Ptr());
++	
++	static char* error_message;
++	error_message = (*BLI_dynlib_get_error_as_string)(m_library);
++	
++	if(!error_message)
++	{
++		m_modifiedFunction = false;
++		return 1;
++	}
++	else
++	{
++		printf("Error while loading the function: %s",error_message);
++		ErrorPrint(NULL);
++		return 0;
++	}
++}
++
++void KX_SCA_CLibraryController::ErrorPrint(char* error_msg)
++{
++	if(error_msg)
++		printf("%s - object '%s', controller '%s', library '%s', function '%s'\n", error_msg, GetParent()->GetName().Ptr(), GetName().Ptr(), m_libraryPath.Ptr(), m_functionName.Ptr());
++	else
++		printf(" - object '%s', controller '%s', library '%s', function '%s'\n", GetParent()->GetName().Ptr(), GetName().Ptr(), m_libraryPath.Ptr(), m_functionName.Ptr());
++}
++
++void KX_SCA_CLibraryController::Trigger(SCA_LogicManager* logicmgr)
++{
++	
++	m_sCurrentController = this;
++	m_sCurrentLogicManager = logicmgr;
++
++	if(!m_libraryPath.Compare("") || !m_functionName.Compare(""))
++	{
++		ErrorPrint("Expected a library path and a function name, '' received instead.");
++		m_sCurrentController = NULL;
++		return;
++	}
++	
++	/*If debug is true, reload the module each time*/
++	if(m_debug)
++	{
++		/*Free the memory of the previous library*/
++		this->FreeCLibrary();
++		if(!this->LoadCLibrary()) return;
++		if(!this->LoadFunction()) return;
++	}
++	/*If the path has been changed, reload the library*/
++	if(m_modifiedPath)
++	{
++		this->FreeCLibrary();
++		if(!this->LoadCLibrary()) return;
++		/*Since the library is reloaded, the function's address may change*/
++		if(!this->LoadFunction()) return;
++	}
++	/*If the function name has been changed, reload the function*/
++	if(m_modifiedFunction)
++		if(!this->LoadFunction()) return;
++	
++	
++	m_lastReturnCode[0] = NULL;
++	
++	/*the actual execution of the function*/
++	(this->m_function)(KX_GetActiveEngine(), KX_GetActiveScene(), (KX_GameObject*) this->GetParent(), (SCA_IController*) this, m_lastReturnCode);
++	
++	switch(*m_lastReturnCode)
++	{
++		case NULL:
++		{
++			ErrorPrint("An error occourred while executing the library function");
++			break;
++		}
++		case '1':
++			/*everything went fine*/
++			break;
++		default:
++		{
++			/*Print the error string given by the library function*/
++			ErrorPrint(m_lastReturnCode);
++			break;
++		}
++	}
++	m_sCurrentController = NULL;
++}
++
++#ifdef WITH_PYTHON
++
++/* warning, self is not the SCA_CLibraryController, its a PyObjectPlus_Proxy */
++
++PyObject* KX_SCA_CLibraryController::sPyGetCurrentController(PyObject *self)
++{
++	if(m_sCurrentController==NULL)
++	{
++		PyErr_SetString(PyExc_SystemError, "bge.logic.getCurrentController(), this function is being run outside the python controllers context, or blenders internal state is corrupt.");
++		return NULL;
++	}
++	return m_sCurrentController->GetProxy();
++}
++
++const char* KX_SCA_CLibraryController::sPyGetCurrentController__doc__ = "getCurrentController()";
++
++PyTypeObject KX_SCA_CLibraryController::Type = {
++	PyVarObject_HEAD_INIT(NULL, 0)
++	"KX_SCA_CLibraryController",
++	sizeof(PyObjectPlus_Proxy),
++	0,
++	py_base_dealloc,
++	0,
++	0,
++	0,
++	0,
++	py_base_repr,
++	0,0,0,0,0,0,0,0,0,
++	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
++	0,0,0,0,0,0,0,
++	Methods,
++	0,
++	0,
++	&SCA_IController::Type,
++	0,0,0,0,0,0,
++	py_base_new
++};
++
++PyMethodDef KX_SCA_CLibraryController::Methods[] = {
++	{NULL,NULL} //Sentinel
++};
++
++PyAttributeDef KX_SCA_CLibraryController::Attributes[] = {
++	KX_PYATTRIBUTE_BOOL_RW("debug", KX_SCA_CLibraryController, m_debug),
++	KX_PYATTRIBUTE_STRING_RW("module_path", 0, 63, false, KX_SCA_CLibraryController, m_libraryPath),
++	KX_PYATTRIBUTE_STRING_RW("function_name", 0, 31, false, KX_SCA_CLibraryController, m_functionName),
++	{NULL}
++
++};
++
++#endif
+\ No newline at end of file
+Index: source/gameengine/Ketsji/KX_SCA_CLibraryController.h
+===================================================================
+--- source/gameengine/Ketsji/KX_SCA_CLibraryController.h	(revisione 0)
++++ source/gameengine/Ketsji/KX_SCA_CLibraryController.h	(revisione 0)
+@@ -0,0 +1,101 @@
++/*
++ * $Id: KX_SCA_CLibraryController.cpp 2011-08-03 11:17:25Z Makers_F $
++ *
++ * ***** BEGIN GPL LICENSE BLOCK *****
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ *
++ * The Original Code is Copyright (C) 2001-2002 by NaN Holding BV.
++ * All rights reserved.
++ *
++ * The Original Code is: all of this file.
++ *
++ * Contributor(s): none yet.
++ *
++ * ***** END GPL LICENSE BLOCK *****
++ */
++
++/** \file KX_SCA_CLibraryController.h
++ *  \ingroup ketsji
++ *  \brief Execute C Library
++ */
++
++#ifndef KX_CLIBRARYCONTROLLER_H
++#define KX_CLIBRARYCONTROLLER_H
++
++	      
++#include "SCA_IController.h"
++#include "SCA_LogicManager.h"
++#include "KX_GameObject.h"
++#include "KX_KetsjiEngine.h"
++#include "KX_Scene.h"
++#include "KX_PythonInit.h"
++
++extern "C" {
++#include "BLI_dynlib.h"
++}
++
++
++class KX_SCA_CLibraryController: public SCA_IController
++{
++
++	Py_Header;
++
++public:
++
++	KX_SCA_CLibraryController(SCA_IObject* gameobj);
++	virtual ~KX_SCA_CLibraryController();
++	virtual CValue* GetReplica();
++	
++	virtual void Trigger(SCA_LogicManager* logicmgr);
++	
++	void		SetModulePath(const STR_String& text);
++	void		SetFunctiontName(const STR_String& name);
++	void		SetDebug(bool debug) { m_debug = debug; }
++	STR_String	GetModulePath() {return m_libraryPath; }
++	STR_String	GetFunctionName() { return m_functionName; }
++
++#ifdef WITH_PYTHON
++	static const char* sPyGetCurrentController__doc__;
++	PyObject* sPyGetCurrentController(PyObject *self);
++
++#endif
++
++
++protected:
++	
++	typedef void (*moduleFunction)(KX_KetsjiEngine* curEngine, KX_Scene* curScene, KX_GameObject* curObject, SCA_IController* curController, char* error_msg);
++
++	bool					m_modifiedPath;
++	bool					m_modifiedFunction;
++	bool					m_debug;
++	STR_String				m_libraryPath;
++	STR_String				m_functionName;
++
++	DynamicLibrary*			m_library;
++	moduleFunction			m_function;
++	
++	static KX_SCA_CLibraryController* m_sCurrentController;
++	int		LoadCLibrary();
++	void	FreeCLibrary();
++	int		LoadFunction();
++	void	ErrorPrint(char* error_msg);
++	STR_String ResolvePath(STR_String path);
++	
++	char					m_lastReturnCode[1024];
++};
++
++
++#endif
+\ No newline at end of file
