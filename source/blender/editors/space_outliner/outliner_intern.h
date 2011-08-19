@@ -1,5 +1,5 @@
 /*
- * $Id: outliner_intern.h 39291 2011-08-11 05:46:18Z campbellbarton $
+ * $Id: outliner_intern.h 39532 2011-08-18 18:42:42Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -143,9 +143,6 @@ void outliner_build_tree(struct Main *mainvar, struct Scene *scene, struct Space
 void draw_outliner(const struct bContext *C);
 
 /* outliner_select.c -------------------------------------------- */
-
-void outliner_select(struct SpaceOops *soops, ListBase *lb, int *index, short *selecting);
-
 int tree_element_type_active(struct bContext *C, struct Scene *scene, struct SpaceOops *soops, TreeElement *te, TreeStoreElem *tselem, int set);
 int tree_element_active(struct bContext *C, struct Scene *scene, SpaceOops *soops, TreeElement *te, int set);
 

@@ -1,5 +1,5 @@
 /*
- * $Id: sequencer_edit.c 39421 2011-08-15 16:18:04Z blendix $
+ * $Id: sequencer_edit.c 39533 2011-08-18 19:07:37Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -1228,9 +1228,6 @@ void SEQUENCER_OT_refresh_all(struct wmOperatorType *ot)
 	/* api callbacks */
 	ot->exec= sequencer_refresh_all_exec;
 	ot->poll= sequencer_edit_poll;
-	
-	/* flags */
-	ot->flag= OPTYPE_REGISTER|OPTYPE_UNDO;
 }
 
 static int sequencer_reassign_inputs_exec(bContext *C, wmOperator *op)
