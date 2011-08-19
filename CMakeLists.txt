@@ -108,6 +108,8 @@ option(WITH_FFTW3         "Enable FFTW3 support (Used for smoke and audio effect
 option(WITH_BULLET        "Enable Bullet (Physics Engine)" ON)
 option(WITH_GAMEENGINE    "Enable Game Engine" ON)
 option(WITH_PLAYER        "Build Player" OFF)
+option(WITH_FBT			  "Save/load converted BGE to file" ON)
+mark_as_advanced(WITH_FBT)
 
 # GHOST Windowing Library Options
 option(WITH_GHOST_DEBUG   "Enable debugging output for the GHOST library" OFF)
@@ -222,6 +224,10 @@ endif()
 
 if(NOT WITH_GAMEENGINE AND WITH_PLAYER)
 	message(FATAL_ERROR "WITH_PLAYER requires WITH_GAMEENGINE")
+endif()
+
+if(NOT WITH_GAMEENGINE AND WITH_FBT)
+	message(FATAL_ERROR "WITH_FBT requires WITH_GAMEENGINE")
 endif()
 
 if(NOT WITH_AUDASPACE AND (WITH_OPENAL OR WITH_SDL OR WITH_JACK))
@@ -1354,6 +1360,7 @@ if(FIRST_RUN)
 	info_cfg_option(WITH_OPENCOLLADA)
 	info_cfg_option(WITH_FFTW3)
 	info_cfg_option(WITH_INTERNATIONAL)
+	info_cfg_option(WITH_FBT)
 	info_cfg_option(WITH_INPUT_NDOF)
 
 	info_cfg_text("Compiler Options:")
