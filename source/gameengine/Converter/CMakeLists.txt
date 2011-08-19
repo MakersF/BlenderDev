@@ -119,8 +119,8 @@ if(WITH_AUDASPACE)
 endif()
 
 if(WITH_FBT)
-	list(APPEND INC ../../../extern/FileTools)
-	list(APPEND SRC KX_FileInterface.cpp KX_FileInterface.h KX_BGEdna.h)
+	add_subdirectory(FileSave)
+	add_definitions(-DWITH_FBT)
 endif()
 
 blender_add_lib(ge_converter "${SRC}" "${INC}" "${INC_SYS}")

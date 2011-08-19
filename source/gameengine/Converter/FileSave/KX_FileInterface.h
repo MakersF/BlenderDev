@@ -11,7 +11,7 @@ public:
         virtual ~KX_FileInterface();
 
 
-        fbtList m_scene;// all fbtList for each thing here!
+        Bgedna::fbtSceneList m_scene;// all fbtList for each thing here!
 
         Bgedna::FileGlobal* m_fg;
 
