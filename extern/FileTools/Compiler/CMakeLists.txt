@@ -21,27 +21,9 @@
 #    misrepresented as being the original software.
 # 3. This notice may not be removed or altered from any source distribution.
 #------------------------------------------------------------------------------
-#include(FlexBison)
+set(FILE_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
-set(File_SRC
-    fbtFile.cpp
-    fbtTables.cpp    
-    fbtTypes.cpp
-    fbtStreams.cpp
-	fbtBuilder.cpp
-)
-
-set(File_HDR
-    fbtFile.h
-    fbtTables.h
-    fbtBuilder.h
-    fbtTypes.h
-    fbtConfig.h
-    fbtStreams.h
-    fbtPlatformHeaders.h
-)
-
-set(fbtScanner Generated/fbtScanner.inl)
-set(Sources ${File_SRC} ${File_HDR} ${fbtScanner})
-blender_add_lib(fbtFile ${Sources} "" "")
-add_subdirectory(Compiler)
+include_directories(. ${FILE_SRC_DIR})
+link_libraries(fbtFile)
+add_executable(makefbt  makefbt.cpp)
+add_dependencies(makefbt fbtFile)
