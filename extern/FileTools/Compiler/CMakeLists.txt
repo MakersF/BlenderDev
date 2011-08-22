@@ -27,3 +27,10 @@ include_directories(. ${FILE_SRC_DIR})
 link_libraries(fbtFile)
 add_executable(makefbt  makefbt.cpp)
 add_dependencies(makefbt fbtFile)
+
+#command to compile the header. To adapt to makefbt from makesdna
+#add_custom_command(
+#	OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/dna.c
+#	COMMAND ${CMAKE_BINARY_DIR}/bin/${CMAKE_CFG_INTDIR}/makesdna ${CMAKE_CURRENT_BINARY_DIR}/dna.c ${CMAKE_SOURCE_DIR}/source/blender/makesdna/
+#	DEPENDS makesdna
+#)

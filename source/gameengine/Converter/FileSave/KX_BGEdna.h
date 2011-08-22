@@ -20,29 +20,52 @@ Note: make a class that convert a KX_Scene to Bgedna::KX_Scene and vice versa.*/
 struct KX_SceneStruct
 {
 	//put here all the variables that will contain KX_Scene's attributes that must be saved
-	KX_CameraStruct active_camera;
-	RAS_BucketManagerStruct bucket_manager;
-	fbtDataList cameras;
-	unsigned int camera_design_height;
-	unsigned int camera_design_width;
-	bool dbvt_culling;
-	int dbvt_occlusion_res;
-	fbtDataList fonts;
-	RAS_FrameSettingsStruct framing_type;
+	KX_CameraStruct				active_camera;
+	RAS_BucketManagerStruct		bucket_manager;
+	fbtDataList					cameras;
+	unsigned int				camera_design_height;
+	unsigned int				camera_design_width;
+	bool						dbvt_culling;
+	int							dbvt_occlusion_res;
+	fbtDataList					fonts;
+	RAS_FrameSettingsStruct		framing_type;
+	fbtDataList					inactive_list;
+	fbtDataList					light_list;
+	char						name[64];
+	fbtDataList					object_list;
+	KX_CameraStruct				pcamera;
 
-};
+	double						suspended_delta;
+	double						suspended_time;
+	fbtDataList					temp_obj_list;
 
-struct KX_CameraStruct
-{
-
-};
-
-struct RAS_BucketManagerStruct
-{
+	RAS_RectStruct				scene_viewport;
+	SCA_TimeEventManagerStruct	time_event_manager;
+	KX_WorldInfoStruct			world_info;
 
 };
 
 struct KX_FontObjectStruct
+{
+
+};
+
+struct KX_GameObjectStruct
+{
+	
+};
+
+struct KX_CameraStruct : KX_GameObjectStruct
+{
+
+};
+
+struct KX_LightObjectStruct : KX_GameObjectStruct
+{
+
+};
+
+struct KX_WorldInfoStruct
 {
 
 };
@@ -52,7 +75,20 @@ struct RAS_FrameSettingsStruct
 
 };
 
+struct RAS_BucketManagerStruct
+{
 
+};
+
+struct RAS_RectStruct
+{
+
+};
+
+struct SCA_TimeEventManagerStruct
+{
+
+};
 
 /*data list related code*/
 
@@ -76,6 +112,7 @@ pub_methods:
 	{
 		DataList* datalist = new DataList();
 		datalist->data = data;
+		datalist->next = 0;
 		push_back(datalist);
 	}
 

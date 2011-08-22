@@ -4,6 +4,7 @@ set(INC
 	../../Ketsji
 	../../Rasterizer
 	../../Expressions
+	../../../../intern/string
 )
 
 set(INC_SYS
