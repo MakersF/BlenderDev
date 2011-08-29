@@ -238,3 +238,17 @@ BlenderWorldInfo::setMistColorBlue(
 ) {
 	m_mistcolor[2] = d;
 }
+
+		void	
+BlenderWorldInfo::setHasMist(
+		bool has_mist
+) {
+	m_hasmist = has_mist;
+}
+
+		void	
+BlenderWorldInfo::setHasWorld(
+		bool has_world
+) {
+	m_hasworld = has_world;
+}

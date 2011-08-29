@@ -99,7 +99,16 @@ public:
 	setMistColorBlue(
 		float d
 	);   
-	
+
+		void
+	setHasMist(
+		bool has_mist
+	);
+
+		void
+	setHasWorld(
+		bool has_world
+	);
 	
 #ifdef WITH_CXX_GUARDEDALLOC
 public:
