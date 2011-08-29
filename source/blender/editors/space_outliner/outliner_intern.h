@@ -1,5 +1,5 @@
 /*
- * $Id: outliner_intern.h 39532 2011-08-18 18:42:42Z campbellbarton $
+ * $Id: outliner_intern.h 39558 2011-08-19 16:21:29Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -124,8 +124,8 @@ typedef struct TreeElement {
 #define OL_TOGW OL_TOG_RESTRICT_VIEWX
 
 #define OL_RNA_COLX			(UI_UNIT_X*15)
-#define OL_RNA_COL_SIZEX	(UI_UNIT_X*7.5)
-#define OL_RNA_COL_SPACEX	(UI_UNIT_X*2.5)
+#define OL_RNA_COL_SIZEX	(UI_UNIT_X*7.5f)
+#define OL_RNA_COL_SPACEX	(UI_UNIT_X*2.5f)
 
 
 /* outliner_tree.c ----------------------------------------------- */
