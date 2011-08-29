@@ -9,7 +9,7 @@ static char BgeFile_Header[8] = {'B', 'G', 'E', 'C', 'O', 'N', 'V', '\0'};
 struct fbtIdDB
 {
         const FBTuint16     m_code;
-        Bgedna::fbtSceneList             KX_FileInterface::*m_ptr;
+		Bgedna::fbtList            KX_FileInterface::*m_ptr;
 };
 
 fbtIdDB fbtData[] =
@@ -35,6 +35,12 @@ KX_FileInterface::KX_FileInterface()
 		if (initializeTables(m_memory)!= FS_OK) std::cout << "Error initializing tables.\n";
 
 		m_fg = new Bgedna::FileGlobal();
+		/*declare the KX_ConvertClassStruct here. KX_ConvertClassStruct will know that this
+		class declared it, and will save all the converted data into the attributes of this class.
+		Note1: right now i have to undestand how the containing lists work. I think that fbtList doesn't
+		contains data, and i don't know if fbtDataList is a good choice since it contains void data, and thus
+		i think that fbt doesn't know how to save it.*/
+		m_convertClass = new KX_ConvertClassStruct(this);
 }
 
 
@@ -46,6 +52,9 @@ KX_FileInterface::~KX_FileInterface()
 		delete m_fg;
 		m_fg = 0;
 	}
+
+	if(m_convertClass)
+		delete(m_convertClass);
 }
 
 

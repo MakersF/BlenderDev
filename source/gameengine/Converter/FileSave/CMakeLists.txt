@@ -5,6 +5,8 @@ set(INC
 	../../Rasterizer
 	../../Expressions
 	../../../../intern/string
+	../../Converter
+	../../SceneGraph
 )
 
 set(INC_SYS

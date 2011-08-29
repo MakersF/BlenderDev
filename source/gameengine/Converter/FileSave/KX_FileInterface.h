@@ -3,6 +3,7 @@
 
 #include "fbtFile.h"
 #include "KX_BGEdna.h"
+#include "KX_ConvertClassStruct.h"
 
 class KX_FileInterface : public fbtFile
 {
@@ -11,7 +12,7 @@ public:
         virtual ~KX_FileInterface();
 
 
-        Bgedna::fbtSceneList m_scene;// all fbtList for each thing here!
+		Bgedna::fbtList m_scene;// all fbtList for each thing here!
 
         Bgedna::FileGlobal* m_fg;
 
@@ -26,6 +27,7 @@ protected:
         virtual int writeData(fbtStream* stream);
 
         FBTuint32* m_stripList;
+		class KX_ConvertClassStruct* m_convertClass;
 
         virtual void*   getFBT(void);
         virtual FBTsize getFBTlength(void);
