@@ -1,5 +1,5 @@
 /*
- * $Id: rna_nodetree.c 37331 2011-06-09 11:09:46Z broken $
+ * $Id: rna_nodetree.c 39744 2011-08-28 05:06:30Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -732,7 +732,7 @@ static StructRNA* def_node(BlenderRNA *brna, int node_id)
 	return srna;
 }
 
-void alloc_node_type_items(EnumPropertyItem *items, int category)
+static void alloc_node_type_items(EnumPropertyItem *items, int category)
 {
 	int i;
 	int count = 3;

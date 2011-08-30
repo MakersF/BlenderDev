@@ -1,5 +1,5 @@
 /*
- * $Id: bpy_rna.c 39520 2011-08-18 12:20:10Z campbellbarton $
+ * $Id: bpy_rna.c 39716 2011-08-26 18:48:48Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -814,34 +814,40 @@ static PyObject *pyrna_struct_str(BPy_StructRNA *self)
 static PyObject *pyrna_struct_repr(BPy_StructRNA *self)
 {
 	ID *id= self->ptr.id.data;
+	PyObject *tmp_str;
+	PyObject *ret;
+
 	if(id == NULL || !PYRNA_STRUCT_IS_VALID(self))
 		return pyrna_struct_str(self); /* fallback */
 
+	tmp_str= PyUnicode_FromString(id->name+2);
+
 	if(RNA_struct_is_ID(self->ptr.type)) {
-		return PyUnicode_FromFormat("bpy.data.%s[\"%s\"]",
+		ret= PyUnicode_FromFormat("bpy.data.%s[%R]",
 		                            BKE_idcode_to_name_plural(GS(id->name)),
-		                            id->name+2);
+		                            tmp_str);
 	}
 	else {
-		PyObject *ret;
 		const char *path;
 		path= RNA_path_from_ID_to_struct(&self->ptr);
 		if(path) {
-			ret= PyUnicode_FromFormat("bpy.data.%s[\"%s\"].%s",
+			ret= PyUnicode_FromFormat("bpy.data.%s[%R].%s",
 			                          BKE_idcode_to_name_plural(GS(id->name)),
-			                          id->name+2,
+			                          tmp_str,
 			                          path);
 			MEM_freeN((void *)path);
 		}
 		else { /* cant find, print something sane */
-			ret= PyUnicode_FromFormat("bpy.data.%s[\"%s\"]...%s",
+			ret= PyUnicode_FromFormat("bpy.data.%s[%R]...%s",
 			                          BKE_idcode_to_name_plural(GS(id->name)),
-			                          id->name+2,
+			                          tmp_str,
 			                          RNA_struct_identifier(self->ptr.type));
 		}
-
-		return ret;
 	}
+
+	Py_DECREF(tmp_str);
+
+	return ret;
 }
 
 static PyObject *pyrna_prop_str(BPy_PropertyRNA *self)
@@ -911,26 +917,34 @@ static PyObject *pyrna_prop_str(BPy_PropertyRNA *self)
 
 static PyObject *pyrna_prop_repr(BPy_PropertyRNA *self)
 {
-	ID *id;
+	ID *id= self->ptr.id.data;
+	PyObject *tmp_str;
 	PyObject *ret;
 	const char *path;
 
 	PYRNA_PROP_CHECK_OBJ(self)
 
-	if((id= self->ptr.id.data) == NULL)
+	if(id == NULL)
 		return pyrna_prop_str(self); /* fallback */
+
+	tmp_str= PyUnicode_FromString(id->name+2);
 
 	path= RNA_path_from_ID_to_property(&self->ptr, self->prop);
 	if(path) {
-		ret= PyUnicode_FromFormat("bpy.data.%s[\"%s\"].%s", BKE_idcode_to_name_plural(GS(id->name)), id->name+2, path);
+		ret= PyUnicode_FromFormat("bpy.data.%s[%R].%s",
+		                          BKE_idcode_to_name_plural(GS(id->name)),
+		                          tmp_str,
+		                          path);
 		MEM_freeN((void *)path);
 	}
 	else { /* cant find, print something sane */
-		ret= PyUnicode_FromFormat("bpy.data.%s[\"%s\"]...%s",
+		ret= PyUnicode_FromFormat("bpy.data.%s[%R]...%s",
 		                          BKE_idcode_to_name_plural(GS(id->name)),
-		                          id->name+2,
+		                          tmp_str,
 		                          RNA_property_identifier(self->prop));
 	}
+
+	Py_DECREF(tmp_str);
 
 	return ret;
 }
@@ -1103,6 +1117,7 @@ static int pyrna_string_to_enum(PyObject *item, PointerRNA *ptr, PropertyRNA *pr
 	return 1;
 }
 
+/* 'value' _must_ be a set type, error check before calling */
 int pyrna_set_to_enum_bitfield(EnumPropertyItem *items, PyObject *value, int *r_value, const char *error_prefix)
 {
 	/* set of enum items, concatenate all values with OR */
@@ -1124,8 +1139,10 @@ int pyrna_set_to_enum_bitfield(EnumPropertyItem *items, PyObject *value, int *r_
 			             error_prefix, Py_TYPE(key)->tp_name);
 			return -1;
 		}
-		if(pyrna_enum_value_from_id(items, param, &ret, error_prefix) < 0)
+
+		if(pyrna_enum_value_from_id(items, param, &ret, error_prefix) < 0) {
 			return -1;
+		}
 
 		flag |= ret;
 	}
@@ -1141,6 +1158,14 @@ static int pyrna_prop_to_enum_bitfield(PointerRNA *ptr, PropertyRNA *prop, PyObj
 	int free= FALSE;
 
 	*r_value= 0;
+
+	if (!PyAnySet_Check(value)) {
+		PyErr_Format(PyExc_TypeError,
+		             "%.200s, %.200s.%.200s expected a set, not a %.200s",
+		             error_prefix, RNA_struct_identifier(ptr->type),
+		             RNA_property_identifier(prop), Py_TYPE(value)->tp_name);
+		return -1;
+	}
 
 	RNA_property_enum_items(BPy_GetContext(), ptr, prop, &item, NULL, &free);
 
@@ -1515,33 +1540,18 @@ static int pyrna_py_to_prop(PointerRNA *ptr, PropertyRNA *prop, void *data, PyOb
 		{
 			int val= 0;
 
-			if (PyUnicode_Check(value)) {
-				if (!pyrna_string_to_enum(value, ptr, prop, &val, error_prefix))
-					return -1;
-			}
-			else if (PyAnySet_Check(value)) {
-				if(RNA_property_flag(prop) & PROP_ENUM_FLAG) {
-					/* set of enum items, concatenate all values with OR */
-					if(pyrna_prop_to_enum_bitfield(ptr, prop, value, &val, error_prefix) < 0)
-						return -1;
-				}
-				else {
-					PyErr_Format(PyExc_TypeError,
-					             "%.200s, %.200s.%.200s is not a bitflag enum type",
-					             error_prefix, RNA_struct_identifier(ptr->type),
-					             RNA_property_identifier(prop));
+			/* type checkins is done by each function */
+			if(RNA_property_flag(prop) & PROP_ENUM_FLAG) {
+				/* set of enum items, concatenate all values with OR */
+				if(pyrna_prop_to_enum_bitfield(ptr, prop, value, &val, error_prefix) < 0) {
 					return -1;
 				}
 			}
 			else {
-				const char *enum_str= pyrna_enum_as_string(ptr, prop);
-				PyErr_Format(PyExc_TypeError,
-				             "%.200s %.200s.%.200s expected a string enum or a set of strings in (%.2000s), not %.200s",
-				             error_prefix, RNA_struct_identifier(ptr->type),
-				             RNA_property_identifier(prop), enum_str,
-				             Py_TYPE(value)->tp_name);
-				MEM_freeN((void *)enum_str);
-				return -1;
+				/* simple enum string */
+				if (!pyrna_string_to_enum(value, ptr, prop, &val, error_prefix) < 0) {
+					return -1;
+				}
 			}
 
 			if(data)	*((int*)data)= val;
@@ -4297,6 +4307,26 @@ static PyObject *pyrna_param_to_py(PointerRNA *ptr, PropertyRNA *prop, void *dat
 	return ret;
 }
 
+/* Use to replace PyDict_GetItemString() when the overhead of converting a
+ * string into a python unicode is higher than a non hash lookup.
+ * works on small dict's such as keyword args. */
+static PyObject *small_dict_get_item_string(PyObject *dict, const char *key_lookup)
+{
+	PyObject *key= NULL;
+	Py_ssize_t pos = 0;
+	PyObject *value = NULL;
+
+	while (PyDict_Next(dict, &pos, &key, &value)) {
+		if(PyUnicode_Check(key)) {
+			if(strcmp(key_lookup, _PyUnicode_AsString(key))==0) {
+				return value;
+			}
+		}
+	}
+
+	return NULL;
+}
+
 static PyObject *pyrna_func_call(BPy_FunctionRNA *self, PyObject *args, PyObject *kw)
 {
 	/* Note, both BPy_StructRNA and BPy_PropertyRNA can be used here */
@@ -4309,7 +4339,6 @@ static PyObject *pyrna_func_call(BPy_FunctionRNA *self, PyObject *args, PyObject
 	PropertyRNA *parm;
 	PyObject *ret, *item;
 	int i, pyargs_len, pykw_len, parms_len, ret_len, flag, err= 0, kw_tot= 0, kw_arg;
-	const char *parm_id;
 
 	PropertyRNA *pret_single= NULL;
 	void *retdata_single= NULL;
@@ -4385,28 +4414,33 @@ static PyObject *pyrna_func_call(BPy_FunctionRNA *self, PyObject *args, PyObject
 			continue;
 		}
 
-		parm_id= RNA_property_identifier(parm);
 		item= NULL;
 
 		if (i < pyargs_len) {
 			item= PyTuple_GET_ITEM(args, i);
-			i++;
-
 			kw_arg= FALSE;
 		}
 		else if (kw != NULL) {
-			item= PyDict_GetItemString(kw, parm_id); /* borrow ref */
+#if 0
+			item= PyDict_GetItemString(kw, RNA_property_identifier(parm)); /* borrow ref */
+#else
+			item= small_dict_get_item_string(kw, RNA_property_identifier(parm)); /* borrow ref */
+#endif
 			if(item)
 				kw_tot++; /* make sure invalid keywords are not given */
 
 			kw_arg= TRUE;
 		}
 
+		i++; /* current argument */
+
 		if (item==NULL) {
 			if(flag & PROP_REQUIRED) {
 				PyErr_Format(PyExc_TypeError,
 				             "%.200s.%.200s(): required parameter \"%.200s\" not specified",
-				             RNA_struct_identifier(self_ptr->type), RNA_function_identifier(self_func), parm_id);
+				             RNA_struct_identifier(self_ptr->type),
+				             RNA_function_identifier(self_func),
+				             RNA_property_identifier(parm));
 				err= -1;
 				break;
 			}
@@ -4433,9 +4467,18 @@ static PyObject *pyrna_func_call(BPy_FunctionRNA *self, PyObject *args, PyObject
 			PyErr_Clear(); /* re-raise */
 
 			if(kw_arg==TRUE)
-				snprintf(error_prefix, sizeof(error_prefix), "%s.%s(): error with keyword argument \"%s\" - ", RNA_struct_identifier(self_ptr->type), RNA_function_identifier(self_func), parm_id);
+				BLI_snprintf(error_prefix, sizeof(error_prefix),
+				             "%.200s.%.200s(): error with keyword argument \"%.200s\" - ",
+				             RNA_struct_identifier(self_ptr->type),
+				             RNA_function_identifier(self_func),
+				             RNA_property_identifier(parm));
 			else
-				snprintf(error_prefix, sizeof(error_prefix), "%s.%s(): error with argument %d, \"%s\" - ", RNA_struct_identifier(self_ptr->type), RNA_function_identifier(self_func), i, parm_id);
+				BLI_snprintf(error_prefix, sizeof(error_prefix),
+				             "%.200s.%.200s(): error with argument %d, \"%.200s\" - ",
+				             RNA_struct_identifier(self_ptr->type),
+				             RNA_function_identifier(self_func),
+				             i,
+				             RNA_property_identifier(parm));
 
 			pyrna_py_to_prop(&funcptr, parm, iter.data, item, error_prefix);
 
@@ -6374,7 +6417,21 @@ static int bpy_class_call(bContext *C, PointerRNA *ptr, FunctionRNA *func, Param
 			err= -1;
 		}
 		else if(ret_len==1) {
-			err= pyrna_py_to_prop(&funcptr, pret_single, retdata_single, ret, "calling class function:");
+			err= pyrna_py_to_prop(&funcptr, pret_single, retdata_single, ret, "");
+
+			/* when calling operator funcs only gives Function.result with
+			 * no line number since the func has finished calling on error,
+			 * re-raise the exception with more info since it would be slow to
+			 * create prefix on every call (when there are no errors) */
+			if(err == -1 && PyErr_Occurred()) {
+				PyObject *error_type, *error_value, *error_traceback;
+				PyErr_Fetch(&error_type, &error_value, &error_traceback);
+
+				PyErr_Format(error_type,
+				             "class %.200s, function %.200s: incompatible return value%S",
+				             RNA_struct_identifier(ptr->type), RNA_function_identifier(func),
+				             error_value);
+			}
 		}
 		else if (ret_len > 1) {
 
@@ -6534,9 +6591,9 @@ void pyrna_free_types(void)
 PyDoc_STRVAR(pyrna_register_class_doc,
 ".. method:: register_class(cls)\n"
 "\n"
-"   Register a subclass of a blender type in (:class:`Panel`,\n"
-"   :class:`Menu`, :class:`Header`, :class:`Operator`,\n"
-"   :class:`KeyingSetInfo`, :class:`RenderEngine`).\n"
+"   Register a subclass of a blender type in (:class:`bpy.types.Panel`,\n"
+"   :class:`bpy.types.Menu`, :class:`bpy.types.Header`, :class:`bpy.types.Operator`,\n"
+"   :class:`bpy.types.KeyingSetInfo`, :class:`bpy.types.RenderEngine`).\n"
 "\n"
 "   If the class has a *register* class method it will be called\n"
 "   before registration.\n"

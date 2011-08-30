@@ -1,4 +1,4 @@
-# $Id: CMakeLists.txt 38443 2011-07-17 09:11:13Z campbellbarton $
+# $Id: CMakeLists.txt 39749 2011-08-28 14:46:03Z schlaile $
 # ***** BEGIN GPL LICENSE BLOCK *****
 #
 # This program is free software; you can redistribute it and/or
@@ -73,6 +73,7 @@ set(SRC
 	intern/tiff.c
 	intern/util.c
 	intern/writeimage.c
+	intern/indexer.c
 
 	IMB_imbuf.h
 	IMB_imbuf_types.h
