@@ -48,7 +48,12 @@ public:
 
 };
 
-class KX_GameObjectStruct
+class CValueStruct
+{
+
+};
+
+class KX_GameObjectStruct :CValueStruct
 {
 	
 };
