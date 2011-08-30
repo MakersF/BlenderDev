@@ -45,6 +45,10 @@ add_subdirectory(Rasterizer)
 add_subdirectory(Rasterizer/RAS_OpenGLRasterizer)
 add_subdirectory(SceneGraph)
 
+if(WITH_MODULEEXAMPLES)
+	add_subdirectory(CModules)
+endif()
+
 if(WITH_BULLET)
 	add_subdirectory(Physics/Bullet)
 endif()

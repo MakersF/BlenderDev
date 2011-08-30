@@ -137,6 +137,7 @@ def validate_arguments(args, bc):
             'WITH_BF_CXX_GUARDEDALLOC',
             'WITH_BF_JEMALLOC', 'WITH_BF_STATICJEMALLOC', 'BF_JEMALLOC', 'BF_JEMALLOC_INC', 'BF_JEMALLOC_LIBPATH', 'BF_JEMALLOC_LIB', 'BF_JEMALLOC_LIB_STATIC',
             'BUILDBOT_BRANCH', 'WITH_BF_3DMOUSE', 'WITH_BF_STATIC3DMOUSE', 'BF_3DMOUSE', 'BF_3DMOUSE_INC', 'BF_3DMOUSE_LIB', 'BF_3DMOUSE_LIBPATH', 'BF_3DMOUSE_LIB_STATIC'
+			'WITH_MODULEEXAMPLES'
             ]
     
     # Have options here that scons expects to be lists
@@ -518,6 +519,7 @@ def read_opts(env, cfg, args):
         (BoolVariable('WITH_BF_CXX_GUARDEDALLOC', 'Enable GuardedAlloc for C++ memory allocation tracking.', False)),
 
         ('BUILDBOT_BRANCH', 'Buildbot branch name', ''),
+		(BoolVariable('WITH_MODULEEXAMPLES', 'Build the cmodules examples.', False)),
     ) # end of opts.AddOptions()
 
     return localopts

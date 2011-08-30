@@ -24,3 +24,6 @@ if env['WITH_BF_PLAYER']:
 
 if env['WITH_BF_BULLET']:
     SConscript(['Physics/Bullet/SConscript'])
+
+if env['WITH_MODULEEXAMPLES']
+	SConscript(['CModule/SConscript'])

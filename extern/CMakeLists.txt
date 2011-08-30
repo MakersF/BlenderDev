@@ -58,7 +58,3 @@ endif()
 if(WITH_LZMA)
 	add_subdirectory(lzma)
 endif()
-
-if(WITH_FBT)
-	add_subdirectory(FileTools)
-endif()

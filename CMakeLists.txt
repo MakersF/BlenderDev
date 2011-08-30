@@ -124,6 +124,7 @@ option(WITH_FFTW3         "Enable FFTW3 support (Used for smoke and audio effect
 option(WITH_BULLET        "Enable Bullet (Physics Engine)" ON)
 option(WITH_GAMEENGINE    "Enable Game Engine" ON)
 option(WITH_PLAYER        "Build Player" OFF)
+
 option(WITH_FBT           "Enable BGE converted file saving/loading" ON)
 
 # GHOST Windowing Library Options
@@ -207,6 +208,10 @@ option(WITH_PYTHON_INSTALL       "Copy system python into the blender install fo
 option(WITH_MEM_JEMALLOC   "Enable malloc replacement (http://www.canonware.com/jemalloc)" OFF)
 mark_as_advanced(WITH_MEM_JEMALLOC)
 
+#compile the BGE bundled CModules
+option(WITH_MODULEEXAMPLES "Build the bundled C module for the bge" OFF)
+mark_as_advanced(WITH_MODULEEXAMPLES)
+
 # Debug
 option(WITH_CXX_GUARDEDALLOC "Enable GuardedAlloc for C++ memory allocation tracking (only enable for development)" OFF)
 mark_as_advanced(WITH_CXX_GUARDEDALLOC)
@@ -270,6 +275,10 @@ if(WITH_CODEC_QUICKTIME AND MINGW)
 	message(FATAL_ERROR "MINGW requires WITH_CODEC_QUICKTIME to be OFF "
 						"because it is currently unsupported, remove this "
 						"line if youre a developer who wants to add support.")
+endif()
+
+if(NOT WITH_GAMEENGINE AND WITH_MODULEEXAMPLES)
+	message(FATAL_ERROR "WITH_MODULEEXAMPLES requires WITH_GAMEENGINE")
 endif()
 
 # may as well build python module without a UI
@@ -1403,8 +1412,9 @@ if(FIRST_RUN)
 	info_cfg_option(WITH_FFTW3)
 	info_cfg_option(WITH_INTERNATIONAL)
 	info_cfg_option(WITH_INPUT_NDOF)
+	info_cfg_option(WITH_MODULEEXAMPLES)
 	info_cfg_option(WITH_FBT)
-	
+
 	info_cfg_text("Compiler Options:")
 	info_cfg_option(WITH_BUILDINFO)
 	info_cfg_option(WITH_OPENMP)

@@ -1,0 +1,45 @@
+#!/usr/bin/python
+import sys
+
+Import ('env')
+
+sources = env.Glob('*.cpp')
+
+defs = []
+
+incs = '. #/source/gameengine/BlenderRoutines'
+incs += ' #/source/gameengine/Converter'
+incs += ' #/source/gameengine/Expressions'
+incs += ' #/source/gameengine/GameLogic'
+incs += ' #/source/gameengine/Ketsji'
+incs += ' #/source/gameengine/Ketsji/KXNetwork'
+incs += ' #/source/gameengine/Network'
+incs += ' #/source/gameengine/Network/LoopBackNetwork'
+incs += ' #/source/gameengine/Physics/common'
+incs += ' #/source/gameengine/Rasterizer'
+incs += ' #/source/gameengine/Rasterizer/RAS_OpenGLRasterizer'
+incs += ' #/source/gameengine/SceneGraph'
+incs += ' #/source/blender'
+incs += ' #/source/blender/blenfont'
+incs += ' #/source/blender/blenkernel'
+incs += ' #/source/blender/blenlib'
+incs += ' #/source/blender/blenloader'
+incs += ' #/source/blender/blenpluginapi'
+incs += ' #/source/blender/gpu'
+incs += ' #/source/blender/imbuf'
+incs += ' #/source/blender/makesdna'
+incs += ' #/source/blender/python'
+incs += ' #/source/blender/python/generic'
+incs += ' #/source/blender/python/mathutils'
+incs += ' #intern/container'
+incs += ' #intern/guardedalloc'
+incs += ' #intern/moto/include'
+incs += ' #intern/string'
+	
+	
+if env['WITH_BF_PYTHON']:
+    incs += ' ' + env['BF_PYTHON_INC']
+    defs.append('WITH_PYTHON')
+	
+#can't find a way to make it compile as a shared library..
+env.BlenderLib ( 'BGE_Module', sources, Split(incs), defs, libtype=['core','player'], cxx_compileflags=env['BGE_CXXFLAGS'])
