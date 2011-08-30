@@ -1,5 +1,5 @@
 /*
- * $Id: outliner_tree.c 39294 2011-08-11 06:40:04Z gsrb3d $
+ * $Id: outliner_tree.c 39744 2011-08-28 05:06:30Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -231,7 +231,7 @@ void outliner_free_tree(ListBase *lb)
 }
 
 /* Find ith item from the treestore */
-TreeElement *outliner_find_tree_element(ListBase *lb, int store_index)
+static TreeElement *outliner_find_tree_element(ListBase *lb, int store_index)
 {
 	TreeElement *te= lb->first, *tes;
 	while(te) {

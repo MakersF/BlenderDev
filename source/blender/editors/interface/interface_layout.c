@@ -1,5 +1,5 @@
 /*
- * $Id: interface_layout.c 39392 2011-08-14 11:38:17Z campbellbarton $
+ * $Id: interface_layout.c 39744 2011-08-28 05:06:30Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -1017,12 +1017,10 @@ void uiItemFullR(uiLayout *layout, PointerRNA *ptr, PropertyRNA *prop, int index
 		ui_item_array(layout, block, name, icon, ptr, prop, len, 0, 0, w, h, expand, slider, toggle, icon_only);
 	/* enum item */
 	else if(type == PROP_ENUM && index == RNA_ENUM_VALUE) {
-		const char *identifier= RNA_property_identifier(prop);
-
 		if(icon && name[0] && !icon_only)
 			uiDefIconTextButR_prop(block, ROW, 0, icon, name, 0, 0, w, h, ptr, prop, -1, 0, value, -1, -1, NULL);
 		else if(icon)
-			uiDefIconButR(block, ROW, 0, icon, 0, 0, w, h, ptr, identifier, -1, 0, value, -1, -1, NULL);
+			uiDefIconButR_prop(block, ROW, 0, icon, 0, 0, w, h, ptr, prop, -1, 0, value, -1, -1, NULL);
 		else
 			uiDefButR_prop(block, ROW, 0, name, 0, 0, w, h, ptr, prop, -1, 0, value, -1, -1, NULL);
 	}
@@ -1363,7 +1361,7 @@ void uiItemPointerR(uiLayout *layout, struct PointerRNA *ptr, const char *propna
 static void ui_item_menutype_func(bContext *C, uiLayout *layout, void *arg_mt)
 {
 	MenuType *mt= (MenuType*)arg_mt;
-	Menu menu = {0};
+	Menu menu = {NULL};
 
 	menu.type= mt;
 	menu.layout= layout;

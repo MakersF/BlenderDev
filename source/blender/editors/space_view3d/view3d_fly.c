@@ -1,5 +1,5 @@
 /*
- * $Id: view3d_fly.c 39111 2011-08-06 23:25:13Z merwin $
+ * $Id: view3d_fly.c 39558 2011-08-19 16:21:29Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -867,7 +867,7 @@ static int flyApply(bContext *C, FlyInfo *fly)
 					upvec[2]=1;
 					mul_m3_v3(mat, upvec);
 					/*make sure we have some z rolling*/
-					if (fabs(upvec[2]) > 0.00001f) {
+					if (fabsf(upvec[2]) > 0.00001f) {
 						roll= upvec[2] * -5.0f;
 
 						upvec[0]= 1.0f; /*rotate the view about this axis*/

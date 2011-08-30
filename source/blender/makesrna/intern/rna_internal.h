@@ -1,5 +1,5 @@
 /*
- * $Id: rna_internal.h 39084 2011-08-05 20:45:26Z blendix $
+ * $Id: rna_internal.h 39760 2011-08-28 23:24:34Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -260,6 +260,7 @@ void RNA_api_wm(struct StructRNA *srna);
 void RNA_api_sensor(struct StructRNA *srna);
 void RNA_api_controller(struct StructRNA *srna);
 void RNA_api_actuator(struct StructRNA *srna);
+void RNA_api_environment_map(struct StructRNA *srna);
 
 /* main collection functions */
 void RNA_def_main_cameras(BlenderRNA *brna, PropertyRNA *cprop);

@@ -21,9 +21,9 @@
 bl_info = {
     "name": "IvyGen",
     "author": "testscreenings, PKHG, TrumanBlending",
-    "version": (0, 1, 0),
-    "blender": (2, 5, 8),
-    "api": 38479,
+    "version": (0, 1, 1),
+    "blender": (2, 5, 9),
+    "api": 39307,
     "location": "View3D > Add > Curve",
     "description": "Adds generated ivy to a mesh object starting at the 3D"\
                    " cursor.",
@@ -605,15 +605,12 @@ class IvyGen(bpy.types.Operator):
 
         return {'FINISHED'}
 
-
     def draw(self, context):
         layout = self.layout
-        row = layout.row()
-        row.alignment = 'EXPAND'
-        row.prop(self, 'updateIvy', icon='CURVE_DATA')
+        
+        layout.prop(self, 'updateIvy', icon='CURVE_DATA')
 
-        row = layout.row()
-        properties = row.operator('curve.ivy_gen', text="Add New Ivy")
+        properties = layout.operator('curve.ivy_gen', text="Add New Ivy")
         properties.randomSeed = self.randomSeed
         properties.maxTime = self.maxTime
         properties.maxIvyLength = self.maxIvyLength
@@ -628,53 +625,42 @@ class IvyGen(bpy.types.Operator):
         properties.leafProbability = self.leafProbability
         properties.ivyBranchSize = self.ivyBranchSize
         properties.ivyLeafSize = self.ivyLeafSize
+        properties.updateIvy = True
 
-        row = layout.row()
-        row.operator('curve.ivy_gen', text="Add New Default Ivy")
+        prop_def = layout.operator('curve.ivy_gen', text="Add New Default Ivy")
+        prop_def.updateIvy = True
 
-        row = layout.row()
-        row.prop(self, 'growLeaves')
+        layout.prop(self, 'growLeaves')
 
         box = layout.box()
-        box.label("Generation Settings")
-        row = box.row()
-        row.prop(self, 'randomSeed')
-        row = box.row()
-        row.prop(self, 'maxTime')
+        box.label("Generation Settings:")
+        box.prop(self, 'randomSeed')
+        box.prop(self, 'maxTime')
+        
         box = layout.box()
-        box.label("Size Settings")
-        row = box.row()
-        row.prop(self, 'maxIvyLength')
-        row = box.row()
-        row.prop(self, 'ivySize')
-        row = box.row()
-        row.prop(self, 'maxFloatLength')
-        row = box.row()
-        row.prop(self, 'maxAdhesionDistance')
+        box.label("Size Settings:")
+        box.prop(self, 'maxIvyLength')
+        box.prop(self, 'ivySize')
+        box.prop(self, 'maxFloatLength')
+        box.prop(self, 'maxAdhesionDistance')
+        
         box = layout.box()
-        box.label("Weight Settings")
-        row = box.row()
-        row.prop(self, 'primaryWeight')
-        row = box.row()
-        row.prop(self, 'randomWeight')
-        row = box.row()
-        row.prop(self, 'gravityWeight')
-        row = box.row()
-        row.prop(self, 'adhesionWeight')
+        box.label("Weight Settings:")
+        box.prop(self, 'primaryWeight')
+        box.prop(self, 'randomWeight')
+        box.prop(self, 'gravityWeight')
+        box.prop(self, 'adhesionWeight')
+        
         box = layout.box()
-        box.label("Branch Settings")
-        row = box.row()
-        row.prop(self, 'branchingProbability')
-        row = box.row()
-        row.prop(self, 'ivyBranchSize')
+        box.label("Branch Settings:")
+        box.prop(self, 'branchingProbability')
+        box.prop(self, 'ivyBranchSize')
 
         if self.growLeaves:
             box = layout.box()
-            box.label("Leaf Settings")
-            row = box.row()
-            row.prop(self, 'ivyLeafSize')
-            row = box.row()
-            row.prop(self, 'leafProbability')
+            box.label("Leaf Settings:")
+            box.prop(self, 'ivyLeafSize')
+            box.prop(self, 'leafProbability')
 
 
 def menu_func(self, context):

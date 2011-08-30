@@ -1,5 +1,5 @@
 /*
- * $Id: DNA_space_types.h 39016 2011-08-04 11:27:13Z campbellbarton $ 
+ * $Id: DNA_space_types.h 39749 2011-08-28 14:46:03Z schlaile $ 
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -267,7 +267,7 @@ typedef struct SpaceImage {
 	float centx, centy;				/* storage for offset while render drawing */
 
 	short curtile; /* the currently active tile of the image when tile is enabled, is kept in sync with the active faces tile */
-	short imtypenr;
+	short pad;
 	short lock;
 	short pin;
 	char dt_uv; /* UV draw type */
@@ -930,6 +930,7 @@ enum {
 #define SEQ_PROXY_RENDER_SIZE_25        25
 #define SEQ_PROXY_RENDER_SIZE_50        50
 #define SEQ_PROXY_RENDER_SIZE_75        75
+#define SEQ_PROXY_RENDER_SIZE_100       99
 #define SEQ_PROXY_RENDER_SIZE_FULL      100
 
 

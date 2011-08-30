@@ -1,5 +1,5 @@
 /*
- * $Id: object_bake.c 38555 2011-07-21 08:10:34Z nazgul $
+ * $Id: object_bake.c 39558 2011-08-19 16:21:29Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -636,14 +636,14 @@ static void apply_heights_data(void *bake_data)
 			if(ibuf->rect_float) {
 				float *rrgbf= ibuf->rect_float + i*4;
 
-				if(max-min > 1e-5) height= (heights[i]-min)/(max-min);
+				if(max-min > 1e-5f) height= (heights[i]-min)/(max-min);
 				else height= 0;
 
 				rrgbf[0]=rrgbf[1]=rrgbf[2]= height;
 			} else {
 				char *rrgb= (char*)ibuf->rect + i*4;
 
-				if(max-min > 1e-5) height= (heights[i]-min)/(max-min);
+				if(max-min > 1e-5f) height= (heights[i]-min)/(max-min);
 				else height= 0;
 
 				rrgb[0]=rrgb[1]=rrgb[2]= FTOCHAR(height);
