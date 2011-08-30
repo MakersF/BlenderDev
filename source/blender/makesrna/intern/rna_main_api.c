@@ -1,5 +1,5 @@
 /*
- * $Id: rna_main_api.c 37031 2011-05-31 02:14:25Z campbellbarton $
+ * $Id: rna_main_api.c 39744 2011-08-28 05:06:30Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -38,6 +38,7 @@
 #include "RNA_define.h"
 #include "RNA_access.h"
 #include "RNA_enum_types.h"
+#include "rna_internal.h"
 
 #include "BKE_utildefines.h"
 

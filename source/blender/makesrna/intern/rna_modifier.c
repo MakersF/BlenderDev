@@ -1,5 +1,5 @@
 /*
- * $Id: rna_modifier.c 39385 2011-08-14 06:43:58Z campbellbarton $
+ * $Id: rna_modifier.c 39744 2011-08-28 05:06:30Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -32,6 +32,7 @@
 #include <stdlib.h>
 
 #include "RNA_define.h"
+#include "RNA_enum_types.h"
 
 #include "rna_internal.h"
 

@@ -1,5 +1,5 @@
 /*
- * $Id: bpy_intern_string.c 37626 2011-06-18 23:22:55Z gsrb3d $
+ * $Id: bpy_intern_string.c 39744 2011-08-28 05:06:30Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -28,13 +28,14 @@
 
 #include <Python.h>
 
+#include "bpy_intern_string.h"
+
 PyObject *bpy_intern_str_register;
 PyObject *bpy_intern_str_unregister;
 PyObject *bpy_intern_str_bl_rna;
 PyObject *bpy_intern_str_order;
 PyObject *bpy_intern_str_attr;
 PyObject *bpy_intern_str___slots__;
-PyObject *bpy_intern_str___bases__;
 
 void bpy_intern_string_init(void)
 {

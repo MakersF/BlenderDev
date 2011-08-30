@@ -1,5 +1,5 @@
 /*
- * $Id: KX_BlenderSceneConverter.cpp 39044 2011-08-05 05:26:19Z campbellbarton $
+ * $Id: KX_BlenderSceneConverter.cpp 39743 2011-08-28 05:01:16Z campbellbarton $
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
  * This program is free software; you can redistribute it and/or
@@ -1083,7 +1083,7 @@ bool KX_BlenderSceneConverter::LinkBlendFile(BlendHandle *bpy_openlib, const cha
  * most are temp and NewRemoveObject frees m_map_gameobject_to_blender */
 bool KX_BlenderSceneConverter::FreeBlendFile(struct Main *maggie)
 {
-	int maggie_index;
+	int maggie_index= -1;
 	int i=0;
 
 	if(maggie==NULL)
@@ -1100,6 +1100,10 @@ bool KX_BlenderSceneConverter::FreeBlendFile(struct Main *maggie)
 		}
 		i++;
 	}
+
+	/* should never happen but just to be safe */
+	if(maggie_index == -1)
+		return false;
 
 	m_DynamicMaggie.erase(m_DynamicMaggie.begin() + maggie_index);
 	tag_main(maggie, 1);

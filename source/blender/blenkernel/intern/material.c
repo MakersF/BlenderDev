@@ -2,7 +2,7 @@
 /*  material.c
  *
  * 
- * $Id: material.c 38881 2011-07-31 12:43:41Z campbellbarton $
+ * $Id: material.c 39744 2011-08-28 05:06:30Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -515,7 +515,7 @@ short *give_totcolp_id(ID *id)
 	return NULL;
 }
 
-void data_delete_material_index_id(ID *id, int index)
+static void data_delete_material_index_id(ID *id, int index)
 {
 	switch(GS(id->name)) {
 	case ID_ME:
@@ -1365,7 +1365,7 @@ void ramp_blend(int type, float *r, float *g, float *b, float fac, float *col)
 }
 
 /* copy/paste buffer, if we had a propper py api that would be better */
-Material matcopybuf;
+static Material matcopybuf;
 static short matcopied= 0;
 
 void clear_matcopybuf(void)
