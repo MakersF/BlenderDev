@@ -1,6 +1,4 @@
 /*
- * $Id: anim_ops.c 37315 2011-06-08 10:57:24Z aligorith $
- *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
  * This program is free software; you can redistribute it and/or

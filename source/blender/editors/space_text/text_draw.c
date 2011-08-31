@@ -1,5 +1,5 @@
 /*
- * $Id: text_draw.c 36547 2011-05-08 10:29:40Z campbellbarton $
+ * $Id: text_draw.c 39792 2011-08-30 09:15:55Z nexyon $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -907,9 +907,12 @@ static void text_update_drawcache(SpaceText *st, ARegion *ar)
 
 void text_drawcache_tag_update(SpaceText *st, int full)
 {
-	DrawCache *drawcache= (DrawCache *)st->drawcache;
-
-	if(drawcache) {
+	/* this happens if text editor ops are caled from python */
+	if (st == NULL)
+		return;
+		
+	if(st->drawcache) {
+		DrawCache *drawcache= (DrawCache *)st->drawcache;
 		Text *txt= st->text;
 
 		if(drawcache->update_flag) {

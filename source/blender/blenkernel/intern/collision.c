@@ -1,5 +1,5 @@
 /*
- * $Id: collision.c 36423 2011-05-02 03:44:02Z campbellbarton $
+ * $Id: collision.c 39815 2011-08-31 01:07:55Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -1091,7 +1091,7 @@ static int cloth_collision_response_moving ( ClothModifierData *clmd, CollisionM
 				
 				VECADDMUL(cloth1->verts[collpair->ap1].impulse, pimpulse, w1*2.0);
 				VECADDMUL(cloth1->verts[collpair->ap2].impulse, pimpulse, w2*2.0);
-				VECADDMUL(cloth1->verts[collpair->ap3].impulse, pimpulse, w3*2.0);;
+				VECADDMUL(cloth1->verts[collpair->ap3].impulse, pimpulse, w3*2.0);
 				cloth1->verts[collpair->ap1].impulse_count++;
 				cloth1->verts[collpair->ap2].impulse_count++;
 				cloth1->verts[collpair->ap3].impulse_count++;

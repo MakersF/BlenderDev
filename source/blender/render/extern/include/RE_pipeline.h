@@ -1,5 +1,5 @@
 /*
- * $Id: RE_pipeline.h 39760 2011-08-28 23:24:34Z campbellbarton $
+ * $Id: RE_pipeline.h 39810 2011-08-30 23:08:38Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -227,8 +227,8 @@ void RE_SetReports(struct Render *re, struct ReportList *reports);
 /* main preview render call */
 void RE_PreviewRender(struct Render *re, struct Main *bmain, struct Scene *scene);
 
-void RE_ReadRenderResult(struct Scene *scene, struct Scene *scenode);
-void RE_WriteRenderResult(RenderResult *rr, const char *filename, int compress);
+int RE_ReadRenderResult(struct Scene *scene, struct Scene *scenode);
+int RE_WriteRenderResult(struct ReportList *reports, RenderResult *rr, const char *filename, int compress);
 struct RenderResult *RE_MultilayerConvert(void *exrhandle, int rectx, int recty);
 
 extern const float default_envmap_layout[];

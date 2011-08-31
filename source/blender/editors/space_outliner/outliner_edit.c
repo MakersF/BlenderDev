@@ -1,6 +1,4 @@
 /*
- * $Id: outliner_edit.c 39294 2011-08-11 06:40:04Z gsrb3d $
- *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
  * This program is free software; you can redistribute it and/or
