@@ -1,3 +1,5 @@
+setup_libdirs()
+
 set(INC	
 	.
 	../../BlenderRoutines

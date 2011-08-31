@@ -12,4 +12,4 @@
 #include "KX_Scene.h"
 #include "SCA_IController.h"
 
-extern "C" LIBEXPORT void bge_func(KX_KetsjiEngine* , KX_Scene* scene, KX_GameObject*, SCA_IController*, char*);
+extern "C" {LIBEXPORT void bge_func(KX_KetsjiEngine* , KX_Scene* scene, KX_GameObject*, SCA_IController*, char*);}

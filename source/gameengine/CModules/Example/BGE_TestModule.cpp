@@ -9,7 +9,7 @@
 
 /* *msg = '1'; -> Everything fine
 msg = "Error description"; -> error log that will be printed*/
-extern "C" LIBEXPORT void bge_func(KX_KetsjiEngine* engine, KX_Scene* scene, KX_GameObject* object, SCA_IController* cont, char* msg)
+extern "C" { LIBEXPORT void bge_func(KX_KetsjiEngine* engine, KX_Scene* scene, KX_GameObject* object, SCA_IController* cont, char* msg)
 {
 	cout<<"I did it!\n";
 
@@ -36,4 +36,5 @@ extern "C" LIBEXPORT void bge_func(KX_KetsjiEngine* engine, KX_Scene* scene, KX_
 	engine->Render();
 
 	strcpy(msg,"Everything gone fine");
+}
 }
