@@ -16,23 +16,27 @@
 #include "SG_Dlist.h"
 #include "KX_FileInterface.h"
 
-Bgedna::fbtDataList* KX_ConvertClassStruct::fbtListFromCList(CListValue* clist, FBTuint16 ID)
+#define NEW NULL
+
+Bgedna::fbtList* KX_ConvertClassStruct::fbtListFromCList(CListValue* clist, FBTuint16 ID)
 {
-	Bgedna::fbtDataList* retlist = new Bgedna::fbtDataList(ID);
+	
+	Bgedna::fbtList* retlist = new Bgedna::fbtList(ID);
 
 	switch (ID)
 	{
 		case GAME_OBJECT :
 			for (int i=0; i < clist->GetCount(); ++i)
 			{
-				retlist->add_data( convertGameObject((KX_GameObject*) (clist+i) ) );
+				retlist->push_back( convertGameObject((KX_GameObject*) (clist+i), NEW, true) );
 			}
 			break;
 
 		case LIGHT_OBJECT :
 			for (int i=0; i < clist->GetCount(); ++i)
 			{
-				retlist->add_data( convertLightObject((KX_LightObject*) (clist+i) ) );
+
+				retlist->push_back( convertLightObject((KX_LightObject*) (clist+i), NEW, true) );
 			}
 			break;
 
@@ -84,9 +88,10 @@ void* KX_ConvertClassStruct::convertClassToStruct(void* save_class, FBTuint16 ID
 
 }
 
-Bgedna::KX_SceneStruct* KX_ConvertClassStruct::convertScene(KX_Scene* scene)
+Bgedna::KX_SceneStruct* KX_ConvertClassStruct::convertScene(KX_Scene* scene, Bgedna::KX_SceneStruct* scene_struct, bool add_to_list)
 {
-	Bgedna::KX_SceneStruct* scene_struct = new Bgedna::KX_SceneStruct();
+	if(!scene_struct)
+		Bgedna::KX_SceneStruct* scene_struct = new Bgedna::KX_SceneStruct();
 
 	/*convert all attributes that are simple data or structs*/
 	scene_struct->active_camera = *convertCameraObject(scene->GetActiveCamera());
@@ -154,35 +159,40 @@ Bgedna::KX_SceneStruct* KX_ConvertClassStruct::convertScene(KX_Scene* scene)
 	All the data is actually stored into the KX_FileInterface lists. The conversion functions only return pointers to where the data is saved.
 	This is done in order to save each element only once, and to avoid conversion loops in wich struct A contains struct B
 	and struct B contains struct A.*/
-	m_finterface->m_scene.push_back(scene_struct);
-	return (Bgedna::KX_SceneStruct*) m_finterface->m_scene.last;
+	if(add_to_list)
+	{
+		m_finterface->m_scene.push_back(scene_struct);
+		return (Bgedna::KX_SceneStruct*) m_finterface->m_scene.last;
+	}
+	return scene_struct;
 }
 
-KX_Scene* KX_ConvertClassStruct::convertSceneStruct(Bgedna::KX_SceneStruct* scene)
+KX_Scene* KX_ConvertClassStruct::convertSceneStruct(Bgedna::KX_SceneStruct* scene, KX_Scene* scene)
 {
 	
 }
 
-Bgedna::KX_CameraStruct* KX_ConvertClassStruct::convertCameraObject(KX_Camera* camera)
+Bgedna::KX_CameraStruct* KX_ConvertClassStruct::convertCameraObject(KX_Camera* camera, Bgedna::KX_CameraStruct* camera_struct, bool add_to_list)
 {
 
 }
 
-Bgedna::KX_FontObjectStruct* KX_ConvertClassStruct::convertFont(KX_FontObject* font)
+Bgedna::KX_FontObjectStruct* KX_ConvertClassStruct::convertFont(KX_FontObject* font, Bgedna::KX_FontObjectStruct* font_struct, bool add_to_list)
 {
 	
 }
 
-Bgedna::KX_LightObjectStruct* KX_ConvertClassStruct::convertLightObject(KX_LightObject* light)
+Bgedna::KX_LightObjectStruct* KX_ConvertClassStruct::convertLightObject(KX_LightObject* light, Bgedna::KX_LightObjectStruct* light_struct, bool add_to_list)
 {
 
 }
 
-Bgedna::KX_GameObjectStruct* KX_ConvertClassStruct::convertGameObject(KX_GameObject* gameobj)
+Bgedna::KX_GameObjectStruct* KX_ConvertClassStruct::convertGameObject(KX_GameObject* game_obj, Bgedna::KX_GameObjectStruct* game_obj_struct, bool add_to_list)
 {
 
 }
 
+//continue correcting from here
 Bgedna::RAS_FrameSettingsStruct* KX_ConvertClassStruct::convertFrameSettings(const RAS_FrameSettings frsets)
 {
 	Bgedna::RAS_FrameSettingsStruct* frsets_struct = new Bgedna::RAS_FrameSettingsStruct();

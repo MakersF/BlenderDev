@@ -145,6 +145,12 @@ public:
 	List *next, *prev;
 };
 
+class PointerList : List
+{
+public:
+	void* data;
+};
+
 
 class fbtList
 {
@@ -187,6 +193,7 @@ pub_methods:
 	}
 
 	void setIDCode(unsigned int IDcode) { ID = IDcode; }
+	unsigned int getIDCode() {return ID;};
 
 public:
 	List*   first;
