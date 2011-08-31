@@ -1,5 +1,5 @@
 /*
- * $Id: bpy_intern_string.c 39744 2011-08-28 05:06:30Z campbellbarton $
+ * $Id: bpy_intern_string.c 39815 2011-08-31 01:07:55Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -40,7 +40,7 @@ PyObject *bpy_intern_str___slots__;
 void bpy_intern_string_init(void)
 {
 	bpy_intern_str_register= PyUnicode_FromString("register");
-	bpy_intern_str_unregister= PyUnicode_FromString("unregister");;
+	bpy_intern_str_unregister= PyUnicode_FromString("unregister");
 	bpy_intern_str_bl_rna= PyUnicode_FromString("bl_rna");
 	bpy_intern_str_order= PyUnicode_FromString("order");
 	bpy_intern_str_attr= PyUnicode_FromString("attr");

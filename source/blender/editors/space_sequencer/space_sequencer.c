@@ -1,5 +1,5 @@
 /*
- * $Id: space_sequencer.c 36788 2011-05-20 05:27:31Z campbellbarton $
+ * $Id: space_sequencer.c 39792 2011-08-30 09:15:55Z nexyon $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -223,7 +223,7 @@ static SpaceLink *sequencer_new(const bContext *C)
 	ar->v2d.cur= ar->v2d.tot;
 	
 	ar->v2d.min[0]= 10.0f;
-	ar->v2d.min[1]= 4.0f;
+	ar->v2d.min[1]= 0.5f;
 	
 	ar->v2d.max[0]= MAXFRAMEF;
 	ar->v2d.max[1]= MAXSEQ;

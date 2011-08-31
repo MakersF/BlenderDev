@@ -1,5 +1,5 @@
 /*
- * $Id: KX_Scene.h 36523 2011-05-06 20:18:42Z blendix $
+ * $Id: KX_Scene.h 39792 2011-08-30 09:15:55Z nexyon $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -340,6 +340,7 @@ public:
 	 */
 	void LogicBeginFrame(double curtime);
 	void LogicUpdateFrame(double curtime, bool frame);
+	void UpdateAnimations(double curtime);
 
 		void						
 	LogicEndFrame(
@@ -565,6 +566,8 @@ public:
 	void SetPhysicsEnvironment(class PHY_IPhysicsEnvironment*	physEnv);
 
 	void	SetGravity(const MT_Vector3& gravity);
+
+	short GetAnimationFPS();
 	
 	/**
 	 * Sets the node tree for this scene.

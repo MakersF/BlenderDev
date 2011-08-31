@@ -1,5 +1,5 @@
 /*
- * $Id: logic_window.c 37455 2011-06-13 17:08:33Z dfelinto $
+ * $Id: logic_window.c 39815 2011-08-31 01:07:55Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -3716,16 +3716,22 @@ static void draw_actuator_action(uiLayout *layout, PointerRNA *ptr)
 {
 	Object *ob = (Object *)ptr->id.data;
 	PointerRNA settings_ptr;
-	uiLayout *row;
+	uiLayout *row, *subrow, *col;
 
-	if(ob->type != OB_ARMATURE){
-		uiItemL(layout, "Actuator only available for armatures", ICON_NONE);
-		return;
-	}
 	RNA_pointer_create((ID *)ob, &RNA_GameObjectSettings, ob, &settings_ptr);
 
 	row= uiLayoutRow(layout, 0);
 	uiItemR(row, ptr, "play_mode", 0, "", ICON_NONE);
+
+	subrow= uiLayoutRow(row, 1);
+	uiItemR(subrow, ptr, "use_force", UI_ITEM_R_TOGGLE, NULL, ICON_NONE);
+	uiItemR(subrow, ptr, "use_additive", UI_ITEM_R_TOGGLE, NULL, ICON_NONE);
+
+	col = uiLayoutColumn(subrow, 0);
+	uiLayoutSetActive(col, (RNA_boolean_get(ptr, "use_additive") || RNA_boolean_get(ptr, "use_force")));
+	uiItemR(col, ptr, "use_local", UI_ITEM_R_TOGGLE, NULL, ICON_NONE);
+
+	row= uiLayoutRow(layout, 0);
 	uiItemR(row, ptr, "action", 0, "", ICON_NONE);
 	uiItemR(row, ptr, "use_continue_last_frame", 0, NULL, ICON_NONE);
 
@@ -3738,9 +3744,15 @@ static void draw_actuator_action(uiLayout *layout, PointerRNA *ptr)
 		uiItemR(row, ptr, "frame_end", 0, NULL, ICON_NONE);
 	}
 
+	uiItemR(row, ptr, "apply_to_children", 0, NULL, ICON_NONE);
+
 	row= uiLayoutRow(layout, 0);
 	uiItemR(row, ptr, "frame_blend_in", 0, NULL, ICON_NONE);
 	uiItemR(row, ptr, "priority", 0, NULL, ICON_NONE);
+
+	row= uiLayoutRow(layout, 0);
+	uiItemR(row, ptr, "layer", 0, NULL, ICON_NONE);
+	uiItemR(row, ptr, "layer_weight", 0, NULL, ICON_NONE);
 
 	row= uiLayoutRow(layout, 0);
 	uiItemPointerR(layout, ptr, "frame_property", &settings_ptr, "properties", NULL, ICON_NONE);
@@ -4016,6 +4028,7 @@ static void draw_actuator_game(uiLayout *layout, PointerRNA *ptr)
 		uiItemR(layout, ptr, "filename", 0, NULL, ICON_NONE);
 }
 
+/* The IPO/Fcurve actuator has been deprecated, so this is no longer used */
 static void draw_actuator_ipo(uiLayout *layout, PointerRNA *ptr)
 {
 	Object *ob;
@@ -4435,9 +4448,6 @@ static void draw_brick_actuator(uiLayout *layout, PointerRNA *ptr, bContext *C)
 			break;
 		case ACT_GAME:
 			draw_actuator_game(box, ptr);
-			break;
-		case ACT_IPO:
-			draw_actuator_ipo(box, ptr);
 			break;
 		case ACT_MESSAGE:
 			draw_actuator_message(box, ptr, C);
