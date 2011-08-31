@@ -1,5 +1,5 @@
 /*
- * $Id: makesrna.c 39760 2011-08-28 23:24:34Z campbellbarton $
+ * $Id: makesrna.c 39792 2011-08-30 09:15:55Z nexyon $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -42,7 +42,7 @@
 
 #include "rna_internal.h"
 
-#define RNA_VERSION_DATE "$Id: makesrna.c 39760 2011-08-28 23:24:34Z campbellbarton $"
+#define RNA_VERSION_DATE "$Id: makesrna.c 39792 2011-08-30 09:15:55Z nexyon $"
 
 #ifdef _WIN32
 #ifndef snprintf
@@ -2461,6 +2461,7 @@ static RNAProcessItem PROCESS_ITEMS[]= {
 	{"rna_sequencer.c", "rna_sequencer_api.c", RNA_def_sequencer},
 	{"rna_smoke.c", NULL, RNA_def_smoke},
 	{"rna_space.c", NULL, RNA_def_space},
+	{"rna_speaker.c", NULL, RNA_def_speaker},
 	{"rna_test.c", NULL, RNA_def_test},
 	{"rna_text.c", NULL, RNA_def_text},
 	{"rna_timeline.c", NULL, RNA_def_timeline_marker},

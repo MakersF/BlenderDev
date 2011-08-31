@@ -1,5 +1,5 @@
 /*
- * $Id: KX_Scene.cpp 36523 2011-05-06 20:18:42Z blendix $
+ * $Id: KX_Scene.cpp 39792 2011-08-30 09:15:55Z nexyon $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -1502,7 +1502,12 @@ void KX_Scene::LogicBeginFrame(double curtime)
 	m_logicmgr->BeginFrame(curtime, 1.0/KX_KetsjiEngine::GetTicRate());
 }
 
-
+void KX_Scene::UpdateAnimations(double curtime)
+{
+	// Update any animations
+	for (int i=0; i<GetObjectList()->GetCount(); ++i)
+		((KX_GameObject*)GetObjectList()->GetValue(i))->UpdateActionManager(curtime);
+}
 
 void KX_Scene::LogicUpdateFrame(double curtime, bool frame)
 {
@@ -1666,6 +1671,11 @@ void KX_Scene::setSuspendedDelta(double suspendeddelta)
 double KX_Scene::getSuspendedDelta()
 {
 	return m_suspendeddelta;
+}
+
+short KX_Scene::GetAnimationFPS()
+{
+	return m_blenderScene->r.frs_sec;
 }
 
 #ifdef USE_BULLET
