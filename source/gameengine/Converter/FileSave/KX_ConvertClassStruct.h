@@ -1,3 +1,8 @@
+#if WITH_FBT
+
+#ifndef _KX_CONVERTCLASSSTRUCT.H
+#define _KX_CONVERTCLASSSTRUCT.H
+
 #include "KX_Scene.h"
 #include "KX_BGEdna.h"
 #include "fbtTypes.h"
@@ -69,3 +74,5 @@ private:
 	RAS_MeshSlot*							convertMeshSlotStruct(Bgedna::RAS_MeshSlotStruct* mesh_slot_struct, RAS_MeshSlot* mesh_slot);
 
 }
+#endif //_KX_CONVERTCLASSSTRUCT.H
+#endif

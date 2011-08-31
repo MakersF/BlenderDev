@@ -1,3 +1,7 @@
+#if WITH_FBT
+#ifndef _KX_CONVERTCLASSSTRUCT.CPP
+#define _KX_CONVERTCLASSSTRUCT.CPP
+
 #include "KX_ConvertClassStruct.h"
 #include <list>
 #include <vector>
@@ -397,3 +401,5 @@ KX_WorldInfo* KX_ConvertClassStruct::convertWorldInfoStruct(Bgedna::KX_WorldInfo
 	return winfo;
 
 }
+#endif //_KX_CONVERTCLASSSTRUCT.CPP
+#endif

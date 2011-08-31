@@ -1,5 +1,7 @@
-#ifndef _KX_FILEINTERFACE
-#define _KX_FILEINTERFACE
+#if WITH_FBT
+
+#ifndef _KX_FILEINTERFACE.H
+#define _KX_FILEINTERFACE.H
 
 #include "fbtFile.h"
 #include "KX_BGEdna.h"
@@ -34,4 +36,5 @@ protected:
 };
 
 
-#endif//_KX_FILEINTERFACE
+#endif//_KX_FILEINTERFACE.H
+#endif

@@ -1,3 +1,5 @@
+#if WITH_FBT
+
 #ifndef _KX_BGEDNA
 #define _KX_BGEDNA
 
@@ -336,3 +338,4 @@ public:
 /** @}*/
 }
 #endif//_KX_BGEDNA
+#endif
