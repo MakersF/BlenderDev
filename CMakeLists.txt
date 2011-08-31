@@ -564,12 +564,12 @@ elseif(WIN32)
 	# this file is included anyway when building under Windows with cl.exe
 	#  include(${CMAKE_ROOT}/Modules/Platform/Windows-cl.cmake)
 
-	set(LIBDIR ${CMAKE_SOURCE_DIR}/../../BlenderSVN/lib/windows)
+	set(LIBDIR ${CMAKE_SOURCE_DIR}/../lib/windows)
 
 	# Setup 64bit and 64bit windows systems
 	if(CMAKE_CL_64)
 		message("64 bit compiler detected.")
-		set(LIBDIR ${CMAKE_SOURCE_DIR}/../../BlenderSVN/lib/windows)
+		set(LIBDIR ${CMAKE_SOURCE_DIR}/../lib/windows)
 	endif()
 	
 	add_definitions(-DWIN32)
