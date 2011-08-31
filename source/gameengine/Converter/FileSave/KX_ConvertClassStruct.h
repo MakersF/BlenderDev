@@ -1,11 +1,28 @@
-#if WITH_FBT
+#ifdef WITH_FBT
 
-#ifndef _KX_CONVERTCLASSSTRUCT.H
-#define _KX_CONVERTCLASSSTRUCT.H
+#ifndef _KX_CONVERTCLASSSTRUCT
+#define _KX_CONVERTCLASSSTRUCT
 
 #include "KX_Scene.h"
 #include "KX_BGEdna.h"
 #include "fbtTypes.h"
+#include <vector>
+
+#include <list>
+#include "ListValue.h"
+#include "STR_String.h"
+#include "KX_GameObject.h"
+#include "KX_FontObject.h"
+#include "KX_Light.h"
+#include "KX_Camera.h"
+#include "KX_WorldInfo.h"
+#include "BlenderWorldInfo.h"
+#include "RAS_FramingManager.h"
+#include "RAS_Rect.h"
+#include "RAS_BucketManager.h"
+#include "RAS_MaterialBucket.h"
+#include "SG_Dlist.h"
+#include "KX_FileInterface.h"
 
 enum DataType{
 	SCENE = FBT_ID2('S', 'C'),
@@ -16,11 +33,32 @@ enum DataType{
 	GAME_OBJECT = FBT_ID2('G','O'),
 	LIGHT_OBJECT = FBT_ID2('L','O'),
 	MATERIAL_BUCKET = FBT_ID2('M','B'),
-	MESH_SLOT = FBT_ID2('M','S')
+	MESH_SLOT = FBT_ID2('M','S'),
+	RAS_RECT = FBT_ID2('R','R'),
+	WORLD_INFO = FBT_ID2('W','I')
 };
 
 
 class KX_ConvertClassStruct{
+public:	
+
+	class PointerCouple
+	{
+	public:
+		void* original;
+		void* converted;
+	};
+	
+	typedef std::vector<PointerCouple> PointerCoupleList;
+	
+	class PointerIDList
+	{
+	public:
+		PointerIDList();
+		PointerIDList(unsigned int id) {ID = id;};
+		unsigned int ID;
+		PointerCoupleList pointer_pairs;
+	};
 
 public:
 	KX_ConvertClassStruct();
@@ -34,10 +72,18 @@ private:
 	/*attributes*/
 
 	class KX_FileInterface* m_finterface;
+	/*it contains a different list of PointerCouple for each different IDs.
+	It is used to check if the elements have been already converted*/
+	std::vector<PointerIDList> converted_list;
 
 	/*methods*/
+
+	/*check if the element has be already converted. If so, it returns the pointer to the converted element,
+	if not return NULL*/
+	void*									checkUnique(void* original, FBTuint16 ID);
+	void									notifyConverted(void* original, void* converted, FBTuint16 ID);
 	/*general function to convert from Clists to fbtDataList*/
-	Bgedna::fbtList*					fbtListFromCList(CListValue* clist, FBTuint16 ID);
+	Bgedna::fbtDataList*						CListTofbtDataList(CListValue* clist, FBTuint16 ID);
 	
 	/*specific class to struct conversion methods.*/
 	
@@ -74,5 +120,5 @@ private:
 	RAS_MeshSlot*							convertMeshSlotStruct(Bgedna::RAS_MeshSlotStruct* mesh_slot_struct, RAS_MeshSlot* mesh_slot);
 
 }
-#endif //_KX_CONVERTCLASSSTRUCT.H
+#endif //_KX_CONVERTCLASSSTRUCT
 #endif

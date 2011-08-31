@@ -13,8 +13,13 @@ public:
         KX_FileInterface();
         virtual ~KX_FileInterface();
 
-
-		Bgedna::fbtList m_scene;// all fbtList for each thing here!
+		// all fbtList for each thing here!
+		Bgedna::fbtList m_scene;
+		Bgedna::fbtList m_frameSettings;
+		Bgedna::fbtList m_rasRect;
+		Bgedna::fbtList m_bucketManager;
+		Bgedna::fbtList m_materialBucket;
+		Bgedna::fbtList m_worldInfo;
 
         Bgedna::FileGlobal* m_fg;
 

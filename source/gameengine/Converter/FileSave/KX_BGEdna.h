@@ -1,4 +1,4 @@
-#if WITH_FBT
+#ifdef WITH_FBT
 
 #ifndef _KX_BGEDNA
 #define _KX_BGEDNA
@@ -25,28 +25,28 @@ pub_methods:
 	KX_SceneStruct(){ List();};
 public:
 	//put here all the variables that will contain KX_Scene's attributes that must be saved
-	KX_CameraStruct				active_camera;
-	RAS_BucketManagerStruct		bucket_manager;
+	KX_CameraStruct*			active_camera;
+	RAS_BucketManagerStruct*	bucket_manager;
 	fbtDataList					cameras;
 	unsigned int				camera_design_height;
 	unsigned int				camera_design_width;
 	bool						dbvt_culling;
 	int							dbvt_occlusion_res;
 	fbtDataList					fonts;
-	RAS_FrameSettingsStruct		framing_type;
+	RAS_FrameSettingsStruct*	framing_type;
 	fbtDataList					inactive_list;
 	fbtDataList					light_list;
 	char						name[64];
 	fbtDataList					object_list;
-	KX_CameraStruct				pcamera;
+	KX_CameraStruct*			pcamera;
 
 	double						suspended_delta;
 	double						suspended_time;
 	fbtDataList					temp_obj_list;
 
-	RAS_RectStruct				scene_viewport;
-	SCA_TimeEventManagerStruct	time_event_manager;
-	KX_WorldInfoStruct			world_info;
+	RAS_RectStruct*				scene_viewport;
+	SCA_TimeEventManagerStruct*	time_event_manager;
+	KX_WorldInfoStruct*			world_info;
 
 };
 
@@ -78,22 +78,22 @@ class KX_LightObjectStruct : KX_GameObjectStruct
 class KX_WorldInfoStruct
 {
 public:
-	float back_color[3];
-	float ambient_color[3];
-	bool has_mist;
-	float mist_color[3];
-	float mist_distance;
-	float mist_start;
-	bool has_world;
+	float		back_color[3];
+	float		ambient_color[3];
+	bool		has_mist;
+	float		mist_color[3];
+	float		mist_distance;
+	float		mist_start;
+	bool		has_world;
 };
 
 class RAS_FrameSettingsStruct
 {
 public:
-	int m_frame_type;//it is an enum
-	float bar[3];
-	unsigned int m_design_aspect_width;
-	unsigned int m_design_aspect_height;
+	int						m_frame_type;//it is an enum
+	float					bar[3];
+	unsigned int			m_design_aspect_width;
+	unsigned int			m_design_aspect_height;
 };
 
 class RAS_IPolyMaterialStruct
@@ -109,19 +109,19 @@ class RAS_MeshSlotStruct
 class RAS_MaterialBucketStruct
 {
 public:
-	bool isSorted;
-	bool isAlpha;
-	RAS_IPolyMaterialStruct material;
-	fbtDataList mesh_slot;
-	fbtDataList act_mesh_slot;
+	bool						isSorted;
+	bool						isAlpha;
+	RAS_IPolyMaterialStruct*	material;
+	fbtDataList					mesh_slot;
+	fbtDataList					act_mesh_slot;
 
 };
 
 class RAS_BucketManagerStruct
 {
 public:
-	fbtDataList solid_bucket_material_list;
-	fbtDataList alpha_bucket_material_list;
+	fbtDataList					solid_bucket_material_list;
+	fbtDataList					alpha_bucket_material_list;
 };
 
 class RAS_RectStruct
@@ -208,7 +208,7 @@ class DataList
 {
 public:
 	DataList *next, *prev;
-	void *data;
+	void* data;
 };
 
 class fbtDataList
@@ -221,7 +221,7 @@ pub_methods:
 
 	void clear(void) { first = last = 0; }
 
-	void add_data(void *data)
+	void add_data(void* data)
 	{
 		if(data)
 		{
@@ -272,7 +272,7 @@ public:
 };
 
 /*SceneList related data*/
-
+/*
 struct SceneList
 	{
 		SceneList   *next;
@@ -325,7 +325,7 @@ public:
 	SceneList*   last;
 
 };
-
+*/
 class FileGlobal
 {
 public:
@@ -333,6 +333,7 @@ public:
     short subversion;
     int revision;
     char filename[240];
+	KX_SceneStruct* current_scene;
 };
 
 /** @}*/

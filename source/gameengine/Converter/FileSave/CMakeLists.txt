@@ -22,4 +22,6 @@ set(SRC
 	KX_ConvertClassStruct.h
 )
 
+add_definitions(-DWITH_FBT)
+
 blender_add_lib(ge_convertedsaveloader "${SRC}" "${INC}" "${INC_SYS}")

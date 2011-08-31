@@ -1,8 +1,8 @@
-#if WITH_FBT
-#ifndef _KX_CONVERTCLASSSTRUCT.CPP
-#define _KX_CONVERTCLASSSTRUCT.CPP
+#ifdef WITH_FBT
 
 #include "KX_ConvertClassStruct.h"
+#include "KX_BGEdna.h"
+/*
 #include <list>
 #include <vector>
 #include "ListValue.h"
@@ -18,21 +18,78 @@
 #include "RAS_BucketManager.h"
 #include "RAS_MaterialBucket.h"
 #include "SG_Dlist.h"
-#include "KX_FileInterface.h"
+#include "KX_FileInterface.h"*/
 
-#define NEW NULL
+#define CREATE_NEW NULL
 
-Bgedna::fbtList* KX_ConvertClassStruct::fbtListFromCList(CListValue* clist, FBTuint16 ID)
+void KX_ConvertClassStruct::notifyConverted(void* original, void* converted, FBTuint16 ID)
+{
+	/*if(checkUnique(original, ID)) return; 
+	/*commented out because i assume that
+	you don't notify data if it is already converted. You should check at the beginning of
+	the conversion function if it is acutally already been converted.*/
+
+	std::vector<PointerIDList>::iterator it;
+	PointerIDList ID_list;
+	/*search for the list of that kind of ID*/
+	for(it = converted_list.begin(); it!=converted_list.end(); ++it)
+	{
+		if( ( (PointerIDList) *it).ID== ID)
+			break;
+	}
+	ID_list = ( PointerIDList) *it;
+	
+	if(it==converted_list.end())
+	{
+		/*it didn't find the correct list. Add it*/
+		ID_list = PointerIDList(ID);
+		converted_list.push_back(ID_list);
+	}
+
+	PointerCouple new_pointerCouple = PointerCouple();
+	new_pointerCouple.converted = converted;
+	new_pointerCouple.original = original;
+	/* add the new couple to the list.*/
+	ID_list.pointer_pairs.push_back(new_pointerCouple);
+
+}
+
+void* KX_ConvertClassStruct::checkUnique(void* original, FBTuint16 ID)
+{
+	std::vector<PointerIDList>::iterator it;
+	/*search for the list of that kind of ID*/
+	for(it = converted_list.begin(); it!=converted_list.end(); ++it)
+	{
+		if( ( (PointerIDList) *it).ID== ID)
+			break;
+	}
+	
+	if(it==converted_list.end())
+		return NULL; /*the list doesn't exist, so no object have been registered so far*/
+
+	PointerCoupleList::iterator pc_it;
+	for(pc_it = ((PointerIDList) *it).pointer_pairs.begin(); pc_it != ((PointerIDList) *it).pointer_pairs.end(); ++pc_it)
+	{
+		if( ((PointerCouple) *pc_it).original == original)
+			return ((PointerCouple) *pc_it).converted;
+	}
+
+	/*nothing found*/
+	return NULL;
+	
+}
+
+Bgedna::fbtDataList* KX_ConvertClassStruct::CListTofbtDataList(CListValue* clist, FBTuint16 ID)
 {
 	
-	Bgedna::fbtList* retlist = new Bgedna::fbtList(ID);
+	Bgedna::fbtDataList* retlist = new Bgedna::fbtDataList(ID);
 
 	switch (ID)
 	{
 		case GAME_OBJECT :
 			for (int i=0; i < clist->GetCount(); ++i)
 			{
-				retlist->push_back( convertGameObject((KX_GameObject*) (clist+i), NEW, true) );
+				retlist->add_data( convertGameObject((KX_GameObject*) (clist+i), CREATE_NEW, true) );
 			}
 			break;
 
@@ -40,7 +97,7 @@ Bgedna::fbtList* KX_ConvertClassStruct::fbtListFromCList(CListValue* clist, FBTu
 			for (int i=0; i < clist->GetCount(); ++i)
 			{
 
-				retlist->push_back( convertLightObject((KX_LightObject*) (clist+i), NEW, true) );
+				retlist->add_data( convertLightObject((KX_LightObject*) (clist+i), CREATE_NEW, true) );
 			}
 			break;
 
@@ -62,7 +119,9 @@ void* KX_ConvertClassStruct::convertClassToStruct(void* save_class, FBTuint16 ID
 	switch (ID) 
 	{
 		case SCENE:
-				return (void*) convertScene((KX_Scene*) save_class);
+			{
+				return (void*) convertScene((KX_Scene*) save_class, CREATE_NEW, true);
+			}
 /*
 		case CAMERA:
 				return (void*) convertCamera((KX_Camera*) save_class);
@@ -95,22 +154,34 @@ void* KX_ConvertClassStruct::convertClassToStruct(void* save_class, FBTuint16 ID
 Bgedna::KX_SceneStruct* KX_ConvertClassStruct::convertScene(KX_Scene* scene, Bgedna::KX_SceneStruct* scene_struct, bool add_to_list)
 {
 	if(!scene_struct)
+	{
 		Bgedna::KX_SceneStruct* scene_struct = new Bgedna::KX_SceneStruct();
 
+		/*Why into this if statement? Because you enter in this if statement only if this is the most derived type class converting function.
+		In fact to convert derived class you call the function that converts it, and so you don't want to notify or check if it already exist,
+		since this is done in the original function. For example, if you want to convert a LightObject you'll call the GameObject convert function,
+		and you don't want to register your LightObject into the GameObject list, and you already know that the GameObject list won't contain
+		an already converted LightObject*/
+		Bgedna::KX_SceneStruct* check_scene;
+		check_scene = (Bgedna::KX_SceneStruct*) checkUnique((void*) scene, SCENE);
+		if(check_scene != NULL)
+			return check_scene;
+	}
+
 	/*convert all attributes that are simple data or structs*/
-	scene_struct->active_camera = *convertCameraObject(scene->GetActiveCamera());
-	scene_struct->bucket_manager = *convertBucketManager(scene->GetBucketManager());
+	scene_struct->active_camera = convertCameraObject(scene->GetActiveCamera(), CREATE_NEW, true);
+	scene_struct->bucket_manager = convertBucketManager(scene->GetBucketManager(), CREATE_NEW, true);
 	scene_struct->camera_design_height = scene->GetCanvasDesignHeight();
 	scene_struct->camera_design_width =  scene->GetCanvasDesignWidth();
 	scene_struct->dbvt_culling = scene->GetDbvtCulling();
 	scene_struct->dbvt_occlusion_res = scene->GetDbvtOcclusionRes();
-	scene_struct->framing_type = *convertFrameSettings(scene->GetFramingType());
-	scene_struct->pcamera = *convertCameraObject(scene->GetpCamera());
+	scene_struct->framing_type = convertFrameSettings(scene->GetFramingType(), CREATE_NEW, true);
+	scene_struct->pcamera = convertCameraObject(scene->GetpCamera(), CREATE_NEW, true);
 	scene_struct->suspended_delta = scene->getSuspendedDelta();
 	scene_struct->suspended_time = scene->getSuspendedTime();
-	scene_struct->scene_viewport = *convertRect(scene->GetSceneViewport());
-	scene_struct->time_event_manager = *convertTimeEvManager(scene->GetTimeEventManager());
-	scene_struct->world_info = *convertWorldInfo(scene->GetWorldInfo());
+	scene_struct->scene_viewport = convertRect(scene->GetSceneViewport(), CREATE_NEW, true);
+	scene_struct->time_event_manager = convertTimeEvManager(scene->GetTimeEventManager(), CREATE_NEW, true);
+	scene_struct->world_info = convertWorldInfo(scene->GetWorldInfo(), CREATE_NEW, true);
 
 	STR_String string = scene->GetName();
 	strncpy(scene_struct->name, string.Ptr(), 64);
@@ -124,7 +195,7 @@ Bgedna::KX_SceneStruct* KX_ConvertClassStruct::convertScene(KX_Scene* scene, Bge
 	std::list<class KX_Camera*>::iterator cam_it = camera_list.begin();
 	while(cam_it!= camera_list.end())
 	{
-		cameras->add_data(convertCameraObject(*cam_it));
+		cameras->add_data(convertCameraObject(*cam_it, CREATE_NEW, true));
 		cam_it++;
 	}
 	scene_struct->cameras = *cameras;
@@ -137,16 +208,16 @@ Bgedna::KX_SceneStruct* KX_ConvertClassStruct::convertScene(KX_Scene* scene, Bge
 	std::list<class KX_FontObject*>::iterator fon_it = font_list.begin();
 	while(fon_it != font_list.end() )
 	{
-		fonts->add_data(convertFont(*fon_it));
+		fonts->add_data(convertFont(*fon_it, CREATE_NEW, true));
 		fon_it++;
 	}
 	scene_struct->fonts = *fonts;
 	delete(&fon_it);
 	delete(&font_list);
 	
-	scene_struct->inactive_list = *(fbtListFromCList(scene->GetInactiveList(), GAME_OBJECT));
-	scene_struct->light_list = *(fbtListFromCList(scene->GetLightList(), LIGHT_OBJECT));
-	scene_struct->object_list = *(fbtListFromCList(scene->GetObjectList(), GAME_OBJECT));
+	scene_struct->inactive_list = *(CListTofbtDataList(scene->GetInactiveList(), GAME_OBJECT));
+	scene_struct->light_list = *(CListTofbtDataList(scene->GetLightList(), LIGHT_OBJECT));
+	scene_struct->object_list = *(CListTofbtDataList(scene->GetObjectList(), GAME_OBJECT));
 	
 	/*need to find a workaround for this: can't save the whole scene, but it is used also outside of conversion...* / 
 	scene->GetBlenderScene();
@@ -157,7 +228,7 @@ Bgedna::KX_SceneStruct* KX_ConvertClassStruct::convertScene(KX_Scene* scene, Bge
 	and i can write a cvaluelistinfos struct to contain this data), but i don't know what to store.. 
 	I think	when it will come to recostructing the scene from the saved data i'll know what i need.* /
 	scene->GetRootParentList();*/
-	scene_struct->temp_obj_list = *(fbtListFromCList(scene->GetTempObjectList(), GAME_OBJECT));
+	scene_struct->temp_obj_list = *(CListTofbtDataList(scene->GetTempObjectList(), GAME_OBJECT));
 
 	/*IMPORTANT:
 	All the data is actually stored into the KX_FileInterface lists. The conversion functions only return pointers to where the data is saved.
@@ -165,13 +236,14 @@ Bgedna::KX_SceneStruct* KX_ConvertClassStruct::convertScene(KX_Scene* scene, Bge
 	and struct B contains struct A.*/
 	if(add_to_list)
 	{
+		notifyConverted((void*) scene, (void*) scene_struct, SCENE);
 		m_finterface->m_scene.push_back(scene_struct);
 		return (Bgedna::KX_SceneStruct*) m_finterface->m_scene.last;
 	}
 	return scene_struct;
 }
 
-KX_Scene* KX_ConvertClassStruct::convertSceneStruct(Bgedna::KX_SceneStruct* scene, KX_Scene* scene)
+KX_Scene* KX_ConvertClassStruct::convertSceneStruct(Bgedna::KX_SceneStruct* scene_struct, KX_Scene* scene)
 {
 	
 }
@@ -196,10 +268,18 @@ Bgedna::KX_GameObjectStruct* KX_ConvertClassStruct::convertGameObject(KX_GameObj
 
 }
 
-//continue correcting from here
-Bgedna::RAS_FrameSettingsStruct* KX_ConvertClassStruct::convertFrameSettings(const RAS_FrameSettings frsets)
+Bgedna::RAS_FrameSettingsStruct* KX_ConvertClassStruct::convertFrameSettings(const RAS_FrameSettings frsets, Bgedna::RAS_FrameSettingsStruct* frsets_struct, bool add_to_list)
 {
-	Bgedna::RAS_FrameSettingsStruct* frsets_struct = new Bgedna::RAS_FrameSettingsStruct();
+	if(!frsets_struct)
+	{
+		Bgedna::RAS_FrameSettingsStruct* frsets_struct = new Bgedna::RAS_FrameSettingsStruct();
+
+		
+		Bgedna::RAS_FrameSettingsStruct* already_converted;
+		already_converted = (Bgedna::RAS_FrameSettingsStruct*) checkUnique((void*) frsets_struct, FRAME_SETTINGS);
+		if(already_converted != NULL)
+			return already_converted;
+	}
 	
 	frsets_struct->m_frame_type = frsets.FrameType();
 
@@ -210,13 +290,19 @@ Bgedna::RAS_FrameSettingsStruct* KX_ConvertClassStruct::convertFrameSettings(con
 	frsets_struct->m_design_aspect_height = frsets.DesignAspectHeight();
 	frsets_struct->m_design_aspect_width = frsets.DesignAspectWidth();
 
+	if(add_to_list)
+	{
+		notifyConverted((void*) &frsets, (void*) frsets_struct, FRAME_SETTINGS);
+		m_finterface->m_frameSettings.push_back(frsets_struct);
+		return (Bgedna::RAS_FrameSettingsStruct*) m_finterface->m_frameSettings.last;
+	}
 	return frsets_struct;
 
 }
 
-const RAS_FrameSettings KX_ConvertClassStruct::convertFrameSettingsStruct(Bgedna::RAS_FrameSettingsStruct* frsets_struct)
+RAS_FrameSettings* KX_ConvertClassStruct::convertFrameSettingsStruct(Bgedna::RAS_FrameSettingsStruct* frsets_struct, RAS_FrameSettings* frsets)
 {
-	const RAS_FrameSettings frsets= RAS_FrameSettings( (RAS_FrameSettings.RAS_FrameType) frsets_struct->m_frame_type, 
+	RAS_FrameSettings* frsets= new RAS_FrameSettings( (RAS_FrameSettings.RAS_FrameType) frsets_struct->m_frame_type, 
 														frsets_struct->bar[0], 
 														frsets_struct->bar[1], 
 														frsets_struct->bar[2], 
@@ -225,40 +311,68 @@ const RAS_FrameSettings KX_ConvertClassStruct::convertFrameSettingsStruct(Bgedna
 	return frsets;
 }
 
-Bgedna::RAS_RectStruct* KX_ConvertClassStruct::convertRect(const RAS_Rect scene_viewport)
+Bgedna::RAS_RectStruct* KX_ConvertClassStruct::convertRect(const RAS_Rect scene_viewport, Bgedna::RAS_RectStruct* scene_viewport_struct, bool add_to_list)
 {
-	Bgedna::RAS_RectStruct* scene_viewport_struct = new Bgedna::RAS_RectStruct();
+	if(!scene_viewport_struct)
+	{
+		Bgedna::RAS_RectStruct* scene_viewport_struct = new Bgedna::RAS_RectStruct();
+
+		
+		Bgedna::RAS_RectStruct* already_converted;
+		already_converted = (Bgedna::RAS_RectStruct*) checkUnique((void*) scene_viewport_struct, RAS_RECT);
+		if(already_converted != NULL)
+			return already_converted;
+	}
+
 	scene_viewport_struct->m_x1 = scene_viewport.GetLeft();
 	scene_viewport_struct->m_x2 = scene_viewport.GetRight();
 	scene_viewport_struct->m_y1 = scene_viewport.GetBottom();
 	scene_viewport_struct->m_y2 = scene_viewport.GetTop();
+
+	if(add_to_list)
+	{
+		notifyConverted((void*) &scene_viewport, (void*) scene_viewport_struct, RAS_RECT);
+		m_finterface->m_rasRect.push_back(scene_viewport_struct);
+		return (Bgedna::RAS_RectStruct*) m_finterface->m_rasRect.last;
+	}
+
 	return scene_viewport_struct;
 }
 
-const RAS_Rect KX_ConvertClassStruct::convertRectStruct(Bgedna::RAS_RectStruct* scene_viewport_struct)
+//continue correcting from here
+RAS_Rect* KX_ConvertClassStruct::convertRectStruct(Bgedna::RAS_RectStruct* scene_viewport_struct, RAS_Rect* scene_viewport)
 {
-	const RAS_Rect scene_viewport = RAS_Rect(scene_viewport_struct->m_x1,
+	RAS_Rect* scene_viewport = new RAS_Rect(scene_viewport_struct->m_x1,
 											scene_viewport_struct->m_y1,
 											scene_viewport_struct->m_x2,
 											scene_viewport_struct->m_y2);
 	return scene_viewport;
 }
 
-Bgedna::SCA_TimeEventManagerStruct* KX_ConvertClassStruct::convertTimeEvManager(SCA_TimeEventManager* time_mng)
+Bgedna::SCA_TimeEventManagerStruct* KX_ConvertClassStruct::convertTimeEvManager(SCA_TimeEventManager* time_mng, Bgedna::SCA_TimeEventManagerStruct* time_mng_struct, bool add_to_list)
 {
 
 }
 
-Bgedna::RAS_BucketManagerStruct* KX_ConvertClassStruct::convertBucketManager(RAS_BucketManager* bucket_manager)
+Bgedna::RAS_BucketManagerStruct* KX_ConvertClassStruct::convertBucketManager(RAS_BucketManager* bucket_manager, Bgedna::RAS_BucketManagerStruct* bucket_manager_struct, bool add_to_list)
 {
-	Bgedna::RAS_BucketManagerStruct* bucket_manager_struct = new Bgedna::RAS_BucketManagerStruct();
+	if(!bucket_manager_struct)
+	{
+		Bgedna::RAS_BucketManagerStruct* c = new Bgedna::RAS_BucketManagerStruct();
+
+		
+		Bgedna::RAS_BucketManagerStruct* already_converted;
+		already_converted = (Bgedna::RAS_BucketManagerStruct*) checkUnique((void*) bucket_manager_struct, BUCKET_MANAGER);
+		if(already_converted != NULL)
+			return already_converted;
+	}
 	
 	Bgedna::fbtDataList* solid_bucket_list_struct = new Bgedna::fbtDataList(MATERIAL_BUCKET);
 	std::vector<class RAS_MaterialBucket*> solid_bucket_list = (std::vector<class RAS_MaterialBucket*>) (bucket_manager->GetSolidBuckets());
 	std::vector<class RAS_MaterialBucket*>::iterator buk_it = solid_bucket_list.begin();
 	while(buk_it != solid_bucket_list.end() )
 	{
-		solid_bucket_list_struct->add_data(convertMaterialBucket(*buk_it));
+		solid_bucket_list_struct->add_data(convertMaterialBucket(*buk_it, CREATE_NEW, true));
 		buk_it++;
 	}
 	bucket_manager_struct->solid_bucket_material_list = *solid_bucket_list_struct;
@@ -269,7 +383,7 @@ Bgedna::RAS_BucketManagerStruct* KX_ConvertClassStruct::convertBucketManager(RAS
 	buk_it = alpha_bucket_list.begin();
 	while(buk_it != alpha_bucket_list.end() )
 	{
-		alpha_bucket_list_struct->add_data(convertMaterialBucket(*buk_it));
+		alpha_bucket_list_struct->add_data(convertMaterialBucket(*buk_it, CREATE_NEW, true));
 		buk_it++;
 	}
 	bucket_manager_struct->alpha_bucket_material_list = *alpha_bucket_list_struct;
@@ -277,10 +391,17 @@ Bgedna::RAS_BucketManagerStruct* KX_ConvertClassStruct::convertBucketManager(RAS
 	
 	delete(&buk_it);
 
+	if(add_to_list)
+	{
+		notifyConverted((void*) bucket_manager, (void*) bucket_manager_struct, BUCKET_MANAGER);
+		m_finterface->m_bucketManager.push_back(bucket_manager_struct);
+		return (Bgedna::RAS_BucketManagerStruct*) m_finterface->m_bucketManager.last;
+	}
+
 	return bucket_manager_struct;
 }
 
-RAS_BucketManager* KX_ConvertClassStruct::convertBucketManagerStruct(Bgedna::RAS_BucketManagerStruct* bucket_manager_struct)
+RAS_BucketManager* KX_ConvertClassStruct::convertBucketManagerStruct(Bgedna::RAS_BucketManagerStruct* bucket_manager_struct, RAS_BucketManager* bucket_manager)
 {
 	RAS_BucketManager* bucket_manager = new RAS_BucketManager();
 	std::vector<class RAS_MaterialBucket*> solid_list;
@@ -304,40 +425,69 @@ RAS_BucketManager* KX_ConvertClassStruct::convertBucketManagerStruct(Bgedna::RAS
 }
 
 
-Bgedna::RAS_MaterialBucketStruct* KX_ConvertClassStruct::convertMaterialBucket(RAS_MaterialBucket* material_bucket)
+Bgedna::RAS_MaterialBucketStruct* KX_ConvertClassStruct::convertMaterialBucket(RAS_MaterialBucket* material_bucket, Bgedna::RAS_MaterialBucketStruct* material_bucket_struct, bool add_to_list)
 {
-	Bgedna::RAS_MaterialBucketStruct* material_bucket_stuct = new Bgedna::RAS_MaterialBucketStruct();
-	material_bucket_stuct->isAlpha =  material_bucket->IsAlpha();
-	material_bucket_stuct->isSorted = material_bucket->IsZSort();
-	material_bucket_stuct->material = *convertIPolyMaterial(material_bucket->GetPolyMaterial());
+	if(!material_bucket_struct)
+	{
+		Bgedna::RAS_MaterialBucketStruct* material_bucket_struct = new Bgedna::RAS_MaterialBucketStruct();
+
+		
+		Bgedna::RAS_MaterialBucketStruct* already_converted;
+		already_converted = (Bgedna::RAS_MaterialBucketStruct*) checkUnique((void*) material_bucket_struct, MATERIAL_BUCKET);
+		if(already_converted != NULL)
+			return already_converted;
+	}
+
+	
+	material_bucket_struct->isAlpha =  material_bucket->IsAlpha();
+	material_bucket_struct->isSorted = material_bucket->IsZSort();
+	material_bucket_struct->material = convertIPolyMaterial(material_bucket->GetPolyMaterial());
 
 	Bgedna::fbtDataList* act_mesh_slot = new Bgedna::fbtDataList(MESH_SLOT);
-	SG_DList::iterator<class RAS_MeshSlot> act_mesh_slot(material_bucket->GetActiveMeshSlots());//assume this is the head of the element
-	for(act_mesh_slot.begin(); !act_mesh_slot.end(); ++act_mesh_slot)
+	SG_DList::iterator<class RAS_MeshSlot> act_mesh_it(material_bucket->GetActiveMeshSlots());//assume this is the head of the element
+	for(act_mesh_it.begin(); !act_mesh_it.end(); ++act_mesh_slot)
 	{
-		act_mesh_slot->add_data(convertMeshSlot(*act_mesh_it));
+		act_mesh_slot->add_data(convertMeshSlot(*act_mesh_it, CREATE_NEW, true));
 	}
-	material_bucket_stuct->act_mesh_slot = *act_mesh_slot;
+	material_bucket_struct->act_mesh_slot = *act_mesh_slot;
 
 	Bgedna::fbtDataList* mesh_slot = new Bgedna::fbtDataList(MESH_SLOT);
 	std::list<class RAS_MeshSlot>::iterator mesh_it = material_bucket->msBegin();
 	for(mesh_it; mesh_it!= material_bucket->msEnd(); ++mesh_it)
 	{
-		mesh_slot->add_data(convertMeshSlot(*mesh_it));
+		mesh_slot->add_data(convertMeshSlot(&(*mesh_it), CREATE_NEW, true));
 	}
-	material_bucket_stuct->mesh_slot = *mesh_slot;
+	material_bucket_struct->mesh_slot = *mesh_slot;
 	delete(&mesh_it);
 
+	if(add_to_list)
+	{
+		notifyConverted((void*) material_bucket, (void*) material_bucket_struct, MATERIAL_BUCKET);
+		m_finterface->m_materialBucket.push_back(material_bucket_struct);
+		return (Bgedna::RAS_MaterialBucketStruct*) m_finterface->m_materialBucket.last;
+	}
+	return material_bucket_struct;
+
 }
 
-RAS_MaterialBucket*	KX_ConvertClassStruct::convertMaterialBucketStruct(Bgedna::RAS_MaterialBucketStruct* material_bucket_struct)
+RAS_MaterialBucket*	KX_ConvertClassStruct::convertMaterialBucketStruct(Bgedna::RAS_MaterialBucketStruct* material_bucket_struct, RAS_MaterialBucket* material_bucket)
 {
 
 }
 
-Bgedna::KX_WorldInfoStruct*	KX_ConvertClassStruct::convertWorldInfo(KX_WorldInfo* winfo)
+Bgedna::KX_WorldInfoStruct*	KX_ConvertClassStruct::convertWorldInfo(KX_WorldInfo* winfo, Bgedna::KX_WorldInfoStruct* winfo_struct, bool add_to_list)
 {
-	Bgedna::KX_WorldInfoStruct* winfo_struct = new Bgedna::KX_WorldInfoStruct();
+	if(!winfo_struct)
+	{
+		Bgedna::KX_WorldInfoStruct* winfo_struct = new Bgedna::KX_WorldInfoStruct();
+
+		
+		Bgedna::KX_WorldInfoStruct* already_converted;
+		already_converted = (Bgedna::KX_WorldInfoStruct*) checkUnique((void*) winfo_struct, WORLD_INFO);
+		if(already_converted != NULL)
+			return already_converted;
+	}
+	
 
 	winfo_struct->ambient_color[2] =  winfo->getAmbientColorBlue();
 	winfo_struct->ambient_color[1] =  winfo->getAmbientColorGreen();
@@ -365,10 +515,17 @@ Bgedna::KX_WorldInfoStruct*	KX_ConvertClassStruct::convertWorldInfo(KX_WorldInfo
 
 	winfo_struct->has_world = winfo->hasWorld();
 
+	if(add_to_list)
+	{
+		notifyConverted((void*) winfo, (void*) winfo_struct, WORLD_INFO);
+		m_finterface->m_worldInfo.push_back(winfo_struct);
+		return (Bgedna::KX_WorldInfoStruct*) m_finterface->m_worldInfo.last;
+	}
+
 	return winfo_struct;
 }
 
-KX_WorldInfo* KX_ConvertClassStruct::convertWorldInfoStruct(Bgedna::KX_WorldInfoStruct* winfo_struct)
+KX_WorldInfo* KX_ConvertClassStruct::convertWorldInfoStruct(Bgedna::KX_WorldInfoStruct* winfo_struct, KX_WorldInfo* winfo)
 {
 	BlenderWorldInfo* winfo = new BlenderWorldInfo(NULL, NULL);
 	winfo->setBackColor(winfo_struct->back_color[0],winfo_struct->back_color[1],winfo_struct->back_color[2]);
@@ -401,5 +558,4 @@ KX_WorldInfo* KX_ConvertClassStruct::convertWorldInfoStruct(Bgedna::KX_WorldInfo
 	return winfo;
 
 }
-#endif //_KX_CONVERTCLASSSTRUCT.CPP
 #endif
