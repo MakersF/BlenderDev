@@ -1,5 +1,5 @@
 /*
- * $Id: makesdna.c 39744 2011-08-28 05:06:30Z campbellbarton $
+ * $Id: makesdna.c 39792 2011-08-30 09:15:55Z nexyon $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -50,7 +50,7 @@
  * numbers give more output.
  * */
 
-#define DNA_VERSION_DATE "$Id: makesdna.c 39744 2011-08-28 05:06:30Z campbellbarton $"
+#define DNA_VERSION_DATE "$Id: makesdna.c 39792 2011-08-30 09:15:55Z nexyon $"
 
 #include <string.h>
 #include <stdlib.h>
@@ -132,6 +132,7 @@ const char *includefiles[] = {
 	"DNA_anim_types.h",
 	"DNA_boid_types.h",
 	"DNA_smoke_types.h",
+	"DNA_speaker_types.h",
 
 	// empty string to indicate end of includefiles
 	""
@@ -1196,4 +1197,5 @@ int main(int argc, char ** argv)
 #include "DNA_anim_types.h"
 #include "DNA_boid_types.h"
 #include "DNA_smoke_types.h"
+#include "DNA_speaker_types.h"
 /* end of list */

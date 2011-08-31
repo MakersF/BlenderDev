@@ -1,5 +1,5 @@
 /*
- * $Id: KX_BlenderSceneConverter.cpp 39743 2011-08-28 05:01:16Z campbellbarton $
+ * $Id: KX_BlenderSceneConverter.cpp 39792 2011-08-30 09:15:55Z nexyon $
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
  * This program is free software; you can redistribute it and/or
@@ -566,18 +566,18 @@ void KX_BlenderSceneConverter::RegisterPolyMaterial(RAS_IPolyMaterial *polymat)
 
 
 void KX_BlenderSceneConverter::RegisterInterpolatorList(
-									BL_InterpolatorList *adtList,
-									struct AnimData *for_adt)
+									BL_InterpolatorList *actList,
+									struct bAction *for_act)
 {
-	m_map_blender_to_gameAdtList.insert(CHashedPtr(for_adt), adtList);
+	m_map_blender_to_gameAdtList.insert(CHashedPtr(for_act), actList);
 }
 
 
 
 BL_InterpolatorList *KX_BlenderSceneConverter::FindInterpolatorList(
-									struct AnimData *for_adt)
+									struct bAction *for_act)
 {
-	BL_InterpolatorList **listp = m_map_blender_to_gameAdtList[CHashedPtr(for_adt)];
+	BL_InterpolatorList **listp = m_map_blender_to_gameAdtList[CHashedPtr(for_act)];
 		
 	return listp?*listp:NULL;
 }
