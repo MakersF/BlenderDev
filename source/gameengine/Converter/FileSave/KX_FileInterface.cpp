@@ -13,14 +13,20 @@ static char BgeFile_Header[8] = {'B', 'G', 'E', 'C', 'O', 'N', 'V', '\0'};
 
 struct fbtIdDB
 {
-        const FBTuint16     m_code;
-		Bgedna::fbtList            KX_FileInterface::*m_ptr;
+        const FBTuint16		m_code;
+		Bgedna::fbtList		KX_FileInterface::*m_ptr;
 };
 
 fbtIdDB fbtData[] =
 {
-        { FBT_ID2('S', 'C'), &KX_FileInterface::m_scene},
 		//all attributes of class here!
+		{ SCENE, &KX_FileInterface::m_scene},
+		{ FRAME_SETTINGS, &KX_FileInterface::m_frameSettings},
+		{ RAS_RECT, &KX_FileInterface::m_rasRect},
+		{ BUCKET_MANAGER, &KX_FileInterface::m_bucketManager},
+		{ MATERIAL_BUCKET, &KX_FileInterface::m_materialBucket},
+		{ WORLD_INFO, &KX_FileInterface::m_worldInfo},
+		{ IPOLY_MATERIAL, &KX_FileInterface::m_iPolyMaterial},
         { 0, 0 }
 };
 
@@ -42,9 +48,7 @@ KX_FileInterface::KX_FileInterface()
 		m_fg = new Bgedna::FileGlobal();
 		/*declare the KX_ConvertClassStruct here. KX_ConvertClassStruct will know that this
 		class declared it, and will save all the converted data into the attributes of this class.
-		Note1: right now i have to undestand how the containing lists work. I think that fbtList doesn't
-		contains data, and i don't know if fbtDataList is a good choice since it contains void data, and thus
-		i think that fbt doesn't know how to save it.*/
+		Note1: right now i have to undestand how the containing lists work. Ask to xat if you find him on IRC.*/
 		m_convertClass = new KX_ConvertClassStruct(this);
 }
 

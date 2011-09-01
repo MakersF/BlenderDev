@@ -220,14 +220,17 @@ Bgedna::KX_SceneStruct* KX_ConvertClassStruct::convertScene(KX_Scene* scene, Bge
 	scene_struct->object_list = *(CListTofbtDataList(scene->GetObjectList(), GAME_OBJECT));
 	
 	/*need to find a workaround for this: can't save the whole scene, but it is used also outside of conversion...
-	I'll create a struct that will contain all the needed things.* / 
+	I'll create a struct that will contain all the needed things.
+	I really think that the engine shouldn't require *ANYTHING* that isn't converted or is a blender strict type:
+	imagine if someone writes a new converter for another format, s/he would need to create also a blender scene
+	only because a few functions require it..
+	Need a bit of time to look at it, let's do it later* / 
 	scene->GetBlenderScene();
 	*/
-	/*rootParentList can contain all types of elements: game_objects, lights, cameras(, i think even fonts)... How can i know what type is the element i'm processing?
-	Maybe i must find a way to directly save CValues. Other question: can i recostruct a CListValue with only the elements i save? If not, storing the additional
-	infos required inside fbtDataList attributes or inside a DataLink attributes is absolutely a no problem(i'll create a fbtCValueList that will have the cvaluelist_infos attribute)
-	and i can write a cvaluelistinfos struct to contain this data), but i don't know what to store.. 
-	I think	when it will come to recostructing the scene from the saved data i'll know what i need.* /
+
+	/*rootParentList can contain all types of elements: game_objects, lights, cameras(even fonts are cvalues.. Quite everything is a cvalue..)
+	Questions: How can i know what type is the element i'm processing?
+	Can i recostruct a CListValue with only the CValue elements i save?* /
 	scene->GetRootParentList();*/
 
 	scene_struct->temp_obj_list = *(CListTofbtDataList(scene->GetTempObjectList(), GAME_OBJECT));

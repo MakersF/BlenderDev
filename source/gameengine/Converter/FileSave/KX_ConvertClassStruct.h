@@ -85,7 +85,7 @@ private:
 	void*									checkUnique(void* original, FBTuint16 ID);
 	void									notifyConverted(void* original, void* converted, FBTuint16 ID);
 	/*general function to convert from Clists to fbtDataList*/
-	Bgedna::fbtDataList*						CListTofbtDataList(CListValue* clist, FBTuint16 ID);
+	Bgedna::fbtDataList*					CListTofbtDataList(CListValue* clist, FBTuint16 ID);
 	
 	/*specific class to struct conversion methods.*/
 	
