@@ -1,5 +1,5 @@
 /*
- * $Id: BL_ShapeDeformer.cpp 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: BL_ShapeDeformer.cpp 39834 2011-09-01 02:12:53Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -69,12 +69,12 @@ extern "C"{
 //#undef __NLA_DEFNORMALS
 
 BL_ShapeDeformer::BL_ShapeDeformer(BL_DeformableGameObject *gameobj,
-                    Object *bmeshobj,
-                    RAS_MeshObject *mesh)
-				:	
-					BL_SkinDeformer(gameobj,bmeshobj, mesh),
-					m_useShapeDrivers(false),
-					m_lastShapeUpdate(-1)
+                                   Object *bmeshobj,
+                                   RAS_MeshObject *mesh)
+    :
+      BL_SkinDeformer(gameobj,bmeshobj, mesh),
+      m_useShapeDrivers(false),
+      m_lastShapeUpdate(-1)
 {
 	m_key = m_bmesh->key;
 	m_bmesh->key = copy_key(m_key);

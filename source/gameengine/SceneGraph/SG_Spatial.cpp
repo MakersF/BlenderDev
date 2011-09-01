@@ -1,5 +1,5 @@
 /*
- * $Id: SG_Spatial.cpp 35175 2011-02-25 13:39:04Z jesterking $
+ * $Id: SG_Spatial.cpp 39834 2011-09-01 02:12:53Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -109,18 +109,17 @@ SetParentRelation(
  */
 
 
-	bool 
+	bool
 SG_Spatial::
 UpdateSpatialData(
-	const SG_Spatial *parent,
-	double time,
-	bool& parentUpdated
+	        const SG_Spatial *parent,
+	        double time,
+	        bool& parentUpdated
 ){
-
-    bool bComputesWorldTransform = false;
+	bool bComputesWorldTransform = false;
 
 	// update spatial controllers
-	
+
 	SGControllerList::iterator cit = GetSGControllerList().begin();
 	SGControllerList::const_iterator c_end = GetSGControllerList().end();
 
@@ -131,7 +130,7 @@ UpdateSpatialData(
 	}
 
 	// If none of the objects updated our values then we ask the
-	// parent_relation object owned by this class to update 
+	// parent_relation object owned by this class to update
 	// our world coordinates.
 
 	if (!bComputesWorldTransform)
