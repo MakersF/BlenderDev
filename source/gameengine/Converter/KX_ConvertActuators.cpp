@@ -1,5 +1,5 @@
 /*
-* $Id: KX_ConvertActuators.cpp 39796 2011-08-30 10:09:10Z nexyon $
+* $Id: KX_ConvertActuators.cpp 39834 2011-09-01 02:12:53Z campbellbarton $
 *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -996,7 +996,7 @@ void BL_ConvertActuators(char* maggiename,
 					filtermode = RAS_2DFilterManager::RAS_2DFILTER_NOFILTER;
 					break;
 			}
-            
+
 			tmp = new SCA_2DFilterActuator(gameobj, filtermode, _2dfilter->flag,
 				_2dfilter->float_arg,_2dfilter->int_arg,ketsjiEngine->GetRasterizer(),scene);
 
@@ -1012,8 +1012,8 @@ void BL_ConvertActuators(char* maggiename,
 				}
 			}
 
-            baseact = tmp;
-			
+			baseact = tmp;
+
 		}
 		break;
 		case ACT_PARENT:
