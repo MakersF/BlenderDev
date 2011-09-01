@@ -1,5 +1,5 @@
 /*
- * $Id: drawnode.c 39015 2011-08-04 10:05:14Z jbakker $
+ * $Id: drawnode.c 39833 2011-09-01 01:48:50Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -1385,7 +1385,7 @@ static void node_texture_set_butfunc(bNodeType *ntype)
 		default:
 			ntype->uifunc= NULL;
 	}
-        if (ntype->uifuncbut == NULL) ntype->uifuncbut = ntype->uifunc;
+	if (ntype->uifuncbut == NULL) ntype->uifuncbut = ntype->uifunc;
 }
 
 /* ******* init draw callbacks for all tree types, only called in usiblender.c, once ************* */

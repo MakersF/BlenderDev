@@ -1,5 +1,5 @@
 /*
- * $Id: KX_KetsjiEngine.cpp 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: KX_KetsjiEngine.cpp 39834 2011-09-01 02:12:53Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -116,7 +116,7 @@ bool   KX_KetsjiEngine::m_restrict_anim_fps = false;
  *	Constructor of the Ketsji Engine
  */
 KX_KetsjiEngine::KX_KetsjiEngine(KX_ISystem* system)
-     :	m_canvas(NULL),
+	:	m_canvas(NULL),
 	m_rasterizer(NULL),
 	m_kxsystem(system),
 	m_rendertools(NULL),
