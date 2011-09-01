@@ -69,7 +69,9 @@ public:
 
 #ifdef WITH_PYTHON
 	static const char* sPyGetCurrentController__doc__;
-	PyObject* sPyGetCurrentController(PyObject *self);
+	static PyObject* sPyGetCurrentController(PyObject *self);
+	static const char* sPyExecute__doc__;
+	static PyObject* sPyExectute(PyObject *self);
 
 #endif
 

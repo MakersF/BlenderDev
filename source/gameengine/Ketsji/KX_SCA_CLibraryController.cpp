@@ -249,6 +249,20 @@ PyObject* KX_SCA_CLibraryController::sPyGetCurrentController(PyObject *self)
 
 const char* KX_SCA_CLibraryController::sPyGetCurrentController__doc__ = "getCurrentController()";
 
+static const char* sPyExecute__doc__ = "execute()";
+
+PyObject* KX_SCA_CLibraryController::sPyExectute(PyObject *self)
+{
+	/*the method should be called like
+	controller.execute()
+	i expect the self parameter to contain the link to controller,
+	but i'm not sure and i don't know if i can make a simple cast to retrieve
+	the controller, and call his Trigger function.
+	Btw right now this method won't work, and most probably will make the bge crash.*/
+	m_sCurrentController->Trigger(m_sCurrentLogicManager);
+	return Py_True;
+}
+
 PyTypeObject KX_SCA_CLibraryController::Type = {
 	PyVarObject_HEAD_INIT(NULL, 0)
 	"KX_SCA_CLibraryController",
@@ -272,6 +286,7 @@ PyTypeObject KX_SCA_CLibraryController::Type = {
 };
 
 PyMethodDef KX_SCA_CLibraryController::Methods[] = {
+	//{"execute", (PyCFunction) KX_SCA_CLibraryController::sPyExectute, METH_O},
 	{NULL,NULL} //Sentinel
 };
 
