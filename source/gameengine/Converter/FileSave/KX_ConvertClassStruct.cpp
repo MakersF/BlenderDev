@@ -27,7 +27,7 @@ void KX_ConvertClassStruct::notifyConverted(void* original, void* converted, FBT
 	/*if(checkUnique(original, ID)) return; 
 	/*commented out because i assume that
 	you don't notify data if it is already converted. You should check at the beginning of
-	the conversion function if it is acutally already been converted.*/
+	the conversion function if it is actually already been converted.*/
 
 	std::vector<PointerIDList>::iterator it;
 	PointerIDList ID_list;
