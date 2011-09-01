@@ -1,5 +1,5 @@
 /*
- * $Id: BL_BlenderDataConversion.cpp 39815 2011-08-31 01:07:55Z campbellbarton $
+ * $Id: BL_BlenderDataConversion.cpp 39834 2011-09-01 02:12:53Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -1911,11 +1911,11 @@ void RBJconstraints(Object *ob)//not used
 
 KX_IPhysicsController* getPhId(CListValue* sumolist,STR_String busc){//not used
 
-    for (int j=0;j<sumolist->GetCount();j++)
+	for (int j=0;j<sumolist->GetCount();j++)
 	{
-	    KX_GameObject* gameobje = (KX_GameObject*) sumolist->GetValue(j);
-	    if (gameobje->GetName()==busc)
-            return gameobje->GetPhysicsController();
+		KX_GameObject* gameobje = (KX_GameObject*) sumolist->GetValue(j);
+		if (gameobje->GetName()==busc)
+			return gameobje->GetPhysicsController();
 	}
 
 	return 0;
@@ -1924,11 +1924,11 @@ KX_IPhysicsController* getPhId(CListValue* sumolist,STR_String busc){//not used
 
 KX_GameObject* getGameOb(STR_String busc,CListValue* sumolist){
 
-    for (int j=0;j<sumolist->GetCount();j++)
+	for (int j=0;j<sumolist->GetCount();j++)
 	{
-	    KX_GameObject* gameobje = (KX_GameObject*) sumolist->GetValue(j);
-	    if (gameobje->GetName()==busc)
-            return gameobje;
+		KX_GameObject* gameobje = (KX_GameObject*) sumolist->GetValue(j);
+		if (gameobje->GetName()==busc)
+			return gameobje;
 	}
 	
 	return 0;
@@ -2629,7 +2629,7 @@ void BL_ConvertBlenderObjects(struct Main* maggie,
 						{
 							PHY_IPhysicsController* physctrl = (PHY_IPhysicsController*) gameobj->GetPhysicsController()->GetUserData();
 							//we need to pass a full constraint frame, not just axis
-	                            
+
 							//localConstraintFrameBasis
 							MT_Matrix3x3 localCFrame(MT_Vector3(dat->axX,dat->axY,dat->axZ));
 							MT_Vector3 axis0 = localCFrame.getColumn(0);
