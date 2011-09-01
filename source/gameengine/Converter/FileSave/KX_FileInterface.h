@@ -14,6 +14,7 @@ public:
         virtual ~KX_FileInterface();
 
 		// all fbtList for each thing here!
+		/*rembeber to add also in the fbtIdDB fbtData[]*/
 		Bgedna::fbtList m_scene;
 		Bgedna::fbtList m_frameSettings;
 		Bgedna::fbtList m_rasRect;

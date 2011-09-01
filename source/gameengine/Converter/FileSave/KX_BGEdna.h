@@ -17,8 +17,7 @@ namespace Bgedna {
 */
 
 /*fbt works with public attributes, so since all the attributes in KX_Scene are protected, i create a struct that will contains
-all the attributes retrieved with the KX_Scene's pubblic methods. 
-Note: make a class that convert a KX_Scene to Bgedna::KX_Scene and vice versa.*/
+all the attributes retrieved with the KX_Scene's pubblic methods.*/
 class KX_SceneStruct : List
 {
 pub_methods:
@@ -103,7 +102,7 @@ public:
 	char					m_materialname[64];
 	int						m_tile;
 	int						m_tilexrep,m_tileyrep;
-	int						m_drawingmode;	// tface->mode
+	int						m_drawingmode;
 	int						m_transp;
 	bool					m_alpha;
 	bool					m_zsort;
@@ -212,8 +211,8 @@ pub_methods:
 	unsigned int getIDCode() {return ID;};
 
 public:
-	List*   first;
-	List*   last;
+	List   *first;
+	List   *last;
 	unsigned short ID;
 };
 
@@ -285,61 +284,6 @@ public:
 	unsigned short ID;
 };
 
-/*SceneList related data*/
-/*
-struct SceneList
-	{
-		SceneList   *next;
-		SceneList   *prev;
-		KX_SceneStruct*	 data;
-	};
-
-class fbtSceneList
-{
-pub_methods:
-
-	fbtSceneList() : first(0), last(0) {}
-	~fbtSceneList() { clear(); }
-
-	void clear(void) { first = last = 0; }
-
-	void push_back(void* v)
-	{
-		SceneList* scenelist = ((SceneList*)v);
-		if (!scenelist)
-			return;
-
-		scenelist->prev = last;
-		if (last)
-			last->next = scenelist;
-
-		if (!first)
-			first = scenelist;
-
-		last = scenelist;
-	}
-
-	void remove(SceneList* link)
-	{
-		if (!link)
-			return;
-		if (link->next)
-			link->next->prev = link->prev;
-		if (link->prev)
-			link->prev->next = link->next;
-		if (last == link)
-			last = link->prev;
-		if (first == link)
-			first = link->next;
-	}
-
-public:
-
-	SceneList*   first;
-	SceneList*   last;
-
-};
-*/
 class FileGlobal
 {
 public:
