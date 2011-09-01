@@ -20,6 +20,7 @@ public:
 		Bgedna::fbtList m_bucketManager;
 		Bgedna::fbtList m_materialBucket;
 		Bgedna::fbtList m_worldInfo;
+		Bgedna::fbtList m_iPolyMaterial;
 
         Bgedna::FileGlobal* m_fg;
 

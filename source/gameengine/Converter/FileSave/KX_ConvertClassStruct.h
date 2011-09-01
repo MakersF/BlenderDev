@@ -9,6 +9,7 @@
 #include <vector>
 
 #include <list>
+#include "MT_Vector3.h"
 #include "ListValue.h"
 #include "STR_String.h"
 #include "KX_GameObject.h"
@@ -35,7 +36,8 @@ enum DataType{
 	MATERIAL_BUCKET = FBT_ID2('M','B'),
 	MESH_SLOT = FBT_ID2('M','S'),
 	RAS_RECT = FBT_ID2('R','R'),
-	WORLD_INFO = FBT_ID2('W','I')
+	WORLD_INFO = FBT_ID2('W','I'),
+	IPOLY_MATERIAL = FBT_ID2('I','P')
 };
 
 
@@ -87,19 +89,19 @@ private:
 	
 	/*specific class to struct conversion methods.*/
 	
-	Bgedna::KX_SceneStruct*					convertScene(KX_Scene* scene, Bgedna::KX_SceneStruct* scene_struct, bool add_to_list);
-	Bgedna::KX_CameraStruct*				convertCameraObject(KX_Camera* camera, Bgedna::KX_CameraStruct* camera_struct, bool add_to_list);
-	Bgedna::RAS_BucketManagerStruct*		convertBucketManager(RAS_BucketManager* bucket_manager, Bgedna::RAS_BucketManagerStruct* bucket_manager_struct, bool add_to_list);
-	Bgedna::KX_FontObjectStruct*			convertFont(KX_FontObject* font, Bgedna::KX_FontObjectStruct* font_struct, bool add_to_list);
-	Bgedna::RAS_FrameSettingsStruct*		convertFrameSettings(const RAS_FrameSettings frsets, Bgedna::RAS_FrameSettingsStruct* frsets_struct, bool add_to_list);
-	Bgedna::RAS_RectStruct*					convertRect(const RAS_Rect scene_viewport, Bgedna::RAS_RectStruct* scene_viewport_struct, bool add_to_list);
-	Bgedna::SCA_TimeEventManagerStruct*		convertTimeEvManager(SCA_TimeEventManager* time_mng, Bgedna::SCA_TimeEventManagerStruct* time_mng_struct, bool add_to_list);
-	Bgedna::KX_WorldInfoStruct*				convertWorldInfo(KX_WorldInfo* winfo, Bgedna::KX_WorldInfoStruct* world_info_struct, bool add_to_list);
-	Bgedna::KX_GameObjectStruct*			convertGameObject(KX_GameObject* game_obj, Bgedna::KX_GameObjectStruct* game_obj_struct, bool add_to_list);
-	Bgedna::KX_LightObjectStruct*			convertLightObject(KX_LightObject* light, Bgedna::KX_LightObjectStruct* light_struct, bool add_to_list);
-	Bgedna::RAS_MaterialBucketStruct*		convertMaterialBucket(RAS_MaterialBucket* material_bucket, Bgedna::RAS_MaterialBucketStruct* material_bucket_struct, bool add_to_list);
-	Bgedna::RAS_IPolyMaterialStruct*		convertIPolyMaterial(RAS_IPolyMaterial* ipoly_material, Bgedna::RAS_IPolyMaterialStruct* ipoly_material_struct, bool add_to_list);
-	Bgedna::RAS_MeshSlotStruct*				convertMeshSlot(RAS_MeshSlot* mesh_slot, Bgedna::RAS_MeshSlotStruct* mesh_slot_struct, bool add_to_list);
+	Bgedna::KX_SceneStruct*					convertScene(KX_Scene* scene, Bgedna::KX_SceneStruct* scene_struct = NULL, bool add_to_list = true);
+	Bgedna::KX_CameraStruct*				convertCameraObject(KX_Camera* camera, Bgedna::KX_CameraStruct* camera_struct = NULL, bool add_to_list = true);
+	Bgedna::RAS_BucketManagerStruct*		convertBucketManager(RAS_BucketManager* bucket_manager, Bgedna::RAS_BucketManagerStruct* bucket_manager_struct = NULL, bool add_to_list = true);
+	Bgedna::KX_FontObjectStruct*			convertFont(KX_FontObject* font, Bgedna::KX_FontObjectStruct* font_struct = NULL, bool add_to_list = true);
+	Bgedna::RAS_FrameSettingsStruct*		convertFrameSettings(const RAS_FrameSettings frsets, Bgedna::RAS_FrameSettingsStruct* frsets_struct = NULL, bool add_to_list = true);
+	Bgedna::RAS_RectStruct*					convertRect(const RAS_Rect scene_viewport, Bgedna::RAS_RectStruct* scene_viewport_struct = NULL, bool add_to_list = true);
+	Bgedna::SCA_TimeEventManagerStruct*		convertTimeEvManager(SCA_TimeEventManager* time_mng, Bgedna::SCA_TimeEventManagerStruct* time_mng_struct = NULL, bool add_to_list = true);
+	Bgedna::KX_WorldInfoStruct*				convertWorldInfo(KX_WorldInfo* winfo, Bgedna::KX_WorldInfoStruct* world_info_struct = NULL, bool add_to_list = true);
+	Bgedna::KX_GameObjectStruct*			convertGameObject(KX_GameObject* game_obj, Bgedna::KX_GameObjectStruct* game_obj_struct = NULL, bool add_to_list = true);
+	Bgedna::KX_LightObjectStruct*			convertLightObject(KX_LightObject* light, Bgedna::KX_LightObjectStruct* light_struct = NULL, bool add_to_list = true);
+	Bgedna::RAS_MaterialBucketStruct*		convertMaterialBucket(RAS_MaterialBucket* material_bucket, Bgedna::RAS_MaterialBucketStruct* material_bucket_struct = NULL, bool add_to_list = true);
+	Bgedna::RAS_IPolyMaterialStruct*		convertIPolyMaterial(RAS_IPolyMaterial* ipoly_material, Bgedna::RAS_IPolyMaterialStruct* ipoly_material_struct = NULL, bool add_to_list = true);
+	Bgedna::RAS_MeshSlotStruct*				convertMeshSlot(RAS_MeshSlot* mesh_slot, Bgedna::RAS_MeshSlotStruct* mesh_slot_struct = NULL, bool add_to_list = true);
 
 	/*specific struct to class conversion methods*/
 

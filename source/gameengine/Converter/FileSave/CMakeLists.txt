@@ -7,6 +7,7 @@ set(INC
 	../../../../intern/string
 	../../Converter
 	../../SceneGraph
+	../../../../intern/moto/include
 )
 
 set(INC_SYS

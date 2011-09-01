@@ -50,7 +50,7 @@ public:
 
 };
 
-class CValueStruct
+class CValueStruct : List
 {
 
 };
@@ -75,7 +75,7 @@ class KX_LightObjectStruct : KX_GameObjectStruct
 
 };
 
-class KX_WorldInfoStruct
+class KX_WorldInfoStruct : List
 {
 public:
 	float		back_color[3];
@@ -87,7 +87,7 @@ public:
 	bool		has_world;
 };
 
-class RAS_FrameSettingsStruct
+class RAS_FrameSettingsStruct : List
 {
 public:
 	int						m_frame_type;//it is an enum
@@ -96,17 +96,31 @@ public:
 	unsigned int			m_design_aspect_height;
 };
 
-class RAS_IPolyMaterialStruct
+class RAS_IPolyMaterialStruct : List
+{
+public:
+	char					m_texturename[64];
+	char					m_materialname[64];
+	int						m_tile;
+	int						m_tilexrep,m_tileyrep;
+	int						m_drawingmode;	// tface->mode
+	int						m_transp;
+	bool					m_alpha;
+	bool					m_zsort;
+	int						m_materialindex;
+
+	float					m_diffuse[3];
+	float					m_shininess;
+	float					m_specular[3];
+	float					m_specularity;
+};
+
+class RAS_MeshSlotStruct : List
 {
 
 };
 
-class RAS_MeshSlotStruct
-{
-
-};
-
-class RAS_MaterialBucketStruct
+class RAS_MaterialBucketStruct : List
 {
 public:
 	bool						isSorted;
@@ -117,21 +131,21 @@ public:
 
 };
 
-class RAS_BucketManagerStruct
+class RAS_BucketManagerStruct : List
 {
 public:
 	fbtDataList					solid_bucket_material_list;
 	fbtDataList					alpha_bucket_material_list;
 };
 
-class RAS_RectStruct
+class RAS_RectStruct : List
 {
 public:
 	int m_x1, m_y1;
 	int m_x2, m_y2;
 };
 
-class SCA_TimeEventManagerStruct
+class SCA_TimeEventManagerStruct : List
 {
 
 };

@@ -162,6 +162,10 @@ public:
 	const STR_String&	GetTextureName() const;
 	unsigned int		GetFlag() const;
 	int					GetMaterialIndex() const;
+	virtual int			GetTile() const {return m_tile;};
+	virtual int			GetTileXRep() const {return m_tilexrep;};
+	virtual int			GetTileYRep() const {return m_tileyrep;};
+	virtual int			GetTransp() const {return m_transp;};
 
 	virtual Material*   GetBlenderMaterial() const;
 	virtual Image*      GetBlenderImage() const;

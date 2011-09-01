@@ -124,22 +124,22 @@ void* KX_ConvertClassStruct::convertClassToStruct(void* save_class, FBTuint16 ID
 			}
 /*
 		case CAMERA:
-				return (void*) convertCamera((KX_Camera*) save_class);
+				return (void*) convertCamera((KX_Camera*) save_class, CREATE_NEW, true);
 
 		case BUCKET_MANAGER:
-				return (void*) convertBucketManager((RAS_BucketManager*) save_class);
+				return (void*) convertBucketManager((RAS_BucketManager*) save_class, CREATE_NEW, true);
 
 		case FONT_OBJECT:
-				return (void*) convertFont((KX_FontObject*) save_class);
+				return (void*) convertFont((KX_FontObject*) save_class, CREATE_NEW, true);
 		
 		case FRAME_SETTINGS:
-				return (void*) convertFrameSettings((const Ras_BucketManager) save_class);
+				return (void*) convertFrameSettings((const Ras_BucketManager) save_class, CREATE_NEW, true);
 
 		case GAME_OBJECT:
-				return (void*) convertGameObject((KX_GameObject*) save_class);
+				return (void*) convertGameObject((KX_GameObject*) save_class, CREATE_NEW, true);
 
 		case LIGHT_OBJECT:
-				return (void*) convertLightObject((KX_LightObject*) save_class);
+				return (void*) convertLightObject((KX_LightObject*) save_class, CREATE_NEW, true);
 
 		to be updated
 */
@@ -219,15 +219,17 @@ Bgedna::KX_SceneStruct* KX_ConvertClassStruct::convertScene(KX_Scene* scene, Bge
 	scene_struct->light_list = *(CListTofbtDataList(scene->GetLightList(), LIGHT_OBJECT));
 	scene_struct->object_list = *(CListTofbtDataList(scene->GetObjectList(), GAME_OBJECT));
 	
-	/*need to find a workaround for this: can't save the whole scene, but it is used also outside of conversion...* / 
+	/*need to find a workaround for this: can't save the whole scene, but it is used also outside of conversion...
+	I'll create a struct that will contain all the needed things.* / 
 	scene->GetBlenderScene();
 	*/
-	/*rootParentList can contain all types of elements: game_objects, lights, cameras... How can i know what type is the element i'm processing?
+	/*rootParentList can contain all types of elements: game_objects, lights, cameras(, i think even fonts)... How can i know what type is the element i'm processing?
 	Maybe i must find a way to directly save CValues. Other question: can i recostruct a CListValue with only the elements i save? If not, storing the additional
 	infos required inside fbtDataList attributes or inside a DataLink attributes is absolutely a no problem(i'll create a fbtCValueList that will have the cvaluelist_infos attribute)
 	and i can write a cvaluelistinfos struct to contain this data), but i don't know what to store.. 
 	I think	when it will come to recostructing the scene from the saved data i'll know what i need.* /
 	scene->GetRootParentList();*/
+
 	scene_struct->temp_obj_list = *(CListTofbtDataList(scene->GetTempObjectList(), GAME_OBJECT));
 
 	/*IMPORTANT:
@@ -253,9 +255,19 @@ Bgedna::KX_CameraStruct* KX_ConvertClassStruct::convertCameraObject(KX_Camera* c
 
 }
 
+KX_Camera* KX_ConvertClassStruct::convertCameraObjectStruct(Bgedna::KX_CameraStruct* camera_struct, KX_Camera* camera)
+{
+
+}
+
 Bgedna::KX_FontObjectStruct* KX_ConvertClassStruct::convertFont(KX_FontObject* font, Bgedna::KX_FontObjectStruct* font_struct, bool add_to_list)
 {
 	
+}
+
+KX_FontObject* KX_ConvertClassStruct::convertFontStruct(Bgedna::KX_FontObjectStruct* font_struct, KX_FontObject*	font)
+{
+
 }
 
 Bgedna::KX_LightObjectStruct* KX_ConvertClassStruct::convertLightObject(KX_LightObject* light, Bgedna::KX_LightObjectStruct* light_struct, bool add_to_list)
@@ -263,7 +275,17 @@ Bgedna::KX_LightObjectStruct* KX_ConvertClassStruct::convertLightObject(KX_Light
 
 }
 
+KX_LightObject* KX_ConvertClassStruct::convertLightObjectStruct(Bgedna::KX_LightObjectStruct* light_struct, KX_LightObject* light)
+{
+
+}
+
 Bgedna::KX_GameObjectStruct* KX_ConvertClassStruct::convertGameObject(KX_GameObject* game_obj, Bgedna::KX_GameObjectStruct* game_obj_struct, bool add_to_list)
+{
+
+}
+
+KX_GameObject* KX_ConvertClassStruct::convertGameObjectStruct(Bgedna::KX_GameObjectStruct* game_obj_struct, KX_GameObject* game_obj)
 {
 
 }
@@ -302,7 +324,8 @@ Bgedna::RAS_FrameSettingsStruct* KX_ConvertClassStruct::convertFrameSettings(con
 
 RAS_FrameSettings* KX_ConvertClassStruct::convertFrameSettingsStruct(Bgedna::RAS_FrameSettingsStruct* frsets_struct, RAS_FrameSettings* frsets)
 {
-	RAS_FrameSettings* frsets= new RAS_FrameSettings( (RAS_FrameSettings.RAS_FrameType) frsets_struct->m_frame_type, 
+	if(!frsets)
+		frsets= new RAS_FrameSettings( (RAS_FrameSettings.RAS_FrameType) frsets_struct->m_frame_type, 
 														frsets_struct->bar[0], 
 														frsets_struct->bar[1], 
 														frsets_struct->bar[2], 
@@ -339,10 +362,10 @@ Bgedna::RAS_RectStruct* KX_ConvertClassStruct::convertRect(const RAS_Rect scene_
 	return scene_viewport_struct;
 }
 
-//continue correcting from here
 RAS_Rect* KX_ConvertClassStruct::convertRectStruct(Bgedna::RAS_RectStruct* scene_viewport_struct, RAS_Rect* scene_viewport)
 {
-	RAS_Rect* scene_viewport = new RAS_Rect(scene_viewport_struct->m_x1,
+	if(!scene_viewport)
+			scene_viewport = new RAS_Rect(scene_viewport_struct->m_x1,
 											scene_viewport_struct->m_y1,
 											scene_viewport_struct->m_x2,
 											scene_viewport_struct->m_y2);
@@ -354,13 +377,17 @@ Bgedna::SCA_TimeEventManagerStruct* KX_ConvertClassStruct::convertTimeEvManager(
 
 }
 
+SCA_TimeEventManager* KX_ConvertClassStruct::convertTimeEvManagerStruct(Bgedna::SCA_TimeEventManagerStruct* time_mng_struct, SCA_TimeEventManager* time_mng)
+{
+
+}
+
 Bgedna::RAS_BucketManagerStruct* KX_ConvertClassStruct::convertBucketManager(RAS_BucketManager* bucket_manager, Bgedna::RAS_BucketManagerStruct* bucket_manager_struct, bool add_to_list)
 {
 	if(!bucket_manager_struct)
 	{
-		Bgedna::RAS_BucketManagerStruct* c = new Bgedna::RAS_BucketManagerStruct();
+		Bgedna::RAS_BucketManagerStruct* bucket_manager_struct = new Bgedna::RAS_BucketManagerStruct();
 
-		
 		Bgedna::RAS_BucketManagerStruct* already_converted;
 		already_converted = (Bgedna::RAS_BucketManagerStruct*) checkUnique((void*) bucket_manager_struct, BUCKET_MANAGER);
 		if(already_converted != NULL)
@@ -403,7 +430,9 @@ Bgedna::RAS_BucketManagerStruct* KX_ConvertClassStruct::convertBucketManager(RAS
 
 RAS_BucketManager* KX_ConvertClassStruct::convertBucketManagerStruct(Bgedna::RAS_BucketManagerStruct* bucket_manager_struct, RAS_BucketManager* bucket_manager)
 {
-	RAS_BucketManager* bucket_manager = new RAS_BucketManager();
+	if(!bucket_manager)
+		bucket_manager = new RAS_BucketManager();
+
 	std::vector<class RAS_MaterialBucket*> solid_list;
 	Bgedna::DataList* bms;
 	for( bms = bucket_manager_struct->solid_bucket_material_list.first; bms; bms = bms->next)
@@ -423,7 +452,6 @@ RAS_BucketManager* KX_ConvertClassStruct::convertBucketManagerStruct(Bgedna::RAS
 	return bucket_manager;
 
 }
-
 
 Bgedna::RAS_MaterialBucketStruct* KX_ConvertClassStruct::convertMaterialBucket(RAS_MaterialBucket* material_bucket, Bgedna::RAS_MaterialBucketStruct* material_bucket_struct, bool add_to_list)
 {
@@ -525,9 +553,14 @@ Bgedna::KX_WorldInfoStruct*	KX_ConvertClassStruct::convertWorldInfo(KX_WorldInfo
 	return winfo_struct;
 }
 
-KX_WorldInfo* KX_ConvertClassStruct::convertWorldInfoStruct(Bgedna::KX_WorldInfoStruct* winfo_struct, KX_WorldInfo* winfo)
+KX_WorldInfo* KX_ConvertClassStruct::convertWorldInfoStruct(Bgedna::KX_WorldInfoStruct* winfo_struct, KX_WorldInfo* winfo_origin)
 {
-	BlenderWorldInfo* winfo = new BlenderWorldInfo(NULL, NULL);
+	BlenderWorldInfo* winfo;
+	if(winfo_origin)
+		winfo = (BlenderWorldInfo*) winfo_origin;
+	else
+		winfo = new BlenderWorldInfo(NULL, NULL);
+
 	winfo->setBackColor(winfo_struct->back_color[0],winfo_struct->back_color[1],winfo_struct->back_color[2]);
 	if(winfo_struct->has_world)
 	{
@@ -558,4 +591,83 @@ KX_WorldInfo* KX_ConvertClassStruct::convertWorldInfoStruct(Bgedna::KX_WorldInfo
 	return winfo;
 
 }
+
+Bgedna::RAS_IPolyMaterialStruct* KX_ConvertClassStruct::convertIPolyMaterial(RAS_IPolyMaterial* ipoly_material, Bgedna::RAS_IPolyMaterialStruct* ipoly_material_struct = NULL, bool add_to_list = true)
+{
+	if(!ipoly_material_struct)
+	{
+		Bgedna::RAS_IPolyMaterialStruct* ipoly_material_struct = new Bgedna::RAS_IPolyMaterialStruct();
+
+		
+		Bgedna::RAS_IPolyMaterialStruct* already_converted;
+		already_converted = (Bgedna::RAS_IPolyMaterialStruct*) checkUnique((void*) ipoly_material_struct, IPOLY_MATERIAL);
+		if(already_converted != NULL)
+			return already_converted;
+	}
+
+	
+
+	STR_String copy_string = STR_String(ipoly_material->GetMaterialName());
+	strncpy(ipoly_material_struct->m_materialname, copy_string.Ptr(), 64 );
+	delete(copy_string);
+	STR_String copy_string = STR_String(ipoly_material->GetTextureName());
+	strncpy(ipoly_material_struct->m_texturename, copy_string.Ptr(), 64 );
+	delete(copy_string);
+
+	ipoly_material_struct->m_shininess = ipoly_material->m_shininess;
+	ipoly_material->m_diffuse.getValue(ipoly_material_struct->m_diffuse);
+
+	ipoly_material_struct->m_specularity = ipoly_material->m_specularity;
+	ipoly_material->m_specular.getValue(ipoly_material_struct->m_specular);
+
+	ipoly_material_struct->m_tile = ipoly_material->GetTile();
+	ipoly_material_struct->m_tilexrep = ipoly_material->GetTileXRep();
+	ipoly_material_struct->m_tileyrep = ipoly_material->GetTileYRep();
+
+	ipoly_material_struct->m_drawingmode = ipoly_material->GetDrawingMode();
+	ipoly_material_struct->m_transp = ipoly_material->GetTransp();
+
+	ipoly_material_struct->m_alpha = ipoly_material->IsAlpha();
+	ipoly_material_struct->m_zsort = ipoly_material->IsZSort();
+	ipoly_material_struct->m_materialindex = ipoly_material->GetMaterialIndex();
+
+
+	if(add_to_list)
+	{
+		notifyConverted((void*) ipoly_material, (void*) ipoly_material_struct, IPOLY_MATERIAL);
+		m_finterface->m_iPolyMaterial.push_back(ipoly_material_struct);
+		return (Bgedna::RAS_IPolyMaterialStruct*) m_finterface->m_iPolyMaterial.last;
+	}
+
+	return ipoly_material_struct;
+}
+
+RAS_IPolyMaterial* KX_ConvertClassStruct::convertIPolyMaterialStruct(Bgedna::RAS_IPolyMaterialStruct* ipoly_material_struct, RAS_IPolyMaterial* ipoly_material)
+{
+	if(!ipoly_material)
+		ipoly_material = new RAS_IPolyMaterial( const STR_String(ipoly_material_struct->m_texturename),
+												const STR_String(ipoly_material_struct->m_materialname),
+												ipoly_material_struct->m_materialindex,
+												ipoly_material_struct->m_tile,
+												ipoly_material_struct->m_tilexrep,
+												ipoly_material_struct->m_tileyrep,
+												ipoly_material_struct->m_drawingmode,
+												ipoly_material_struct->m_transp,
+												ipoly_material_struct->m_alpha,
+												ipoly_material_struct->m_zsort);
+	return ipoly_material;
+
+}
+
+Bgedna::RAS_MeshSlotStruct* KX_ConvertClassStruct::convertMeshSlot(RAS_MeshSlot* mesh_slot, Bgedna::RAS_MeshSlotStruct* mesh_slot_struct = NULL, bool add_to_list = true)
+{
+
+}
+
+RAS_MeshSlot* KX_ConvertClassStruct::convertMeshSlotStruct(Bgedna::RAS_MeshSlotStruct* mesh_slot_struct, RAS_MeshSlot* mesh_slot)
+{
+
+}
+
+
 #endif
