@@ -1,7 +1,4 @@
-#if WITH_FBT
-
-#ifndef _KXFILEINTERFACE.CPP
-#define _KXFILEINTERFACE.CPP
+#ifdef WITH_FBT
 
 #include "KX_FileInterface.h"
 #include "fbtTables.h"
@@ -162,6 +159,4 @@ int KX_FileInterface::save(const char *path, const int mode)
         m_version = m_fileVersion;
         return reflect(path, mode);
 }
-
-#endif //_KXFILEINTERFACE.CPP
 #endif

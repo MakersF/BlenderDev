@@ -2,24 +2,6 @@
 
 #include "KX_ConvertClassStruct.h"
 #include "KX_BGEdna.h"
-/*
-#include <list>
-#include <vector>
-#include "ListValue.h"
-#include "STR_String.h"
-#include "KX_GameObject.h"
-#include "KX_FontObject.h"
-#include "KX_Light.h"
-#include "KX_Camera.h"
-#include "KX_WorldInfo.h"
-#include "BlenderWorldInfo.h"
-#include "RAS_FramingManager.h"
-#include "RAS_Rect.h"
-#include "RAS_BucketManager.h"
-#include "RAS_MaterialBucket.h"
-#include "SG_Dlist.h"
-#include "KX_FileInterface.h"*/
-
 #define CREATE_NEW NULL
 
 void KX_ConvertClassStruct::notifyConverted(void* original, void* converted, FBTuint16 ID)
@@ -215,9 +197,9 @@ Bgedna::KX_SceneStruct* KX_ConvertClassStruct::convertScene(KX_Scene* scene, Bge
 	delete(&fon_it);
 	delete(&font_list);
 	
-	scene_struct->inactive_list = *(CListTofbtDataList(scene->GetInactiveList(), GAME_OBJECT));
-	scene_struct->light_list = *(CListTofbtDataList(scene->GetLightList(), LIGHT_OBJECT));
-	scene_struct->object_list = *(CListTofbtDataList(scene->GetObjectList(), GAME_OBJECT));
+	scene_struct->inactive_list = *(CListTofbtList(scene->GetInactiveList(), GAME_OBJECT));
+	scene_struct->light_list = *(CListTofbtList(scene->GetLightList(), LIGHT_OBJECT));
+	scene_struct->object_list = *(CListTofbtList(scene->GetObjectList(), GAME_OBJECT));
 	
 	/*need to find a workaround for this: can't save the whole scene, but it is used also outside of conversion...
 	I'll create a struct that will contain all the needed things.
@@ -233,7 +215,7 @@ Bgedna::KX_SceneStruct* KX_ConvertClassStruct::convertScene(KX_Scene* scene, Bge
 	Can i recostruct a CListValue with only the CValue elements i save?* /
 	scene->GetRootParentList();*/
 
-	scene_struct->temp_obj_list = *(CListTofbtDataList(scene->GetTempObjectList(), GAME_OBJECT));
+	scene_struct->temp_obj_list = *(CListTofbtList(scene->GetTempObjectList(), GAME_OBJECT));
 
 	/*IMPORTANT:
 	All the data is actually stored into the KX_FileInterface lists. The conversion functions only return pointers to where the data is saved.

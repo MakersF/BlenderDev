@@ -4,10 +4,12 @@ set(INC
 	../../Ketsji
 	../../Rasterizer
 	../../Expressions
-	../../../../intern/string
 	../../Converter
 	../../SceneGraph
+	../../../../intern/container
 	../../../../intern/moto/include
+	../../../../intern/string
+
 )
 
 set(INC_SYS

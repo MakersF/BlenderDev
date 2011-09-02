@@ -16,37 +16,71 @@ namespace Bgedna {
 *  @{
 */
 
-/*fbt works with public attributes, so since all the attributes in KX_Scene are protected, i create a struct that will contains
-all the attributes retrieved with the KX_Scene's pubblic methods.*/
-class KX_SceneStruct : public List
+/*data list related code*/
+
+class List
 {
 pub_methods:
-	KX_SceneStruct(){ List();};
+	List() {next = 0;};
 public:
-	//put here all the variables that will contain KX_Scene's attributes that must be saved
-	KX_CameraStruct*			active_camera;
-	RAS_BucketManagerStruct*	bucket_manager;
-	fbtList						cameras;
-	unsigned int				camera_design_height;
-	unsigned int				camera_design_width;
-	bool						dbvt_culling;
-	int							dbvt_occlusion_res;
-	fbtList						fonts;
-	RAS_FrameSettingsStruct*	framing_type;
-	fbtList						inactive_list;
-	fbtList						light_list;
-	char						name[64];
-	fbtList						object_list;
-	KX_CameraStruct*			pcamera;
+	List* next;
+	List* prev;
+};
 
-	double						suspended_delta;
-	double						suspended_time;
-	fbtList						temp_obj_list;
+class PointerList : public List
+{
+public:
+	void* data;
+};
 
-	RAS_RectStruct*				scene_viewport;
-	SCA_TimeEventManagerStruct*	time_event_manager;
-	KX_WorldInfoStruct*			world_info;
 
+class fbtList
+{
+pub_methods:
+
+	fbtList() : first(0), last(0) {}
+	fbtList(unsigned short ID_code) : ID(ID_code), first(0), last(0) {}
+	~fbtList() { clear(); }
+
+	void clear(void) { first = last = 0; }
+
+	void push_back(void* v)
+	{
+		List* datalist = ((List*)v);
+		if (!datalist)
+			return;
+
+		datalist->prev = last;
+		if (last)
+			last->next = datalist;
+
+		if (!first)
+			first = datalist;
+
+		last = datalist;
+	}
+
+	void remove(List* link)
+	{
+		if (!link)
+			return;
+		if (link->next)
+			link->next->prev = link->prev;
+		if (link->prev)
+			link->prev->next = link->next;
+		if (last == link)
+			last = link->prev;
+		if (first == link)
+			first = link->next;
+	}
+
+	void setIDCode(unsigned int IDcode) { ID = IDcode; }
+	unsigned int getIDCode() {return ID;};
+
+public:
+	List*   first;
+	List*   last;
+	unsigned short ID;
 };
 
 class CValueStruct : public List
@@ -139,6 +173,17 @@ class KX_ListSlotStruct : public List
 
 };
 
+class RAS_MaterialBucketStruct : public List
+{
+public:
+	bool						isSorted;
+	bool						isAlpha;
+	RAS_IPolyMaterialStruct*	material;
+	fbtList						mesh_slot;
+	fbtList						act_mesh_slot;
+
+};
+
 class RAS_MeshSlotStruct : public List
 {
 public:
@@ -180,17 +225,6 @@ public:
 	fbtList						m_joinedSlots;
 };
 
-class RAS_MaterialBucketStruct : public List
-{
-public:
-	bool						isSorted;
-	bool						isAlpha;
-	RAS_IPolyMaterialStruct*	material;
-	fbtList						mesh_slot;
-	fbtList						act_mesh_slot;
-
-};
-
 class RAS_BucketManagerStruct : public List
 {
 public:
@@ -210,142 +244,39 @@ class SCA_TimeEventManagerStruct : public List
 
 };
 
-/*data list related code*/
-
-
-class List
+/*fbt works with public attributes, so since all the attributes in KX_Scene are protected, i create a struct that will contains
+all the attributes retrieved with the KX_Scene's pubblic methods.*/
+class KX_SceneStruct : public List
 {
 pub_methods:
-	List() {next = 0;};
+	KX_SceneStruct(){ List();};
 public:
-	List* next;
-	List* prev;
+	//put here all the variables that will contain KX_Scene's attributes that must be saved
+	KX_CameraStruct*			active_camera;
+	RAS_BucketManagerStruct*	bucket_manager;
+	fbtList						cameras;
+	unsigned int				camera_design_height;
+	unsigned int				camera_design_width;
+	bool						dbvt_culling;
+	int							dbvt_occlusion_res;
+	fbtList						fonts;
+	RAS_FrameSettingsStruct*	framing_type;
+	fbtList						inactive_list;
+	fbtList						light_list;
+	char						name[64];
+	fbtList						object_list;
+	KX_CameraStruct*			pcamera;
+
+	double						suspended_delta;
+	double						suspended_time;
+	fbtList						temp_obj_list;
+
+	RAS_RectStruct*				scene_viewport;
+	SCA_TimeEventManagerStruct*	time_event_manager;
+	KX_WorldInfoStruct*			world_info;
+
 };
 
-class PointerList : public List
-{
-public:
-	void* data;
-};
-
-
-class fbtList
-{
-pub_methods:
-
-	fbtList() : first(0), last(0) {}
-	fbtList(unsigned short ID_code) : ID(ID_code), first(0), last(0) {}
-	~fbtList() { clear(); }
-
-	void clear(void) { first = last = 0; }
-
-	void push_back(void* v)
-	{
-		List* datalist = ((List*)v);
-		if (!datalist)
-			return;
-
-		datalist->prev = last;
-		if (last)
-			last->next = datalist;
-
-		if (!first)
-			first = datalist;
-
-		last = datalist;
-	}
-
-	void remove(List* link)
-	{
-		if (!link)
-			return;
-		if (link->next)
-			link->next->prev = link->prev;
-		if (link->prev)
-			link->prev->next = link->next;
-		if (last == link)
-			last = link->prev;
-		if (first == link)
-			first = link->next;
-	}
-
-	void setIDCode(unsigned int IDcode) { ID = IDcode; }
-	unsigned int getIDCode() {return ID;};
-
-public:
-	List*   first;
-	List*   last;
-	unsigned short ID;
-};
-
-/* Now useless. Use PointerList instead
-class DataList
-{
-public:
-	DataList *next, *prev;
-	void* data;
-};
-
-class fbtDataList
-{
-pub_methods:
-
-	fbtDataList() : first(0), last(0) {}
-	fbtDataList(unsigned short ID_code) : ID(ID_code), first(0), last(0) {}
-	~fbtDataList() { clear(); }
-
-	void clear(void) { first = last = 0; }
-
-	void add_data(void* data)
-	{
-		if(data)
-		{
-			DataList* datalist = new DataList();
-			datalist->data = data;
-			datalist->next = 0;
-			push_back(datalist);
-		}
-	}
-
-	void push_back(void* v)
-	{
-		DataList* datalist = ((DataList*)v);
-		if (!datalist)
-			return;
-
-		datalist->prev = last;
-		if (last)
-			last->next = datalist;
-
-		if (!first)
-			first = datalist;
-
-		last = datalist;
-	}
-
-	void remove(DataList* link)
-	{
-		if (!link)
-			return;
-		if (link->next)
-			link->next->prev = link->prev;
-		if (link->prev)
-			link->prev->next = link->next;
-		if (last == link)
-			last = link->prev;
-		if (first == link)
-			first = link->next;
-	}
-
-	void setIDCode(unsigned int IDcode) { ID = IDcode; }
-
-public:
-
-	DataList*   first;
-	DataList*   last;
-	unsigned short ID;
-};
-*/
 class FileGlobal
 {
 public:
