@@ -18,7 +18,7 @@ namespace Bgedna {
 
 /*fbt works with public attributes, so since all the attributes in KX_Scene are protected, i create a struct that will contains
 all the attributes retrieved with the KX_Scene's pubblic methods.*/
-class KX_SceneStruct : List
+class KX_SceneStruct : public List
 {
 pub_methods:
 	KX_SceneStruct(){ List();};
@@ -26,22 +26,22 @@ public:
 	//put here all the variables that will contain KX_Scene's attributes that must be saved
 	KX_CameraStruct*			active_camera;
 	RAS_BucketManagerStruct*	bucket_manager;
-	fbtDataList					cameras;
+	fbtList						cameras;
 	unsigned int				camera_design_height;
 	unsigned int				camera_design_width;
 	bool						dbvt_culling;
 	int							dbvt_occlusion_res;
-	fbtDataList					fonts;
+	fbtList						fonts;
 	RAS_FrameSettingsStruct*	framing_type;
-	fbtDataList					inactive_list;
-	fbtDataList					light_list;
+	fbtList						inactive_list;
+	fbtList						light_list;
 	char						name[64];
-	fbtDataList					object_list;
+	fbtList						object_list;
 	KX_CameraStruct*			pcamera;
 
 	double						suspended_delta;
 	double						suspended_time;
-	fbtDataList					temp_obj_list;
+	fbtList						temp_obj_list;
 
 	RAS_RectStruct*				scene_viewport;
 	SCA_TimeEventManagerStruct*	time_event_manager;
@@ -49,7 +49,7 @@ public:
 
 };
 
-class CValueStruct : List
+class CValueStruct : public List
 {
 
 };
@@ -74,7 +74,7 @@ class KX_LightObjectStruct : KX_GameObjectStruct
 
 };
 
-class KX_WorldInfoStruct : List
+class KX_WorldInfoStruct : public List
 {
 public:
 	float		back_color[3];
@@ -86,7 +86,7 @@ public:
 	bool		has_world;
 };
 
-class RAS_FrameSettingsStruct : List
+class RAS_FrameSettingsStruct : public List
 {
 public:
 	int						m_frame_type;//it is an enum
@@ -95,7 +95,7 @@ public:
 	unsigned int			m_design_aspect_height;
 };
 
-class RAS_IPolyMaterialStruct : List
+class RAS_IPolyMaterialStruct : public List
 {
 public:
 	char					m_texturename[64];
@@ -114,37 +114,37 @@ public:
 	float					m_specularity;
 };
 
-class RAS_MeshSlotStruct : List
+class RAS_MeshSlotStruct : public List
 {
-
+	
 };
 
-class RAS_MaterialBucketStruct : List
+class RAS_MaterialBucketStruct : public List
 {
 public:
 	bool						isSorted;
 	bool						isAlpha;
 	RAS_IPolyMaterialStruct*	material;
-	fbtDataList					mesh_slot;
-	fbtDataList					act_mesh_slot;
+	fbtList						mesh_slot;
+	fbtList						act_mesh_slot;
 
 };
 
-class RAS_BucketManagerStruct : List
+class RAS_BucketManagerStruct : public List
 {
 public:
-	fbtDataList					solid_bucket_material_list;
-	fbtDataList					alpha_bucket_material_list;
+	fbtList					solid_bucket_material_list;
+	fbtList					alpha_bucket_material_list;
 };
 
-class RAS_RectStruct : List
+class RAS_RectStruct : public List
 {
 public:
 	int m_x1, m_y1;
 	int m_x2, m_y2;
 };
 
-class SCA_TimeEventManagerStruct : List
+class SCA_TimeEventManagerStruct : public List
 {
 
 };
@@ -160,7 +160,7 @@ public:
 	List *next, *prev;
 };
 
-class PointerList : List
+class PointerList : public List
 {
 public:
 	void* data;

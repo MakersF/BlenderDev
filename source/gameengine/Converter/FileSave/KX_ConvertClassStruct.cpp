@@ -79,17 +79,17 @@ void* KX_ConvertClassStruct::checkUnique(void* original, FBTuint16 ID)
 	
 }
 
-Bgedna::fbtDataList* KX_ConvertClassStruct::CListTofbtDataList(CListValue* clist, FBTuint16 ID)
+Bgedna::fbtList* KX_ConvertClassStruct::CListTofbtList(CListValue* clist, FBTuint16 ID)
 {
 	
-	Bgedna::fbtDataList* retlist = new Bgedna::fbtDataList(ID);
+	Bgedna::fbtList* retlist = new Bgedna::fbtList(ID);
 
 	switch (ID)
 	{
 		case GAME_OBJECT :
 			for (int i=0; i < clist->GetCount(); ++i)
 			{
-				retlist->add_data( convertGameObject((KX_GameObject*) (clist+i), CREATE_NEW, true) );
+				retlist->push_back( convertGameObject((KX_GameObject*) (clist+i), CREATE_NEW, true) );
 			}
 			break;
 
@@ -97,7 +97,7 @@ Bgedna::fbtDataList* KX_ConvertClassStruct::CListTofbtDataList(CListValue* clist
 			for (int i=0; i < clist->GetCount(); ++i)
 			{
 
-				retlist->add_data( convertLightObject((KX_LightObject*) (clist+i), CREATE_NEW, true) );
+				retlist->push_back( convertLightObject((KX_LightObject*) (clist+i), CREATE_NEW, true) );
 			}
 			break;
 
@@ -190,12 +190,12 @@ Bgedna::KX_SceneStruct* KX_ConvertClassStruct::convertScene(KX_Scene* scene, Bge
 	/*start converting the attributes in lists*/
 
 	//convert all cameras and put into a DataList
-	Bgedna::fbtDataList* cameras = new Bgedna::fbtDataList(CAMERA);
+	Bgedna::fbtList* cameras = new Bgedna::fbtList(CAMERA);
 	std::list<class KX_Camera*> camera_list = (std::list<class KX_Camera*>) *(scene->GetCameras());
 	std::list<class KX_Camera*>::iterator cam_it = camera_list.begin();
 	while(cam_it!= camera_list.end())
 	{
-		cameras->add_data(convertCameraObject(*cam_it, CREATE_NEW, true));
+		cameras->push_back(convertCameraObject(*cam_it, CREATE_NEW, true));
 		cam_it++;
 	}
 	scene_struct->cameras = *cameras;
@@ -203,12 +203,12 @@ Bgedna::KX_SceneStruct* KX_ConvertClassStruct::convertScene(KX_Scene* scene, Bge
 	delete(&camera_list);
 
 	//convert all fonts and put into Datalist
-	Bgedna::fbtDataList* fonts = new Bgedna::fbtDataList(FONT_OBJECT);
+	Bgedna::fbtList* fonts = new Bgedna::fbtList(FONT_OBJECT);
 	std::list<class KX_FontObject*> font_list = (std::list<class KX_FontObject*>) *(scene->GetFonts());
 	std::list<class KX_FontObject*>::iterator fon_it = font_list.begin();
 	while(fon_it != font_list.end() )
 	{
-		fonts->add_data(convertFont(*fon_it, CREATE_NEW, true));
+		fonts->push_back(convertFont(*fon_it, CREATE_NEW, true));
 		fon_it++;
 	}
 	scene_struct->fonts = *fonts;
@@ -397,23 +397,23 @@ Bgedna::RAS_BucketManagerStruct* KX_ConvertClassStruct::convertBucketManager(RAS
 			return already_converted;
 	}
 	
-	Bgedna::fbtDataList* solid_bucket_list_struct = new Bgedna::fbtDataList(MATERIAL_BUCKET);
+	Bgedna::fbtList* solid_bucket_list_struct = new Bgedna::fbtList(MATERIAL_BUCKET);
 	std::vector<class RAS_MaterialBucket*> solid_bucket_list = (std::vector<class RAS_MaterialBucket*>) (bucket_manager->GetSolidBuckets());
 	std::vector<class RAS_MaterialBucket*>::iterator buk_it = solid_bucket_list.begin();
 	while(buk_it != solid_bucket_list.end() )
 	{
-		solid_bucket_list_struct->add_data(convertMaterialBucket(*buk_it, CREATE_NEW, true));
+		solid_bucket_list_struct->push_back(convertMaterialBucket(*buk_it, CREATE_NEW, true));
 		buk_it++;
 	}
 	bucket_manager_struct->solid_bucket_material_list = *solid_bucket_list_struct;
 	delete(&solid_bucket_list);
 
-	Bgedna::fbtDataList* alpha_bucket_list_struct = new Bgedna::fbtDataList(MATERIAL_BUCKET);
+	Bgedna::fbtList* alpha_bucket_list_struct = new Bgedna::fbtList(MATERIAL_BUCKET);
 	std::vector<class RAS_MaterialBucket*> alpha_bucket_list = (std::vector<class RAS_MaterialBucket*>) (bucket_manager->GetAlphaBuckets());
 	buk_it = alpha_bucket_list.begin();
 	while(buk_it != alpha_bucket_list.end() )
 	{
-		alpha_bucket_list_struct->add_data(convertMaterialBucket(*buk_it, CREATE_NEW, true));
+		alpha_bucket_list_struct->push_back(convertMaterialBucket(*buk_it, CREATE_NEW, true));
 		buk_it++;
 	}
 	bucket_manager_struct->alpha_bucket_material_list = *alpha_bucket_list_struct;
@@ -474,19 +474,19 @@ Bgedna::RAS_MaterialBucketStruct* KX_ConvertClassStruct::convertMaterialBucket(R
 	material_bucket_struct->isSorted = material_bucket->IsZSort();
 	material_bucket_struct->material = convertIPolyMaterial(material_bucket->GetPolyMaterial());
 
-	Bgedna::fbtDataList* act_mesh_slot = new Bgedna::fbtDataList(MESH_SLOT);
+	Bgedna::fbtList* act_mesh_slot = new Bgedna::fbtList(MESH_SLOT);
 	SG_DList::iterator<class RAS_MeshSlot> act_mesh_it(material_bucket->GetActiveMeshSlots());//assume this is the head of the element
 	for(act_mesh_it.begin(); !act_mesh_it.end(); ++act_mesh_slot)
 	{
-		act_mesh_slot->add_data(convertMeshSlot(*act_mesh_it, CREATE_NEW, true));
+		act_mesh_slot->push_back(convertMeshSlot(*act_mesh_it, CREATE_NEW, true));
 	}
 	material_bucket_struct->act_mesh_slot = *act_mesh_slot;
 
-	Bgedna::fbtDataList* mesh_slot = new Bgedna::fbtDataList(MESH_SLOT);
+	Bgedna::fbtList* mesh_slot = new Bgedna::fbtList(MESH_SLOT);
 	std::list<class RAS_MeshSlot>::iterator mesh_it = material_bucket->msBegin();
 	for(mesh_it; mesh_it!= material_bucket->msEnd(); ++mesh_it)
 	{
-		mesh_slot->add_data(convertMeshSlot(&(*mesh_it), CREATE_NEW, true));
+		mesh_slot->push_back(convertMeshSlot(&(*mesh_it), CREATE_NEW, true));
 	}
 	material_bucket_struct->mesh_slot = *mesh_slot;
 	delete(&mesh_it);
@@ -503,6 +503,17 @@ Bgedna::RAS_MaterialBucketStruct* KX_ConvertClassStruct::convertMaterialBucket(R
 
 RAS_MaterialBucket*	KX_ConvertClassStruct::convertMaterialBucketStruct(Bgedna::RAS_MaterialBucketStruct* material_bucket_struct, RAS_MaterialBucket* material_bucket)
 {
+	if(!material_bucket)
+		material_bucket = new RAS_MaterialBucket(convertIPolyMaterialStruct(material_bucket_struct->material, CREATE_NEW));
+
+	Bgedna::RAS_MeshSlotStruct* elem;
+	for(elem = (material_bucket_struct->act_mesh_slot).first; elem != material_bucket_struct->act_mesh_slot.last; elem = elem->next)
+		material_bucket->ActivateMesh(convertMeshSlotStruct(elem, CREATE_NEW));
+
+	for(elem = material_bucket_struct->mesh_slot.first; elem != material_bucket_struct->mesh_slot.last; elem = elem->next)
+		material_bucket->CopyMesh(convertMeshSlotStruct(elem, CREATE_NEW));
+
+	return material_bucket;
 
 }
 
