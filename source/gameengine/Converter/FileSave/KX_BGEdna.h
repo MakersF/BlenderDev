@@ -114,9 +114,70 @@ public:
 	float					m_specularity;
 };
 
+class RAS_DisplayArrayStruct : public List
+{
+
+};
+
+class RAS_MeshObjectStruct : public List
+{
+
+};
+
+class RAS_DeformerStruct : public List
+{
+
+};
+
+class DerivedMeshStruct : public List
+{
+
+};
+
+class KX_ListSlotStruct : public List
+{
+
+};
+
 class RAS_MeshSlotStruct : public List
 {
-	
+public:
+	//  indices into display arrays
+	int							m_startarray;
+	int							m_endarray;
+	int							m_startindex;
+	int							m_endindex;
+	int							m_startvertex;
+	int							m_endvertex;
+	fbtList						m_displayArrays;
+
+	// for construction only
+	RAS_DisplayArrayStruct*		m_currentArray;
+
+	// for rendering
+	RAS_MaterialBucketStruct*	m_bucket;
+	RAS_MeshObjectStruct*		m_mesh;
+	void*						m_clientObj;
+	RAS_DeformerStruct*			m_pDeformer;
+	DerivedMeshStruct*			m_pDerivedMesh;
+	double*						m_OpenGLMatrix;
+	// visibility
+	bool						m_bVisible;
+	bool						m_bCulled;
+	// object color
+	bool						m_bObjectColor;
+	float						m_RGBAcolor[4];
+	// display lists
+	KX_ListSlotStruct*			m_DisplayList;
+	bool						m_bDisplayList;
+	// joined mesh slots
+	RAS_MeshSlotStruct*			m_joinSlot;
+	/**
+	 * Access with [row index][column index]
+	 */
+	float					m_joinInvTransform[4][4];
+	/*note: FBT supports at max 2 dimension matrices, DON'T exceed this limit!!*/
+	fbtList						m_joinedSlots;
 };
 
 class RAS_MaterialBucketStruct : public List
@@ -157,7 +218,8 @@ class List
 pub_methods:
 	List() {next = 0;};
 public:
-	List *next, *prev;
+	List* next;
+	List* prev;
 };
 
 class PointerList : public List
@@ -211,12 +273,12 @@ pub_methods:
 	unsigned int getIDCode() {return ID;};
 
 public:
-	List   *first;
-	List   *last;
+	List*   first;
+	List*   last;
 	unsigned short ID;
 };
 
-
+/* Now useless. Use PointerList instead
 class DataList
 {
 public:
@@ -283,7 +345,7 @@ public:
 	DataList*   last;
 	unsigned short ID;
 };
-
+*/
 class FileGlobal
 {
 public:

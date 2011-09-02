@@ -507,6 +507,7 @@ RAS_MaterialBucket*	KX_ConvertClassStruct::convertMaterialBucketStruct(Bgedna::R
 		material_bucket = new RAS_MaterialBucket(convertIPolyMaterialStruct(material_bucket_struct->material, CREATE_NEW));
 
 	Bgedna::RAS_MeshSlotStruct* elem;
+	//elem = elem -> next. VS 2010 underline it as en error, but RAS_MeshSlotStruct implements List, so it should work..
 	for(elem = (material_bucket_struct->act_mesh_slot).first; elem != material_bucket_struct->act_mesh_slot.last; elem = elem->next)
 		material_bucket->ActivateMesh(convertMeshSlotStruct(elem, CREATE_NEW));
 
