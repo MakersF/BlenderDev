@@ -4,7 +4,7 @@
 /**
  * sound.c (mar-2001 nzc)
  *
- * $Id: sound.c 39840 2011-09-01 09:46:07Z campbellbarton $
+ * $Id: sound.c 39858 2011-09-02 03:32:57Z campbellbarton $
  */
 
 #include <string.h>
@@ -39,8 +39,10 @@
 #include "BKE_sequencer.h"
 #include "BKE_scene.h"
 
+#ifdef WITH_AUDASPACE
 // evil global ;-)
 static int sound_cfra;
+#endif
 
 struct bSound* sound_new_file(struct Main *bmain, const char *filename)
 {

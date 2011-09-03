@@ -1,7 +1,7 @@
 /** \file gameengine/VideoTexture/ImageRender.cpp
  *  \ingroup bgevideotex
  */
-/* $Id: ImageRender.cpp 39834 2011-09-01 02:12:53Z campbellbarton $
+/* $Id: ImageRender.cpp 39883 2011-09-03 02:15:49Z campbellbarton $
 -----------------------------------------------------------------------------
 This source file is part of VideoTexture library
 
@@ -328,11 +328,11 @@ static int ImageRender_init (PyObject * pySelf, PyObject * args, PyObject * kwds
 // get background color
 PyObject * getBackground (PyImage * self, void * closure)
 {
-	return Py_BuildValue("[BBBB]", 
-        getImageRender(self)->getBackground(0),
-		getImageRender(self)->getBackground(1), 
-        getImageRender(self)->getBackground(2),
-        getImageRender(self)->getBackground(3));
+	return Py_BuildValue("[BBBB]",
+	                     getImageRender(self)->getBackground(0),
+	                     getImageRender(self)->getBackground(1),
+	                     getImageRender(self)->getBackground(2),
+	                     getImageRender(self)->getBackground(3));
 }
 
 // set color

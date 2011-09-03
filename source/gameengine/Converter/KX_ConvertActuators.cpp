@@ -1,5 +1,5 @@
 /*
-* $Id: KX_ConvertActuators.cpp 39834 2011-09-01 02:12:53Z campbellbarton $
+* $Id: KX_ConvertActuators.cpp 39883 2011-09-03 02:15:49Z campbellbarton $
 *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -942,7 +942,7 @@ void BL_ConvertActuators(char* maggiename,
 		case ACT_2DFILTER:
 		{
 			bTwoDFilterActuator *_2dfilter = (bTwoDFilterActuator*) bact->data;
-            SCA_2DFilterActuator *tmp = NULL;
+			SCA_2DFilterActuator *tmp = NULL;
 
 			RAS_2DFilterManager::RAS_2DFILTER_MODE filtermode;
 			switch(_2dfilter->type)

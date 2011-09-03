@@ -1,5 +1,5 @@
 /*
- * $Id: rna_access.c 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: rna_access.c 39870 2011-09-02 10:43:51Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -2216,7 +2216,16 @@ char *RNA_property_string_get_alloc(PointerRNA *ptr, PropertyRNA *prop, char *fi
 	else
 		buf= MEM_mallocN(sizeof(char)*(length+1), "RNA_string_get_alloc");
 
+#ifndef NDEBUG
+	/* safety check to ensure the string is actually set */
+	buf[length]= 255;
+#endif
+
 	RNA_property_string_get(ptr, prop, buf);
+
+#ifndef NDEBUG
+	BLI_assert(buf[length] == '\0');
+#endif
 
 	return buf;
 }
