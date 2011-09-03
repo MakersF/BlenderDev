@@ -166,7 +166,7 @@ Bgedna::KX_SceneStruct* KX_ConvertClassStruct::convertScene(KX_Scene* scene, Bge
 	scene_struct->world_info = convertWorldInfo(scene->GetWorldInfo(), CREATE_NEW, true);
 
 	STR_String string = scene->GetName();
-	strncpy(scene_struct->name, string.Ptr(), 64);
+	strncpy(scene_struct->name, string.Ptr(), 128);
 	delete(&string);
 	
 	/*start converting the attributes in lists*/
@@ -419,17 +419,17 @@ RAS_BucketManager* KX_ConvertClassStruct::convertBucketManagerStruct(Bgedna::RAS
 		bucket_manager = new RAS_BucketManager();
 
 	std::vector<class RAS_MaterialBucket*> solid_list;
-	Bgedna::DataList* bms;
+	Bgedna::List* bms;
 	for( bms = bucket_manager_struct->solid_bucket_material_list.first; bms; bms = bms->next)
 	{
-		solid_list.push_back(convertMaterialBucketStruct((Bgedna::RAS_MaterialBucketStruct*) bms->data));
+		solid_list.push_back(convertMaterialBucketStruct((Bgedna::RAS_MaterialBucketStruct*) bms, CREATE_NEW));
 	}
 	bucket_manager->SetSolidBuckets(solid_list);
 
 	std::vector<class RAS_MaterialBucket*> alpha_list;
 	for(bms = bucket_manager_struct->alpha_bucket_material_list.first; bms; bms = bms->next)
 	{
-		alpha_list.push_back(convertMaterialBucketStruct((Bgedna::RAS_MaterialBucketStruct*) bms->data));
+		alpha_list.push_back(convertMaterialBucketStruct((Bgedna::RAS_MaterialBucketStruct*) bms, CREATE_NEW));
 	}
 	bucket_manager->SetAlphaBuckets(alpha_list);
 	
@@ -490,10 +490,10 @@ RAS_MaterialBucket*	KX_ConvertClassStruct::convertMaterialBucketStruct(Bgedna::R
 
 	Bgedna::RAS_MeshSlotStruct* elem;
 	//elem = elem -> next. VS 2010 underline it as en error, but RAS_MeshSlotStruct implements List, so it should work..
-	for(elem = (material_bucket_struct->act_mesh_slot).first; elem != material_bucket_struct->act_mesh_slot.last; elem = elem->next)
+	for(elem = (Bgedna::RAS_MeshSlotStruct*) (material_bucket_struct->act_mesh_slot).first; elem != material_bucket_struct->act_mesh_slot.last; elem = (Bgedna::RAS_MeshSlotStruct*) elem->next)
 		material_bucket->ActivateMesh(convertMeshSlotStruct(elem, CREATE_NEW));
 
-	for(elem = material_bucket_struct->mesh_slot.first; elem != material_bucket_struct->mesh_slot.last; elem = elem->next)
+	for(elem = (Bgedna::RAS_MeshSlotStruct*) material_bucket_struct->mesh_slot.first; elem != material_bucket_struct->mesh_slot.last; elem = (Bgedna::RAS_MeshSlotStruct*) elem->next)
 		material_bucket->CopyMesh(convertMeshSlotStruct(elem, CREATE_NEW));
 
 	return material_bucket;
@@ -605,10 +605,10 @@ Bgedna::RAS_IPolyMaterialStruct* KX_ConvertClassStruct::convertIPolyMaterial(RAS
 	
 
 	STR_String copy_string = STR_String(ipoly_material->GetMaterialName());
-	strncpy(ipoly_material_struct->m_materialname, copy_string.Ptr(), 64 );
+	strncpy(ipoly_material_struct->m_materialname, copy_string.Ptr(), 128 );
 	delete(copy_string);
 	STR_String copy_string = STR_String(ipoly_material->GetTextureName());
-	strncpy(ipoly_material_struct->m_texturename, copy_string.Ptr(), 64 );
+	strncpy(ipoly_material_struct->m_texturename, copy_string.Ptr(), 128 );
 	delete(copy_string);
 
 	ipoly_material_struct->m_shininess = ipoly_material->m_shininess;
@@ -663,7 +663,12 @@ Bgedna::RAS_MeshSlotStruct* KX_ConvertClassStruct::convertMeshSlot(RAS_MeshSlot*
 
 RAS_MeshSlot* KX_ConvertClassStruct::convertMeshSlotStruct(Bgedna::RAS_MeshSlotStruct* mesh_slot_struct, RAS_MeshSlot* mesh_slot)
 {
-
+	mesh_slot_struct->m_bCulled = mesh_slot->m_bCulled;
+	mesh_slot_struct->m_bObjectColor = mesh_slot->m_bObjectColor;
+	mesh_slot_struct->m_bVisible = mesh_slot->m_bVisible;
+	mesh_slot_struct->m_clientObj = mesh_slot->m_clientObj;
+	mesh_slot_struct->m_OpenGLMatrix = mesh_slot->m_OpenGLMatrix;
+	mesh_slot->m_RGBAcolor.getValue(mesh_slot_struct->m_RGBAcolor);
 }
 
 

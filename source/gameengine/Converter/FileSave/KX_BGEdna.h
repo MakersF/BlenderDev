@@ -3,7 +3,8 @@
 #ifndef _KX_BGEDNA
 #define _KX_BGEDNA
 
-
+/*NOTE: SG_QList and SG_DList are used like our class List. So there is no reason to create a new
+class, just use List.
 /*makefbt doesn't like public methods and typedef inside classes.
 So in classes first define all private and protected methods and attribute,
 then use "pub_methods:" to define public methods, and lately use "public:" to
@@ -23,8 +24,8 @@ class List
 pub_methods:
 	List() {next = 0;};
 public:
-	List* next;
-	List* prev;
+	List	*next;
+	List	*prev;
 };
 
 class PointerList : public List
@@ -78,8 +79,8 @@ pub_methods:
 	unsigned int getIDCode() {return ID;};
 
 public:
-	List*   first;
-	List*   last;
+	List	*first;
+	List	*last;
 	unsigned short ID;
 };
 
@@ -132,8 +133,8 @@ public:
 class RAS_IPolyMaterialStruct : public List
 {
 public:
-	char					m_texturename[64];
-	char					m_materialname[64];
+	char					m_texturename[128];
+	char					m_materialname[128];
 	int						m_tile;
 	int						m_tilexrep,m_tileyrep;
 	int						m_drawingmode;
@@ -178,7 +179,7 @@ class RAS_MaterialBucketStruct : public List
 public:
 	bool						isSorted;
 	bool						isAlpha;
-	RAS_IPolyMaterialStruct*	material;
+	RAS_IPolyMaterialStruct		*material;
 	fbtList						mesh_slot;
 	fbtList						act_mesh_slot;
 
@@ -197,15 +198,15 @@ public:
 	fbtList						m_displayArrays;
 
 	// for construction only
-	RAS_DisplayArrayStruct*		m_currentArray;
+	RAS_DisplayArrayStruct		*m_currentArray;
 
 	// for rendering
-	RAS_MaterialBucketStruct*	m_bucket;
-	RAS_MeshObjectStruct*		m_mesh;
-	void*						m_clientObj;
-	RAS_DeformerStruct*			m_pDeformer;
-	DerivedMeshStruct*			m_pDerivedMesh;
-	double*						m_OpenGLMatrix;
+	RAS_MaterialBucketStruct	*m_bucket;
+	RAS_MeshObjectStruct		*m_mesh;
+	void						*m_clientObj;
+	RAS_DeformerStruct			*m_pDeformer;
+	DerivedMeshStruct			*m_pDerivedMesh;
+	double						*m_OpenGLMatrix;
 	// visibility
 	bool						m_bVisible;
 	bool						m_bCulled;
@@ -213,14 +214,14 @@ public:
 	bool						m_bObjectColor;
 	float						m_RGBAcolor[4];
 	// display lists
-	KX_ListSlotStruct*			m_DisplayList;
+	KX_ListSlotStruct			*m_DisplayList;
 	bool						m_bDisplayList;
 	// joined mesh slots
-	RAS_MeshSlotStruct*			m_joinSlot;
+	RAS_MeshSlotStruct			*m_joinSlot;
 	/**
 	 * Access with [row index][column index]
 	 */
-	float					m_joinInvTransform[4][4];
+	float						m_joinInvTransform[4][4];
 	/*note: FBT supports at max 2 dimension matrices, DON'T exceed this limit!!*/
 	fbtList						m_joinedSlots;
 };
@@ -252,39 +253,39 @@ pub_methods:
 	KX_SceneStruct(){ List();};
 public:
 	//put here all the variables that will contain KX_Scene's attributes that must be saved
-	KX_CameraStruct*			active_camera;
-	RAS_BucketManagerStruct*	bucket_manager;
+	KX_CameraStruct				*active_camera;
+	RAS_BucketManagerStruct		*bucket_manager;
 	fbtList						cameras;
 	unsigned int				camera_design_height;
 	unsigned int				camera_design_width;
 	bool						dbvt_culling;
 	int							dbvt_occlusion_res;
 	fbtList						fonts;
-	RAS_FrameSettingsStruct*	framing_type;
+	RAS_FrameSettingsStruct		*framing_type;
 	fbtList						inactive_list;
 	fbtList						light_list;
-	char						name[64];
+	char						name[128];
 	fbtList						object_list;
-	KX_CameraStruct*			pcamera;
+	KX_CameraStruct				*pcamera;
 
 	double						suspended_delta;
 	double						suspended_time;
 	fbtList						temp_obj_list;
 
-	RAS_RectStruct*				scene_viewport;
-	SCA_TimeEventManagerStruct*	time_event_manager;
-	KX_WorldInfoStruct*			world_info;
+	RAS_RectStruct				*scene_viewport;
+	SCA_TimeEventManagerStruct	*time_event_manager;
+	KX_WorldInfoStruct			*world_info;
 
 };
 
 class FileGlobal
 {
 public:
-    char subvstr[4];
-    short subversion;
-    int revision;
-    char filename[240];
-	KX_SceneStruct* current_scene;
+    char				subvstr[4];
+    short				subversion;
+    int					revision;
+    char				filename[240];
+	KX_SceneStruct		*current_scene;
 };
 
 /** @}*/
