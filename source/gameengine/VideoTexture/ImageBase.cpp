@@ -1,7 +1,7 @@
 /** \file gameengine/VideoTexture/ImageBase.cpp
  *  \ingroup bgevideotex
  */
-/* $Id: ImageBase.cpp 39834 2011-09-01 02:12:53Z campbellbarton $
+/* $Id: ImageBase.cpp 39883 2011-09-03 02:15:49Z campbellbarton $
 -----------------------------------------------------------------------------
 This source file is part of VideoTexture library
 
@@ -375,7 +375,7 @@ void Image_dealloc (PyImage * self)
 		if (self->m_image->m_exports > 0)
 		{
 			PyErr_SetString(PyExc_SystemError,
-				            "deallocated Image object has exported buffers");
+			                "deallocated Image object has exported buffers");
 			PyErr_Print();
 		}
 		// if release requires deleting of object, do it

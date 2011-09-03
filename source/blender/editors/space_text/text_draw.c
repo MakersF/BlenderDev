@@ -1,5 +1,5 @@
 /*
- * $Id: text_draw.c 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: text_draw.c 39868 2011-09-02 09:39:21Z nazgul $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -1821,12 +1821,10 @@ void text_update_character_width(SpaceText *st)
 
 /* Moves the view to the cursor location,
   also used to make sure the view isnt outside the file */
-void text_update_cursor_moved(bContext *C)
+void text_scroll_to_cursor(SpaceText *st, ScrArea *sa)
 {
-	ScrArea *sa= CTX_wm_area(C);
-	SpaceText *st= CTX_wm_space_text(C);
 	Text *text;
-	ARegion *ar;
+	ARegion *ar= NULL;
 	int i, x, winx= 0;
 
 	if(ELEM3(NULL, st, st->text, st->text->curl)) return;
@@ -1834,8 +1832,10 @@ void text_update_cursor_moved(bContext *C)
 	text= st->text;
 
 	for(ar=sa->regionbase.first; ar; ar= ar->next)
-		if(ar->regiontype==RGN_TYPE_WINDOW)
+		if(ar->regiontype==RGN_TYPE_WINDOW) {
 			winx= ar->winx;
+			break;
+		}
 	
 	winx -= TXT_SCROLL_WIDTH;
 
@@ -1844,7 +1844,7 @@ void text_update_cursor_moved(bContext *C)
 	i= txt_get_span(text->lines.first, text->sell);
 	if(st->wordwrap) {
 		int offl, offc;
-		wrap_offset(st, CTX_wm_region(C), text->sell, text->selc, &offl, &offc);
+		wrap_offset(st, ar, text->sell, text->selc, &offl, &offc);
 		i+= offl;
 	}
 
@@ -1865,3 +1865,10 @@ void text_update_cursor_moved(bContext *C)
 	if(st->left <0) st->left= 0;
 }
 
+void text_update_cursor_moved(bContext *C)
+{
+	ScrArea *sa= CTX_wm_area(C);
+	SpaceText *st= CTX_wm_space_text(C);
+
+	text_scroll_to_cursor(st, sa);
+}

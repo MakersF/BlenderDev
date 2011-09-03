@@ -1,5 +1,5 @@
 /*
- * $Id: GPG_Application.cpp 39834 2011-09-01 02:12:53Z campbellbarton $
+ * $Id: GPG_Application.cpp 39883 2011-09-03 02:15:49Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -192,7 +192,7 @@ static LRESULT CALLBACK screenSaverWindowProc(HWND hwnd, UINT uMsg, WPARAM wPara
 			LONG dx = scr_save_mouse_pos.x - pt.x;
 			LONG dy = scr_save_mouse_pos.y - pt.y;
 			if (abs(dx) > SCR_SAVE_MOUSE_MOVE_THRESHOLD
-			    || abs(dy) > SCR_SAVE_MOUSE_MOVE_THRESHOLD)
+			        || abs(dy) > SCR_SAVE_MOUSE_MOVE_THRESHOLD)
 			{
 				close = TRUE;
 			}
