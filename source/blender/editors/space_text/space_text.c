@@ -1,5 +1,5 @@
 /*
- * $Id: space_text.c 39738 2011-08-27 11:41:48Z nazgul $
+ * $Id: space_text.c 39868 2011-09-02 09:39:21Z nazgul $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -153,6 +153,11 @@ static void text_listener(ScrArea *sa, wmNotifier *wmn)
 				case NA_ADDED:
 				case NA_REMOVED:
 					ED_area_tag_redraw(sa);
+					break;
+				case NA_SELECTED:
+					if(st->text && st->text == wmn->reference)
+						text_scroll_to_cursor(st, sa);
+
 					break;
 			}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: KX_GameObject.cpp 39834 2011-09-01 02:12:53Z campbellbarton $
+ * $Id: KX_GameObject.cpp 39883 2011-09-03 02:15:49Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -111,7 +111,7 @@ KX_GameObject::KX_GameObject(
       m_pHitObject(NULL),
       m_actionManager(NULL),
       m_isDeformable(false)
-    #ifdef WITH_PYTHON
+#ifdef WITH_PYTHON
     , m_attr_dict(NULL)
 #endif
 {

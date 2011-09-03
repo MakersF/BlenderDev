@@ -1,5 +1,5 @@
 /*
- * $Id: SG_IObject.h 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: SG_IObject.h 39883 2011-09-03 02:15:49Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -194,7 +194,7 @@ public:
 	/** 
 	 * Clear the array of pointers to controllers associated with 
 	 * this node. This does not delete the controllers themselves!
-     * This should be used very carefully to avoid memory
+	 * This should be used very carefully to avoid memory
 	 * leaks.
 	 */
 	

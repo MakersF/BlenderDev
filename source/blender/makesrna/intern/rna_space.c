@@ -1,5 +1,5 @@
 /*
- * $Id: rna_space.c 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: rna_space.c 39868 2011-09-02 09:39:21Z nazgul $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -591,7 +591,8 @@ static void rna_SpaceTextEditor_text_set(PointerRNA *ptr, PointerRNA value)
 	SpaceText *st= (SpaceText*)(ptr->data);
 
 	st->text= value.data;
-	st->top= 0;
+
+	WM_main_add_notifier(NC_TEXT|NA_SELECTED, st->text);
 }
 
 static void rna_SpaceTextEditor_updateEdited(Main *UNUSED(bmain), Scene *UNUSED(scene), PointerRNA *ptr)
