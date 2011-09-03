@@ -1,5 +1,5 @@
 /*
- * $Id: SG_Spatial.cpp 39834 2011-09-01 02:12:53Z campbellbarton $
+ * $Id: SG_Spatial.cpp 39883 2011-09-03 02:15:49Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -115,7 +115,7 @@ UpdateSpatialData(
 	        const SG_Spatial *parent,
 	        double time,
 	        bool& parentUpdated
-){
+	        ){
 	bool bComputesWorldTransform = false;
 
 	// update spatial controllers

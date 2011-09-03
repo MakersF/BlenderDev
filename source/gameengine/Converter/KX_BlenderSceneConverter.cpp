@@ -1,5 +1,5 @@
 /*
- * $Id: KX_BlenderSceneConverter.cpp 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: KX_BlenderSceneConverter.cpp 39883 2011-09-03 02:15:49Z campbellbarton $
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
  * This program is free software; you can redistribute it and/or
@@ -679,7 +679,7 @@ void	KX_BlenderSceneConverter::ResetPhysicsObjectsAnimationIpo(bool clearIpo)
 								MEM_freeN( tmpicu );
 								localDel_ipoCurve( tmpicu );
 							}
-					  	}
+						}
 					} else
 					{	ipo = NULL; // XXX add_ipo(blenderObject->id.name+2, ID_OB);
 						blenderObject->ipo = ipo;

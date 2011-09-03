@@ -197,6 +197,7 @@ class SCENE_OT_export(bpy.types.Operator):
     bl_idname = "export_applink.pilgway_3d_coat"
     bl_label = "Export your custom property"
     bl_description = "Export your custom property"
+    bl_options = {'UNDO'}
 
     
     def invoke(self, context, event):
@@ -263,13 +264,14 @@ class SCENE_OT_export(bpy.types.Operator):
                 file.close()
             coa.objectdir = checkname
 
-        return('FINISHED')
+        return {'FINISHED'}
 
 
 class SCENE_OT_import(bpy.types.Operator):
     bl_idname = "import_applink.pilgway_3d_coat"
     bl_label = "import your custom property"
     bl_description = "import your custom property"
+    bl_options = {'UNDO'}
     
     def invoke(self, context, event):
         scene = context.scene
@@ -383,12 +385,13 @@ class SCENE_OT_import(bpy.types.Operator):
             act_name.select = True
         bpy.context.scene.objects.active = act_first
 
-        return('FINISHED')
+        return {'FINISHED'}
 
 class SCENE_OT_import3b(bpy.types.Operator):
     bl_idname = "import3b_applink.pilgway_3d_coat"
     bl_label = "Brings mesh from 3D-Coat"
     bl_description = "Bring 3D-Coat Mesh"
+    bl_options = {'UNDO'}
 
     
     def invoke(self, context, event):
@@ -458,7 +461,7 @@ class SCENE_OT_import3b(bpy.types.Operator):
         tex.gettex(mat_list, new_obj, scene,export)
 
 
-        return('FINISHED')
+        return {'FINISHED'}
 
 class SCENE_OT_load3b(bpy.types.Operator):
     bl_idname = "import_applink.pilgway_3d_coat_3b"
@@ -484,7 +487,7 @@ class SCENE_OT_load3b(bpy.types.Operator):
             file.close()
 
 
-        return('FINISHED')
+        return {'FINISHED'}
 
 class SCENE_OT_deltex(bpy.types.Operator):
     bl_idname = "import_applink.pilgway_3d_deltex"  # XXX, name?
@@ -512,7 +515,7 @@ class SCENE_OT_deltex(bpy.types.Operator):
                         del_osoite = osoite + i
                         os.remove(del_osoite)
     
-        return('FINISHED')
+        return {'FINISHED'}
 
 
 from bpy import *

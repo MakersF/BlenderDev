@@ -1,5 +1,5 @@
 /*
- * $Id: BL_ShapeDeformer.h 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: BL_ShapeDeformer.h 39883 2011-09-03 02:15:49Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -46,8 +46,8 @@ class BL_ShapeDeformer : public BL_SkinDeformer
 {
 public:
 	BL_ShapeDeformer(BL_DeformableGameObject *gameobj,
-                     Object *bmeshobj,
-                     RAS_MeshObject *mesh);
+	                 Object *bmeshobj,
+	                 RAS_MeshObject *mesh);
 
 	/* this second constructor is needed for making a mesh deformable on the fly. */
 	BL_ShapeDeformer(BL_DeformableGameObject *gameobj,
