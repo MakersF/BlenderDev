@@ -1,5 +1,5 @@
 /*
- * $Id: rna_nodetree.c 39744 2011-08-28 05:06:30Z campbellbarton $
+ * $Id: rna_nodetree.c 39910 2011-09-04 15:53:12Z nazgul $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -2736,6 +2736,7 @@ static void rna_def_nodetree(BlenderRNA *brna)
 	RNA_def_property_flag(prop, PROP_EDITABLE);
 	RNA_def_property_struct_type(prop, "GreasePencil");
 	RNA_def_property_ui_text(prop, "Grease Pencil Data", "Grease Pencil datablock");
+	RNA_def_property_update(prop, NC_NODE, NULL);
 	
 	prop = RNA_def_property(srna, "type", PROP_ENUM, PROP_NONE);
 	RNA_def_property_clear_flag(prop, PROP_EDITABLE);

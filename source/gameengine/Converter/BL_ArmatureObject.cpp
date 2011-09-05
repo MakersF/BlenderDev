@@ -1,5 +1,5 @@
 /*
- * $Id: BL_ArmatureObject.cpp 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: BL_ArmatureObject.cpp 39901 2011-09-04 01:42:47Z moguri $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -231,10 +231,10 @@ BL_ArmatureObject::BL_ArmatureObject(
 	m_timestep(0.040),
 	m_activeAct(NULL),
 	m_activePriority(999),
+	m_vert_deform_type(vert_deform_type),
 	m_constraintNumber(0),
 	m_channelNumber(0),
-	m_lastapplyframe(0.0),
-	m_vert_deform_type(vert_deform_type)
+	m_lastapplyframe(0.0)
 {
 	m_armature = (bArmature *)armature->data;
 

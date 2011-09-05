@@ -1,5 +1,5 @@
 /*
- * $Id: KX_GameObject.cpp 39883 2011-09-03 02:15:49Z campbellbarton $
+ * $Id: KX_GameObject.cpp 39896 2011-09-03 20:48:47Z moguri $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -159,6 +159,7 @@ KX_GameObject::~KX_GameObject()
 	}
 	if (m_actionManager)
 	{
+		KX_GetActiveScene()->RemoveAnimatedObject(this);
 		delete m_actionManager;
 	}
 #ifdef WITH_PYTHON
@@ -355,8 +356,8 @@ BL_ActionManager* KX_GameObject::GetActionManager()
 {
 	// We only want to create an action manager if we need it
 	if (!m_actionManager)
-		m_actionManager = new BL_ActionManager(this);
-
+	{		KX_GetActiveScene()->AddAnimatedObject(this);		m_actionManager = new BL_ActionManager(this);
+	}
 	return m_actionManager;
 }
 

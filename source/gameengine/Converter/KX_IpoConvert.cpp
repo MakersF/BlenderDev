@@ -1,5 +1,5 @@
 /*
- * $Id: KX_IpoConvert.cpp 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: KX_IpoConvert.cpp 39900 2011-09-04 01:27:16Z moguri $
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
  * This program is free software; you can redistribute it and/or
@@ -257,7 +257,7 @@ SG_Controller *BL_CreateCameraIPO(struct bAction *action, KX_GameObject*  camera
 	ipocontr->m_clipstart = blendercamera->clipsta;
 	ipocontr->m_clipend = blendercamera->clipend;
 
-	BL_InterpolatorList *adtList= GetAdtList(blendercamera->adt->action, converter);
+	BL_InterpolatorList *adtList= GetAdtList(action, converter);
 
 	// For each active channel in the adtList add an
 	// interpolator to the game object.
