@@ -37,7 +37,8 @@ enum DataType{
 	MESH_SLOT = FBT_ID2('M','S'),
 	RAS_RECT = FBT_ID2('R','R'),
 	WORLD_INFO = FBT_ID2('W','I'),
-	IPOLY_MATERIAL = FBT_ID2('I','P')
+	IPOLY_MATERIAL = FBT_ID2('I','P'),
+	DISPLAY_ARRAY = FBT_ID2('D','A')
 };
 
 
@@ -102,6 +103,7 @@ private:
 	Bgedna::RAS_MaterialBucketStruct*		convertMaterialBucket(RAS_MaterialBucket* material_bucket, Bgedna::RAS_MaterialBucketStruct* material_bucket_struct = NULL, bool add_to_list = true);
 	Bgedna::RAS_IPolyMaterialStruct*		convertIPolyMaterial(RAS_IPolyMaterial* ipoly_material, Bgedna::RAS_IPolyMaterialStruct* ipoly_material_struct = NULL, bool add_to_list = true);
 	Bgedna::RAS_MeshSlotStruct*				convertMeshSlot(RAS_MeshSlot* mesh_slot, Bgedna::RAS_MeshSlotStruct* mesh_slot_struct = NULL, bool add_to_list = true);
+	Bgedna::RAS_DisplayArrayStruct*			convertDisplayArray(RAS_DisplayArray* display_array, Bgedna::RAS_DisplayArrayStruct* display_array_struct = NULL, bool add_to_list = true);
 
 	/*specific struct to class conversion methods*/
 
@@ -120,6 +122,7 @@ private:
 	RAS_MaterialBucket*						convertMaterialBucketStruct(Bgedna::RAS_MaterialBucketStruct* material_bucket_struct, RAS_MaterialBucket* material_bucket);
 	RAS_IPolyMaterial*						convertIPolyMaterialStruct(Bgedna::RAS_IPolyMaterialStruct* ipoly_material_struct, RAS_IPolyMaterial* ipoly_material);
 	RAS_MeshSlot*							convertMeshSlotStruct(Bgedna::RAS_MeshSlotStruct* mesh_slot_struct, RAS_MeshSlot* mesh_slot);
+	RAS_DisplayArray*						convertDisplayArrayStruct(Bgedna::RAS_DisplayArrayStruct* display_array_struct, RAS_DisplayArray* display_array);
 
 }
 #endif //_KX_CONVERTCLASSSTRUCT

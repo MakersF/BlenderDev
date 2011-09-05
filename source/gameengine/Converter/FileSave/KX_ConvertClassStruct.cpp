@@ -135,6 +135,9 @@ void* KX_ConvertClassStruct::convertClassToStruct(void* save_class, FBTuint16 ID
 
 Bgedna::KX_SceneStruct* KX_ConvertClassStruct::convertScene(KX_Scene* scene, Bgedna::KX_SceneStruct* scene_struct, bool add_to_list)
 {
+	if(!scene)
+		return NULL;
+
 	if(!scene_struct)
 	{
 		Bgedna::KX_SceneStruct* scene_struct = new Bgedna::KX_SceneStruct();
@@ -277,6 +280,9 @@ KX_GameObject* KX_ConvertClassStruct::convertGameObjectStruct(Bgedna::KX_GameObj
 
 Bgedna::RAS_FrameSettingsStruct* KX_ConvertClassStruct::convertFrameSettings(const RAS_FrameSettings frsets, Bgedna::RAS_FrameSettingsStruct* frsets_struct, bool add_to_list)
 {
+	if(!&frsets)
+		return NULL;
+
 	if(!frsets_struct)
 	{
 		Bgedna::RAS_FrameSettingsStruct* frsets_struct = new Bgedna::RAS_FrameSettingsStruct();
@@ -309,6 +315,9 @@ Bgedna::RAS_FrameSettingsStruct* KX_ConvertClassStruct::convertFrameSettings(con
 
 RAS_FrameSettings* KX_ConvertClassStruct::convertFrameSettingsStruct(Bgedna::RAS_FrameSettingsStruct* frsets_struct, RAS_FrameSettings* frsets)
 {
+	if(!frsets_struct)
+		return NULL;
+
 	if(!frsets)
 		frsets= new RAS_FrameSettings( (RAS_FrameSettings.RAS_FrameType) frsets_struct->m_frame_type, 
 														frsets_struct->bar[0], 
@@ -321,6 +330,9 @@ RAS_FrameSettings* KX_ConvertClassStruct::convertFrameSettingsStruct(Bgedna::RAS
 
 Bgedna::RAS_RectStruct* KX_ConvertClassStruct::convertRect(const RAS_Rect scene_viewport, Bgedna::RAS_RectStruct* scene_viewport_struct, bool add_to_list)
 {
+	if(!scene_viewport)
+		return NULL;
+
 	if(!scene_viewport_struct)
 	{
 		Bgedna::RAS_RectStruct* scene_viewport_struct = new Bgedna::RAS_RectStruct();
@@ -349,6 +361,9 @@ Bgedna::RAS_RectStruct* KX_ConvertClassStruct::convertRect(const RAS_Rect scene_
 
 RAS_Rect* KX_ConvertClassStruct::convertRectStruct(Bgedna::RAS_RectStruct* scene_viewport_struct, RAS_Rect* scene_viewport)
 {
+	if(!scene_viewport_struct)
+		return NULL;
+
 	if(!scene_viewport)
 			scene_viewport = new RAS_Rect(scene_viewport_struct->m_x1,
 											scene_viewport_struct->m_y1,
@@ -369,6 +384,9 @@ SCA_TimeEventManager* KX_ConvertClassStruct::convertTimeEvManagerStruct(Bgedna::
 
 Bgedna::RAS_BucketManagerStruct* KX_ConvertClassStruct::convertBucketManager(RAS_BucketManager* bucket_manager, Bgedna::RAS_BucketManagerStruct* bucket_manager_struct, bool add_to_list)
 {
+	if(!bucket_manager)
+		return NULL;
+
 	if(!bucket_manager_struct)
 	{
 		Bgedna::RAS_BucketManagerStruct* bucket_manager_struct = new Bgedna::RAS_BucketManagerStruct();
@@ -415,6 +433,9 @@ Bgedna::RAS_BucketManagerStruct* KX_ConvertClassStruct::convertBucketManager(RAS
 
 RAS_BucketManager* KX_ConvertClassStruct::convertBucketManagerStruct(Bgedna::RAS_BucketManagerStruct* bucket_manager_struct, RAS_BucketManager* bucket_manager)
 {
+	if(!bucket_manager_struct)
+		return NULL;
+
 	if(!bucket_manager)
 		bucket_manager = new RAS_BucketManager();
 
@@ -440,6 +461,9 @@ RAS_BucketManager* KX_ConvertClassStruct::convertBucketManagerStruct(Bgedna::RAS
 
 Bgedna::RAS_MaterialBucketStruct* KX_ConvertClassStruct::convertMaterialBucket(RAS_MaterialBucket* material_bucket, Bgedna::RAS_MaterialBucketStruct* material_bucket_struct, bool add_to_list)
 {
+	if(!material_bucket)
+		return NULL;
+
 	if(!material_bucket_struct)
 	{
 		Bgedna::RAS_MaterialBucketStruct* material_bucket_struct = new Bgedna::RAS_MaterialBucketStruct();
@@ -485,11 +509,13 @@ Bgedna::RAS_MaterialBucketStruct* KX_ConvertClassStruct::convertMaterialBucket(R
 
 RAS_MaterialBucket*	KX_ConvertClassStruct::convertMaterialBucketStruct(Bgedna::RAS_MaterialBucketStruct* material_bucket_struct, RAS_MaterialBucket* material_bucket)
 {
+	if(!material_bucket_struct)
+		return NULL;
+
 	if(!material_bucket)
 		material_bucket = new RAS_MaterialBucket(convertIPolyMaterialStruct(material_bucket_struct->material, CREATE_NEW));
 
 	Bgedna::RAS_MeshSlotStruct* elem;
-	//elem = elem -> next. VS 2010 underline it as en error, but RAS_MeshSlotStruct implements List, so it should work..
 	for(elem = (Bgedna::RAS_MeshSlotStruct*) (material_bucket_struct->act_mesh_slot).first; elem != material_bucket_struct->act_mesh_slot.last; elem = (Bgedna::RAS_MeshSlotStruct*) elem->next)
 		material_bucket->ActivateMesh(convertMeshSlotStruct(elem, CREATE_NEW));
 
@@ -502,6 +528,9 @@ RAS_MaterialBucket*	KX_ConvertClassStruct::convertMaterialBucketStruct(Bgedna::R
 
 Bgedna::KX_WorldInfoStruct*	KX_ConvertClassStruct::convertWorldInfo(KX_WorldInfo* winfo, Bgedna::KX_WorldInfoStruct* winfo_struct, bool add_to_list)
 {
+	if(!winfo)
+		return NULL;
+
 	if(!winfo_struct)
 	{
 		Bgedna::KX_WorldInfoStruct* winfo_struct = new Bgedna::KX_WorldInfoStruct();
@@ -552,6 +581,9 @@ Bgedna::KX_WorldInfoStruct*	KX_ConvertClassStruct::convertWorldInfo(KX_WorldInfo
 
 KX_WorldInfo* KX_ConvertClassStruct::convertWorldInfoStruct(Bgedna::KX_WorldInfoStruct* winfo_struct, KX_WorldInfo* winfo_origin)
 {
+	if(!winfo_struct)
+		return NULL;
+
 	BlenderWorldInfo* winfo;
 	if(winfo_origin)
 		winfo = (BlenderWorldInfo*) winfo_origin;
@@ -591,6 +623,9 @@ KX_WorldInfo* KX_ConvertClassStruct::convertWorldInfoStruct(Bgedna::KX_WorldInfo
 
 Bgedna::RAS_IPolyMaterialStruct* KX_ConvertClassStruct::convertIPolyMaterial(RAS_IPolyMaterial* ipoly_material, Bgedna::RAS_IPolyMaterialStruct* ipoly_material_struct = NULL, bool add_to_list = true)
 {
+	if(!ipoly_material)
+		return NULL;
+
 	if(!ipoly_material_struct)
 	{
 		Bgedna::RAS_IPolyMaterialStruct* ipoly_material_struct = new Bgedna::RAS_IPolyMaterialStruct();
@@ -641,6 +676,9 @@ Bgedna::RAS_IPolyMaterialStruct* KX_ConvertClassStruct::convertIPolyMaterial(RAS
 
 RAS_IPolyMaterial* KX_ConvertClassStruct::convertIPolyMaterialStruct(Bgedna::RAS_IPolyMaterialStruct* ipoly_material_struct, RAS_IPolyMaterial* ipoly_material)
 {
+	if(!ipoly_material_struct)
+		return NULL;
+
 	if(!ipoly_material)
 		ipoly_material = new RAS_IPolyMaterial( const STR_String(ipoly_material_struct->m_texturename),
 												const STR_String(ipoly_material_struct->m_materialname),
@@ -658,18 +696,66 @@ RAS_IPolyMaterial* KX_ConvertClassStruct::convertIPolyMaterialStruct(Bgedna::RAS
 
 Bgedna::RAS_MeshSlotStruct* KX_ConvertClassStruct::convertMeshSlot(RAS_MeshSlot* mesh_slot, Bgedna::RAS_MeshSlotStruct* mesh_slot_struct = NULL, bool add_to_list = true)
 {
+	if(!mesh_slot_struct)
+		return NULL;
 
-}
+	if(!mesh_slot_struct)
+	{
+		Bgedna::RAS_MeshSlotStruct* mesh_slot_struct = new Bgedna::RAS_MeshSlotStruct();
 
-RAS_MeshSlot* KX_ConvertClassStruct::convertMeshSlotStruct(Bgedna::RAS_MeshSlotStruct* mesh_slot_struct, RAS_MeshSlot* mesh_slot)
-{
+		
+		Bgedna::RAS_MeshSlotStruct* already_converted;
+		already_converted = (Bgedna::RAS_MeshSlotStruct*) checkUnique((void*) mesh_slot_struct, MESH_SLOT);
+		if(already_converted != NULL)
+			return already_converted;
+	}
+
 	mesh_slot_struct->m_bCulled = mesh_slot->m_bCulled;
 	mesh_slot_struct->m_bObjectColor = mesh_slot->m_bObjectColor;
 	mesh_slot_struct->m_bVisible = mesh_slot->m_bVisible;
 	mesh_slot_struct->m_clientObj = mesh_slot->m_clientObj;
 	mesh_slot_struct->m_OpenGLMatrix = mesh_slot->m_OpenGLMatrix;
 	mesh_slot->m_RGBAcolor.getValue(mesh_slot_struct->m_RGBAcolor);
+	mesh_slot_struct->m_bucket = convertMaterialBucket(mesh_slot->m_bucket, CREATE_NEW, true);
+	mesh_slot_struct->m_joinSlot = convertMeshSlot(mesh_slot->m_joinSlot, CREATE_NEW, true);
+	RAS_MeshSlot::iterator it;
+	mesh_slot->begin(it);
+	mesh_slot_struct->m_startvertex = it.startvertex;
+	mesh_slot_struct->m_startarray =  it.arraynum;
+	mesh_slot_struct->m_endvertex = it.endvertex;
+	/*m_endarray, m_startindex, m_endindex missing. I don't know how to retrieve from it.*/
+	
+	Bgedna::fbtList* display_list = new Bgedna::fbtList();
+	for(it; !mesh_slot->end(it); mesh_slot->next(it))
+		display_list->push_back(convertDisplayArray(it.array, CREATE_NEW, true));
+
+	mesh_slot_struct->m_displayArrays = *display_list;
+	/*here i really hope that checkUnique() will do his work :) */
+	mesh_slot_struct->m_currentArray = convertDisplayArray(mesh_slot->CurrentDisplayArray(), CREATE_NEW, true);
+
+	if(add_to_list)
+	{
+		notifyConverted((void*) mesh_slot, (void*) mesh_slot_struct, MESH_SLOT);
+		m_finterface->m_meshSlot.push_back(mesh_slot_struct);
+		return (Bgedna::RAS_MeshSlotStruct*) m_finterface->m_meshSlot.last;
+	}
+
+	return mesh_slot_struct;
 }
 
+RAS_MeshSlot* KX_ConvertClassStruct::convertMeshSlotStruct(Bgedna::RAS_MeshSlotStruct* mesh_slot_struct, RAS_MeshSlot* mesh_slot)
+{
+
+}
+
+Bgedna::RAS_DisplayArrayStruct*	KX_ConvertClassStruct::convertDisplayArray(RAS_DisplayArray* display_array, Bgedna::RAS_DisplayArrayStruct* display_array_struct = NULL, bool add_to_list = true)
+{
+
+}
+
+RAS_DisplayArray* KX_ConvertClassStruct::convertDisplayArrayStruct(Bgedna::RAS_DisplayArrayStruct* display_array_struct, RAS_DisplayArray* display_array)
+{
+
+}
 
 #endif
