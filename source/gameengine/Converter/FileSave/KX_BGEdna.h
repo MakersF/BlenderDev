@@ -151,7 +151,18 @@ public:
 
 class RAS_TexVertStruct : public List
 {
-
+public:
+	float			m_localxyz[3];	// 3*4 =	12
+	float			m_uv1[2];		// 2*4 =	8
+	float			m_uv2[2];		// 2*4 =	8
+	unsigned int	m_rgba;			//			4
+	float			m_tangent[4];   // 4*4 =	16
+	float			m_normal[3];	// 3*4 =	12
+	short			m_flag;			//		    2
+	short			m_softBodyIndex;//			2
+	unsigned int	m_unit;			//			4
+	unsigned int	m_origindex;	//			4
+	//									total = 72
 };
 
 /*yes, it is stupid, but since i use fbtList to store lists types,
