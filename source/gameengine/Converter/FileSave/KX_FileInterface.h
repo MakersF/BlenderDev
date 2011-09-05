@@ -23,6 +23,7 @@ public:
 		Bgedna::fbtList m_worldInfo;
 		Bgedna::fbtList m_iPolyMaterial;
 		Bgedna::fbtList m_meshSlot;
+		Bgedna::fbtList m_displayArray;
 
         Bgedna::FileGlobal* m_fg;
 

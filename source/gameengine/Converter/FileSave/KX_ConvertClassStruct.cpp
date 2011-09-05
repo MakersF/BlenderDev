@@ -135,6 +135,7 @@ void* KX_ConvertClassStruct::convertClassToStruct(void* save_class, FBTuint16 ID
 
 Bgedna::KX_SceneStruct* KX_ConvertClassStruct::convertScene(KX_Scene* scene, Bgedna::KX_SceneStruct* scene_struct, bool add_to_list)
 {
+	//if nothing is passed that means that you need to store nothing
 	if(!scene)
 		return NULL;
 
@@ -489,10 +490,10 @@ Bgedna::RAS_MaterialBucketStruct* KX_ConvertClassStruct::convertMaterialBucket(R
 	material_bucket_struct->act_mesh_slot = *act_mesh_slot;
 
 	Bgedna::fbtList* mesh_slot = new Bgedna::fbtList(MESH_SLOT);
-	std::list<class RAS_MeshSlot>::iterator mesh_it = material_bucket->msBegin();
-	for(mesh_it; mesh_it!= material_bucket->msEnd(); ++mesh_it)
+	std::list<class RAS_MeshSlot>::iterator* mesh_it = &(material_bucket->msBegin());
+	for(*mesh_it; *mesh_it!= material_bucket->msEnd(); ++mesh_it)
 	{
-		mesh_slot->push_back(convertMeshSlot(&(*mesh_it), CREATE_NEW, true));
+		mesh_slot->push_back(convertMeshSlot((RAS_MeshSlot*)mesh_it, CREATE_NEW, true));
 	}
 	material_bucket_struct->mesh_slot = *mesh_slot;
 	delete(&mesh_it);
@@ -696,7 +697,7 @@ RAS_IPolyMaterial* KX_ConvertClassStruct::convertIPolyMaterialStruct(Bgedna::RAS
 
 Bgedna::RAS_MeshSlotStruct* KX_ConvertClassStruct::convertMeshSlot(RAS_MeshSlot* mesh_slot, Bgedna::RAS_MeshSlotStruct* mesh_slot_struct = NULL, bool add_to_list = true)
 {
-	if(!mesh_slot_struct)
+	if(!mesh_slot)
 		return NULL;
 
 	if(!mesh_slot_struct)
@@ -749,6 +750,7 @@ Bgedna::RAS_MeshSlotStruct* KX_ConvertClassStruct::convertMeshSlot(RAS_MeshSlot*
 	for(slots_it; slots_it!=mesh_slot->m_joinedSlots.end(); slots_it++)
 		/*here again checkUnique should do a good work*/
 		joined_slots->push_back(convertMeshSlot((RAS_MeshSlot*)&slots_it, CREATE_NEW, true));
+
 	mesh_slot_struct->m_joinedSlots = *joined_slots;
 	mesh_slot_struct->m_pDeformer = convertDeformer(mesh_slot->m_pDeformer, CREATE_NEW, true);
 	mesh_slot_struct->m_pDerivedMesh = convertDerivedMesh(mesh_slot->m_pDerivedMesh, CREATE_NEW, true);
@@ -773,6 +775,48 @@ RAS_MeshSlot* KX_ConvertClassStruct::convertMeshSlotStruct(Bgedna::RAS_MeshSlotS
 
 Bgedna::RAS_DisplayArrayStruct*	KX_ConvertClassStruct::convertDisplayArray(RAS_DisplayArray* display_array, Bgedna::RAS_DisplayArrayStruct* display_array_struct = NULL, bool add_to_list = true)
 {
+	if(!display_array)
+		return NULL;
+
+	if(!display_array_struct)
+	{
+		Bgedna::RAS_DisplayArrayStruct* display_array_struct = new Bgedna::RAS_DisplayArrayStruct();
+
+		
+		Bgedna::RAS_DisplayArrayStruct* already_converted;
+		already_converted = (Bgedna::RAS_DisplayArrayStruct*) checkUnique((void*) display_array_struct, DISPLAY_ARRAY);
+		if(already_converted != NULL)
+			return already_converted;
+	}
+
+	display_array_struct->m_type = display_array->m_type;
+	display_array_struct->m_users = display_array->m_users;
+
+	Bgedna::fbtList* m_index = new Bgedna::fbtList();
+	vector<unsigned short>::iterator *it;
+	Bgedna::ushortList* ushortlist;
+	for(*it = display_array->m_index.begin(); *it != display_array->m_index.end(); it++)
+	{
+		ushortlist = new Bgedna::ushortList();
+		ushortlist->value = *((unsigned short*) it);
+	}
+	display_array_struct->m_index = *m_index;
+
+	Bgedna::fbtList* vertex_list = new Bgedna::fbtList();
+	vector<RAS_TexVert>::iterator* vert_it;
+	for(*vert_it = display_array->m_vertex.begin(); *vert_it != display_array->m_vertex.end(); ++vert_it)
+		vertex_list->push_back(convertTexVert( (RAS_TexVert* )vert_it, CREATE_NEW, true));
+	display_array_struct->m_vertex = *vertex_list;
+	
+
+	if(add_to_list)
+	{
+		notifyConverted((void*) display_array, (void*) display_array_struct, DISPLAY_ARRAY);
+		m_finterface->m_displayArray.push_back(display_array_struct);
+		return (Bgedna::RAS_DisplayArrayStruct*) m_finterface->m_displayArray.last;
+	}
+
+	return display_array_struct;
 
 }
 
@@ -807,6 +851,16 @@ Bgedna::DerivedMeshStruct* KX_ConvertClassStruct::convertDerivedMesh(DerivedMesh
 }
 
 DerivedMesh* KX_ConvertClassStruct::convertDerivedMeshStruct(Bgedna::DerivedMeshStruct* derived_mesh_struct, DerivedMesh* derived_mesh)
+{
+
+}
+
+Bgedna::RAS_TexVertStruct* KX_ConvertClassStruct::convertTexVert(RAS_TexVert* tex_vert, Bgedna::RAS_TexVertStruct* tex_vert_struct = NULL, bool add_to_list = true)
+{
+
+}
+
+RAS_TexVert* KX_ConvertClassStruct::convertTexVertStruct(Bgedna::RAS_TexVertStruct* tex_vert_struct, RAS_TexVert* tex_vert)
 {
 
 }

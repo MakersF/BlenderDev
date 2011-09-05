@@ -15,4 +15,4 @@ whoever wants to join this work is highly encouraged to, for each object you jus
 
 Last little note:
 i have never dug too much into the converting code, so it may be that i'm saving stuff that is not really setted up after conversion, so it wouldn't be necessary to save it. But to be on the safe side, i'm saving everything.
-After completing this part, i'll look in what is leaved empty/null, and i'll remove it.
+After completing this part, i'll look in what is leaft empty/null, and i'll remove it.

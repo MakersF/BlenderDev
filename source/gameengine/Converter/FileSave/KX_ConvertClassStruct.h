@@ -39,7 +39,8 @@ enum DataType{
 	RAS_RECT = FBT_ID2('R','R'),
 	WORLD_INFO = FBT_ID2('W','I'),
 	IPOLY_MATERIAL = FBT_ID2('I','P'),
-	DISPLAY_ARRAY = FBT_ID2('D','A')
+	DISPLAY_ARRAY = FBT_ID2('D','A'),
+	TEXT_VERT = FBT_ID2('T','V')
 };
 
 
@@ -108,6 +109,7 @@ private:
 	Bgedna::RAS_MeshObjectStruct*			convertMeshObject(RAS_MeshObject* mesh_object, Bgedna::RAS_MeshObjectStruct* mesh_object_struct = NULL, bool add_to_list = true);
 	Bgedna::RAS_DeformerStruct*				convertDeformer(RAS_Deformer* ras_deformer, Bgedna::RAS_DeformerStruct* ras_deformer_struct = NULL, bool add_to_list = true);
 	Bgedna::DerivedMeshStruct*				convertDerivedMesh(DerivedMesh* derived_mesh, Bgedna::DerivedMeshStruct* derived_mesh_struct = NULL, bool add_to_list = true);
+	Bgedna::RAS_TexVertStruct*				convertTexVert(RAS_TexVert* tex_vert, Bgedna::RAS_TexVertStruct* tex_vert_struct = NULL, bool add_to_list = true);
 
 
 	/*specific struct to class conversion methods*/
@@ -131,6 +133,7 @@ private:
 	RAS_MeshObject*							convertMeshObjectStruct(Bgedna::RAS_MeshObjectStruct* mesh_object_struct, RAS_MeshObject* mesh_objeect);
 	RAS_Deformer*							convertDeformerStruct(Bgedna::RAS_DeformerStruct* ras_deformer_struct, RAS_Deformer* ras_deformer);
 	DerivedMesh*							convertDerivedMeshStruct(Bgedna::DerivedMeshStruct* derived_mesh_struct, DerivedMesh* derived_mesh);
+	RAS_TexVert*							convertTexVertStruct(Bgedna::RAS_TexVertStruct* tex_vert_struct, RAS_TexVert* tex_vert);
 
 }
 #endif //_KX_CONVERTCLASSSTRUCT

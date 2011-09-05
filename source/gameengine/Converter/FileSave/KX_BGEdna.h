@@ -2,7 +2,7 @@
 
 #ifndef _KX_BGEDNA
 #define _KX_BGEDNA
-
+/*FINAL TODO: ALL THE DATA MUST BE 4BIT ALIGNED, SO CALCULATE ALL THE SIZE OF EACH STRUCT AND CORRECT IF WROND WITH pad0, pad1, ..., padN chars or shorts*/
 /*NOTE: SG_QList and SG_DList are used like our class List. So there is no reason to create a new
 class, just use List.
 /*makefbt doesn't like public methods and typedef inside classes.
@@ -149,9 +149,27 @@ public:
 	float					m_specularity;
 };
 
-class RAS_DisplayArrayStruct : public List
+class RAS_TexVertStruct : public List
 {
 
+};
+
+/*yes, it is stupid, but since i use fbtList to store lists types,
+i thought was better to create this class that finding another method for
+saving a vector of ushort..*/
+class ushortList : public List
+{
+public:
+	unsigned short value;
+};
+
+class RAS_DisplayArrayStruct : public List
+{
+public:
+	int			m_type;//enum
+	int			m_users;
+	fbtList		m_vertex;
+	fbtList		m_index;
 };
 
 class RAS_MeshObjectStruct : public List
