@@ -1,5 +1,5 @@
 /*
-* $Id: BL_ActionActuator.cpp 39853 2011-09-01 21:47:46Z moguri $
+* $Id: BL_ActionActuator.cpp 39901 2011-09-04 01:42:47Z moguri $
 *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -88,10 +88,10 @@ BL_ActionActuator::BL_ActionActuator(SCA_IObject* gameobj,
 	m_blendin(blendin),
 	m_blendstart(0),
 	m_stridelength(stride),
+	m_layer_weight(layer_weight),
 	m_playtype(playtype),
 	m_priority(priority),
 	m_layer(layer),
-	m_layer_weight(layer_weight),
 	m_ipo_flags(ipo_flags),
 	m_pose(NULL),
 	m_blendpose(NULL),
@@ -216,6 +216,9 @@ bool BL_ActionActuator::Update(double curtime, bool frame)
 			break;
 		case ACT_ACTION_FROM_PROP:
 			CValue* prop = GetParent()->GetProperty(m_propname);
+
+			// If we don't have a property, we can't do anything, so just bail
+			if (!prop) return false;
 
 			playtype = BL_Action::ACT_MODE_PLAY;
 			start = end = prop->GetNumber();
