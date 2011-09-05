@@ -96,8 +96,8 @@ private:
 	Bgedna::KX_CameraStruct*				convertCameraObject(KX_Camera* camera, Bgedna::KX_CameraStruct* camera_struct = NULL, bool add_to_list = true);
 	Bgedna::RAS_BucketManagerStruct*		convertBucketManager(RAS_BucketManager* bucket_manager, Bgedna::RAS_BucketManagerStruct* bucket_manager_struct = NULL, bool add_to_list = true);
 	Bgedna::KX_FontObjectStruct*			convertFont(KX_FontObject* font, Bgedna::KX_FontObjectStruct* font_struct = NULL, bool add_to_list = true);
-	Bgedna::RAS_FrameSettingsStruct*		convertFrameSettings(const RAS_FrameSettings frsets, Bgedna::RAS_FrameSettingsStruct* frsets_struct = NULL, bool add_to_list = true);
-	Bgedna::RAS_RectStruct*					convertRect(const RAS_Rect scene_viewport, Bgedna::RAS_RectStruct* scene_viewport_struct = NULL, bool add_to_list = true);
+	Bgedna::RAS_FrameSettingsStruct*		convertFrameSettings(RAS_FrameSettings* frsets, Bgedna::RAS_FrameSettingsStruct* frsets_struct = NULL, bool add_to_list = true);
+	Bgedna::RAS_RectStruct*					convertRect(RAS_Rect* scene_viewport, Bgedna::RAS_RectStruct* scene_viewport_struct = NULL, bool add_to_list = true);
 	Bgedna::SCA_TimeEventManagerStruct*		convertTimeEvManager(SCA_TimeEventManager* time_mng, Bgedna::SCA_TimeEventManagerStruct* time_mng_struct = NULL, bool add_to_list = true);
 	Bgedna::KX_WorldInfoStruct*				convertWorldInfo(KX_WorldInfo* winfo, Bgedna::KX_WorldInfoStruct* world_info_struct = NULL, bool add_to_list = true);
 	Bgedna::KX_GameObjectStruct*			convertGameObject(KX_GameObject* game_obj, Bgedna::KX_GameObjectStruct* game_obj_struct = NULL, bool add_to_list = true);
@@ -110,6 +110,8 @@ private:
 	Bgedna::RAS_DeformerStruct*				convertDeformer(RAS_Deformer* ras_deformer, Bgedna::RAS_DeformerStruct* ras_deformer_struct = NULL, bool add_to_list = true);
 	Bgedna::DerivedMeshStruct*				convertDerivedMesh(DerivedMesh* derived_mesh, Bgedna::DerivedMeshStruct* derived_mesh_struct = NULL, bool add_to_list = true);
 	Bgedna::RAS_TexVertStruct*				convertTexVert(RAS_TexVert* tex_vert, Bgedna::RAS_TexVertStruct* tex_vert_struct = NULL, bool add_to_list = true);
+	Bgedna::CValueStruct*					convertCValue(CValue* cvalue, Bgedna::CValueStruct* cvalue_struct = NULL , bool add_to_list = true);
+
 
 
 	/*specific struct to class conversion methods*/
@@ -134,6 +136,7 @@ private:
 	RAS_Deformer*							convertDeformerStruct(Bgedna::RAS_DeformerStruct* ras_deformer_struct, RAS_Deformer* ras_deformer);
 	DerivedMesh*							convertDerivedMeshStruct(Bgedna::DerivedMeshStruct* derived_mesh_struct, DerivedMesh* derived_mesh);
 	RAS_TexVert*							convertTexVertStruct(Bgedna::RAS_TexVertStruct* tex_vert_struct, RAS_TexVert* tex_vert);
+	CValue*									convertCValueStruct(Bgedna::CValueStruct* cvalue_struct, CValue* cvalue);
 
 }
 #endif //_KX_CONVERTCLASSSTRUCT

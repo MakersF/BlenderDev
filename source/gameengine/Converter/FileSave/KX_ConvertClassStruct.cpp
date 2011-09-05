@@ -141,7 +141,7 @@ Bgedna::KX_SceneStruct* KX_ConvertClassStruct::convertScene(KX_Scene* scene, Bge
 
 	if(!scene_struct)
 	{
-		Bgedna::KX_SceneStruct* scene_struct = new Bgedna::KX_SceneStruct();
+		scene_struct = new Bgedna::KX_SceneStruct();
 
 		/*Why into this if statement? Because you enter in this if statement only if this is the most derived type class converting function.
 		In fact to convert derived class you call the function that converts it, and so you don't want to notify or check if it already exist,
@@ -279,9 +279,19 @@ KX_GameObject* KX_ConvertClassStruct::convertGameObjectStruct(Bgedna::KX_GameObj
 
 }
 
-Bgedna::RAS_FrameSettingsStruct* KX_ConvertClassStruct::convertFrameSettings(const RAS_FrameSettings frsets, Bgedna::RAS_FrameSettingsStruct* frsets_struct, bool add_to_list)
+Bgedna::CValueStruct* KX_ConvertClassStruct::convertCValue(CValue* cvalue, Bgedna::CValueStruct* cvalue_struct = NULL , bool add_to_list = true)
 {
-	if(!&frsets)
+
+}
+
+CValue* KX_ConvertClassStruct::convertCValueStruct(Bgedna::CValueStruct* cvalue_struct, CValue* cvalue)
+{
+
+}
+
+Bgedna::RAS_FrameSettingsStruct* KX_ConvertClassStruct::convertFrameSettings(RAS_FrameSettings* frsets, Bgedna::RAS_FrameSettingsStruct* frsets_struct, bool add_to_list)
+{
+	if(!frsets)
 		return NULL;
 
 	if(!frsets_struct)
@@ -295,14 +305,14 @@ Bgedna::RAS_FrameSettingsStruct* KX_ConvertClassStruct::convertFrameSettings(con
 			return already_converted;
 	}
 	
-	frsets_struct->m_frame_type = frsets.FrameType();
+	frsets_struct->m_frame_type = frsets->FrameType();
 
-	frsets_struct->bar[0] = frsets.BarRed();
-	frsets_struct->bar[1] = frsets.BarGreen();
-	frsets_struct->bar[2] = frsets.BarBlue();
+	frsets_struct->bar[0] = frsets->BarRed();
+	frsets_struct->bar[1] = frsets->BarGreen();
+	frsets_struct->bar[2] = frsets->BarBlue();
 
-	frsets_struct->m_design_aspect_height = frsets.DesignAspectHeight();
-	frsets_struct->m_design_aspect_width = frsets.DesignAspectWidth();
+	frsets_struct->m_design_aspect_height = frsets->DesignAspectHeight();
+	frsets_struct->m_design_aspect_width = frsets->DesignAspectWidth();
 
 	if(add_to_list)
 	{
@@ -329,14 +339,15 @@ RAS_FrameSettings* KX_ConvertClassStruct::convertFrameSettingsStruct(Bgedna::RAS
 	return frsets;
 }
 
-Bgedna::RAS_RectStruct* KX_ConvertClassStruct::convertRect(const RAS_Rect scene_viewport, Bgedna::RAS_RectStruct* scene_viewport_struct, bool add_to_list)
+Bgedna::RAS_RectStruct* KX_ConvertClassStruct::convertRect(RAS_Rect* scene_viewport, Bgedna::RAS_RectStruct* scene_viewport_struct, bool add_to_list)
 {
+
 	if(!scene_viewport)
 		return NULL;
 
 	if(!scene_viewport_struct)
 	{
-		Bgedna::RAS_RectStruct* scene_viewport_struct = new Bgedna::RAS_RectStruct();
+		scene_viewport_struct = new Bgedna::RAS_RectStruct();
 
 		
 		Bgedna::RAS_RectStruct* already_converted;
@@ -345,10 +356,10 @@ Bgedna::RAS_RectStruct* KX_ConvertClassStruct::convertRect(const RAS_Rect scene_
 			return already_converted;
 	}
 
-	scene_viewport_struct->m_x1 = scene_viewport.GetLeft();
-	scene_viewport_struct->m_x2 = scene_viewport.GetRight();
-	scene_viewport_struct->m_y1 = scene_viewport.GetBottom();
-	scene_viewport_struct->m_y2 = scene_viewport.GetTop();
+	scene_viewport_struct->m_x1 = scene_viewport->GetLeft();
+	scene_viewport_struct->m_x2 = scene_viewport->GetRight();
+	scene_viewport_struct->m_y1 = scene_viewport->GetBottom();
+	scene_viewport_struct->m_y2 = scene_viewport->GetTop();
 
 	if(add_to_list)
 	{
@@ -390,7 +401,7 @@ Bgedna::RAS_BucketManagerStruct* KX_ConvertClassStruct::convertBucketManager(RAS
 
 	if(!bucket_manager_struct)
 	{
-		Bgedna::RAS_BucketManagerStruct* bucket_manager_struct = new Bgedna::RAS_BucketManagerStruct();
+		bucket_manager_struct = new Bgedna::RAS_BucketManagerStruct();
 
 		Bgedna::RAS_BucketManagerStruct* already_converted;
 		already_converted = (Bgedna::RAS_BucketManagerStruct*) checkUnique((void*) bucket_manager_struct, BUCKET_MANAGER);
@@ -467,7 +478,7 @@ Bgedna::RAS_MaterialBucketStruct* KX_ConvertClassStruct::convertMaterialBucket(R
 
 	if(!material_bucket_struct)
 	{
-		Bgedna::RAS_MaterialBucketStruct* material_bucket_struct = new Bgedna::RAS_MaterialBucketStruct();
+		material_bucket_struct = new Bgedna::RAS_MaterialBucketStruct();
 
 		
 		Bgedna::RAS_MaterialBucketStruct* already_converted;
@@ -534,7 +545,7 @@ Bgedna::KX_WorldInfoStruct*	KX_ConvertClassStruct::convertWorldInfo(KX_WorldInfo
 
 	if(!winfo_struct)
 	{
-		Bgedna::KX_WorldInfoStruct* winfo_struct = new Bgedna::KX_WorldInfoStruct();
+		winfo_struct = new Bgedna::KX_WorldInfoStruct();
 
 		
 		Bgedna::KX_WorldInfoStruct* already_converted;
@@ -629,7 +640,7 @@ Bgedna::RAS_IPolyMaterialStruct* KX_ConvertClassStruct::convertIPolyMaterial(RAS
 
 	if(!ipoly_material_struct)
 	{
-		Bgedna::RAS_IPolyMaterialStruct* ipoly_material_struct = new Bgedna::RAS_IPolyMaterialStruct();
+		ipoly_material_struct = new Bgedna::RAS_IPolyMaterialStruct();
 
 		
 		Bgedna::RAS_IPolyMaterialStruct* already_converted;
@@ -702,7 +713,7 @@ Bgedna::RAS_MeshSlotStruct* KX_ConvertClassStruct::convertMeshSlot(RAS_MeshSlot*
 
 	if(!mesh_slot_struct)
 	{
-		Bgedna::RAS_MeshSlotStruct* mesh_slot_struct = new Bgedna::RAS_MeshSlotStruct();
+		mesh_slot_struct = new Bgedna::RAS_MeshSlotStruct();
 
 		
 		Bgedna::RAS_MeshSlotStruct* already_converted;
@@ -780,7 +791,7 @@ Bgedna::RAS_DisplayArrayStruct*	KX_ConvertClassStruct::convertDisplayArray(RAS_D
 
 	if(!display_array_struct)
 	{
-		Bgedna::RAS_DisplayArrayStruct* display_array_struct = new Bgedna::RAS_DisplayArrayStruct();
+		display_array_struct = new Bgedna::RAS_DisplayArrayStruct();
 
 		
 		Bgedna::RAS_DisplayArrayStruct* already_converted;
@@ -857,12 +868,60 @@ DerivedMesh* KX_ConvertClassStruct::convertDerivedMeshStruct(Bgedna::DerivedMesh
 
 Bgedna::RAS_TexVertStruct* KX_ConvertClassStruct::convertTexVert(RAS_TexVert* tex_vert, Bgedna::RAS_TexVertStruct* tex_vert_struct = NULL, bool add_to_list = true)
 {
+	if(!tex_vert)
+		return NULL;
+
+	if(!tex_vert_struct)
+	{
+		tex_vert_struct = new Bgedna::RAS_TexVertStruct();
+
+		
+		Bgedna::RAS_TexVertStruct* already_converted;
+		already_converted = (Bgedna::RAS_TexVertStruct*) checkUnique((void*) tex_vert_struct, TEXT_VERT);
+		if(already_converted != NULL)
+			return already_converted;
+	}
+
+	tex_vert_struct->m_flag = tex_vert->getFlag();
+	memcpy(tex_vert_struct->m_normal ,tex_vert->getNormal(), sizeof(float)*3);
+	tex_vert_struct->m_origindex = tex_vert->getOrigIndex();
+	memcpy(&tex_vert_struct->m_rgba,tex_vert->getRGBA(), sizeof(unsigned int));
+	tex_vert_struct->m_softBodyIndex = tex_vert->getSoftBodyIndex();
+	memcpy(tex_vert_struct->m_tangent, tex_vert->getTangent(), sizeof(float)*4);
+	tex_vert_struct->m_unit = tex_vert->getUnit();
+	memcpy(tex_vert_struct->m_uv1 ,tex_vert->getUV1(), sizeof(float)*2 );
+	memcpy(tex_vert_struct->m_uv2 ,tex_vert->getUV2(), sizeof(float)*2 );
+	memcpy(tex_vert_struct->m_localxyz ,tex_vert->getXYZ(), sizeof(float)*3 );
+
+	if(add_to_list)
+	{
+		notifyConverted((void*) tex_vert, (void*) tex_vert_struct, TEXT_VERT);
+		m_finterface->m_texVert.push_back(tex_vert_struct);
+		return (Bgedna::RAS_TexVertStruct*) m_finterface->m_texVert.last;
+	}
+
+	return tex_vert_struct;
 
 }
 
 RAS_TexVert* KX_ConvertClassStruct::convertTexVertStruct(Bgedna::RAS_TexVertStruct* tex_vert_struct, RAS_TexVert* tex_vert)
 {
+	if(!tex_vert_struct)
+		return NULL;
 
+	if(!tex_vert)
+	{
+		tex_vert = new RAS_TexVert(MT_Point3(tex_vert_struct->m_localxyz),
+				MT_Point2(tex_vert_struct->m_uv1),
+				MT_Point2(tex_vert_struct->m_uv2),
+				MT_Vector4(tex_vert_struct->m_tangent),
+				tex_vert_struct->m_rgba,
+				MT_Vector3(tex_vert_struct->m_normal),
+				tex_vert_struct->m_flag,
+				tex_vert_struct->m_origindex);
+	}
+
+	return tex_vert;
 }
 
 #endif
