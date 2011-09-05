@@ -1,5 +1,5 @@
 /*
- * $Id: SkinInfo.cpp 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: SkinInfo.cpp 39898 2011-09-04 00:15:59Z jesterking $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -266,9 +266,9 @@ void SkinInfo::link_armature(bContext *C, Object *ob, std::map<COLLADAFW::Unique
 	// ^ bone index can be -1 meaning weight toward bind shape, how to express this in Blender?
 
 	// for each vertex in weight indices
-	//   for each bone index in vertex
-	//     add vertex to group at group index
-	//     treat group index -1 specially
+	//	for each bone index in vertex
+	//		add vertex to group at group index
+	//		treat group index -1 specially
 
 	// get def group by index with BLI_findlink
 

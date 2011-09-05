@@ -1,5 +1,5 @@
 /*
- * $Id: ArmatureExporter.cpp 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: ArmatureExporter.cpp 39898 2011-09-04 00:15:59Z jesterking $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -188,7 +188,7 @@ void ArmatureExporter::add_bone_node(Bone *bone, Object *ob_arm)
 	for (Bone *child = (Bone*)bone->childbase.first; child; child = child->next) {
 		add_bone_node(child, ob_arm);
 	}
-    node.end();
+	node.end();
 	//}
 }
 

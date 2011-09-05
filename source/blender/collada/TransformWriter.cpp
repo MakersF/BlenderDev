@@ -1,5 +1,5 @@
 /*
- * $Id: TransformWriter.cpp 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: TransformWriter.cpp 39898 2011-09-04 00:15:59Z jesterking $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -50,7 +50,7 @@ void TransformWriter::add_node_transform(COLLADASW::Node& node, float mat[][4], 
 
 	double dmat[4][4];
 	UnitConverter* converter = new UnitConverter();
-    converter->mat4_to_dae_double(dmat,local);
+	converter->mat4_to_dae_double(dmat,local);
 
 	TransformBase::decompose(local, loc, rot, NULL, scale);
 	if ( node.getType() == COLLADASW::Node::JOINT)
