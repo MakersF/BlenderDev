@@ -24,6 +24,7 @@
 #include "RAS_MaterialBucket.h"
 #include "SG_Dlist.h"
 #include "KX_FileInterface.h"
+#include "MT_Matrix4x4.h"
 
 enum DataType{
 	SCENE = FBT_ID2('S', 'C'),
@@ -104,6 +105,10 @@ private:
 	Bgedna::RAS_IPolyMaterialStruct*		convertIPolyMaterial(RAS_IPolyMaterial* ipoly_material, Bgedna::RAS_IPolyMaterialStruct* ipoly_material_struct = NULL, bool add_to_list = true);
 	Bgedna::RAS_MeshSlotStruct*				convertMeshSlot(RAS_MeshSlot* mesh_slot, Bgedna::RAS_MeshSlotStruct* mesh_slot_struct = NULL, bool add_to_list = true);
 	Bgedna::RAS_DisplayArrayStruct*			convertDisplayArray(RAS_DisplayArray* display_array, Bgedna::RAS_DisplayArrayStruct* display_array_struct = NULL, bool add_to_list = true);
+	Bgedna::RAS_MeshObjectStruct*			convertMeshObject(RAS_MeshObject* mesh_object, Bgedna::RAS_MeshObjectStruct* mesh_object_struct = NULL, bool add_to_list = true);
+	Bgedna::RAS_DeformerStruct*				convertDeformer(RAS_Deformer* ras_deformer, Bgedna::RAS_DeformerStruct* ras_deformer_struct = NULL, bool add_to_list = true);
+	Bgedna::DerivedMeshStruct*				convertDerivedMesh(DerivedMesh* derived_mesh, Bgedna::DerivedMeshStruct* derived_mesh_struct = NULL, bool add_to_list = true);
+
 
 	/*specific struct to class conversion methods*/
 
@@ -123,6 +128,9 @@ private:
 	RAS_IPolyMaterial*						convertIPolyMaterialStruct(Bgedna::RAS_IPolyMaterialStruct* ipoly_material_struct, RAS_IPolyMaterial* ipoly_material);
 	RAS_MeshSlot*							convertMeshSlotStruct(Bgedna::RAS_MeshSlotStruct* mesh_slot_struct, RAS_MeshSlot* mesh_slot);
 	RAS_DisplayArray*						convertDisplayArrayStruct(Bgedna::RAS_DisplayArrayStruct* display_array_struct, RAS_DisplayArray* display_array);
+	RAS_MeshObject*							convertMeshObjectStruct(Bgedna::RAS_MeshObjectStruct* mesh_object_struct, RAS_MeshObject* mesh_objeect);
+	RAS_Deformer*							convertDeformerStruct(Bgedna::RAS_DeformerStruct* ras_deformer_struct, RAS_Deformer* ras_deformer);
+	DerivedMesh*							convertDerivedMeshStruct(Bgedna::DerivedMeshStruct* derived_mesh_struct, DerivedMesh* derived_mesh);
 
 }
 #endif //_KX_CONVERTCLASSSTRUCT

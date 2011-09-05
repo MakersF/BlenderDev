@@ -718,11 +718,14 @@ Bgedna::RAS_MeshSlotStruct* KX_ConvertClassStruct::convertMeshSlot(RAS_MeshSlot*
 	mesh_slot->m_RGBAcolor.getValue(mesh_slot_struct->m_RGBAcolor);
 	mesh_slot_struct->m_bucket = convertMaterialBucket(mesh_slot->m_bucket, CREATE_NEW, true);
 	mesh_slot_struct->m_joinSlot = convertMeshSlot(mesh_slot->m_joinSlot, CREATE_NEW, true);
+	mesh_slot_struct->m_bDisplayList = mesh_slot->m_DisplayList;
+	
 	RAS_MeshSlot::iterator it;
 	mesh_slot->begin(it);
 	mesh_slot_struct->m_startvertex = it.startvertex;
 	mesh_slot_struct->m_startarray =  it.arraynum;
 	mesh_slot_struct->m_endvertex = it.endvertex;
+
 	/*m_endarray, m_startindex, m_endindex missing. I don't know how to retrieve from it.*/
 	
 	Bgedna::fbtList* display_list = new Bgedna::fbtList();
@@ -732,6 +735,26 @@ Bgedna::RAS_MeshSlotStruct* KX_ConvertClassStruct::convertMeshSlot(RAS_MeshSlot*
 	mesh_slot_struct->m_displayArrays = *display_list;
 	/*here i really hope that checkUnique() will do his work :) */
 	mesh_slot_struct->m_currentArray = convertDisplayArray(mesh_slot->CurrentDisplayArray(), CREATE_NEW, true);
+	mesh_slot_struct->m_mesh = convertMeshObject(mesh_slot->m_mesh, CREATE_NEW, true);
+	/*why setValue doesn't work?*/
+	for(int x = 0;x<4;x++)
+	{
+		for(int y = 0; y<4; y++)
+		{
+			mesh_slot_struct->m_joinInvTransform[x][y] = mesh_slot->m_joinInvTransform.getElement(x,y);
+		}
+	}
+	Bgedna::fbtList* joined_slots = new Bgedna::fbtList();
+	list<RAS_MeshSlot*>::iterator slots_it = mesh_slot->m_joinedSlots.begin();
+	for(slots_it; slots_it!=mesh_slot->m_joinedSlots.end(); slots_it++)
+		/*here again checkUnique should do a good work*/
+		joined_slots->push_back(convertMeshSlot((RAS_MeshSlot*)&slots_it, CREATE_NEW, true));
+	mesh_slot_struct->m_joinedSlots = *joined_slots;
+	mesh_slot_struct->m_pDeformer = convertDeformer(mesh_slot->m_pDeformer, CREATE_NEW, true);
+	mesh_slot_struct->m_pDerivedMesh = convertDerivedMesh(mesh_slot->m_pDerivedMesh, CREATE_NEW, true);
+	//don't know how to retrieve. Probably not usefull.
+	mesh_slot_struct->m_displayArrays = NULL;
+
 
 	if(add_to_list)
 	{
@@ -754,6 +777,36 @@ Bgedna::RAS_DisplayArrayStruct*	KX_ConvertClassStruct::convertDisplayArray(RAS_D
 }
 
 RAS_DisplayArray* KX_ConvertClassStruct::convertDisplayArrayStruct(Bgedna::RAS_DisplayArrayStruct* display_array_struct, RAS_DisplayArray* display_array)
+{
+
+}
+
+Bgedna::RAS_MeshObjectStruct* KX_ConvertClassStruct::convertMeshObject(RAS_MeshObject* mesh_object, Bgedna::RAS_MeshObjectStruct* mesh_object_struct = NULL, bool add_to_list = true)
+{
+
+}
+
+RAS_MeshObject*	KX_ConvertClassStruct::convertMeshObjectStruct(Bgedna::RAS_MeshObjectStruct* mesh_object_struct, RAS_MeshObject* mesh_objeect)
+{
+
+}
+
+Bgedna::RAS_DeformerStruct*	KX_ConvertClassStruct::convertDeformer(RAS_Deformer* ras_deformer, Bgedna::RAS_DeformerStruct* ras_deformer_struct = NULL, bool add_to_list = true)
+{
+
+}
+
+RAS_Deformer* KX_ConvertClassStruct::convertDeformerStruct(Bgedna::RAS_DeformerStruct* ras_deformer_struct, RAS_Deformer* ras_deformer)
+{
+
+}
+
+Bgedna::DerivedMeshStruct* KX_ConvertClassStruct::convertDerivedMesh(DerivedMesh* derived_mesh, Bgedna::DerivedMeshStruct* derived_mesh_struct = NULL, bool add_to_list = true)
+{
+
+}
+
+DerivedMesh* KX_ConvertClassStruct::convertDerivedMeshStruct(Bgedna::DerivedMeshStruct* derived_mesh_struct, DerivedMesh* derived_mesh)
 {
 
 }

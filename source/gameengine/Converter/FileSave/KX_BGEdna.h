@@ -169,6 +169,8 @@ class DerivedMeshStruct : public List
 
 };
 
+/*is it actually usefull? This structs should only store what is needed after the conversion,
+not all the element to do a dump of the memory on disk.. */
 class KX_ListSlotStruct : public List
 {
 
