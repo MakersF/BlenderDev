@@ -1,5 +1,5 @@
 /*
- * $Id: DocumentExporter.cpp 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: DocumentExporter.cpp 39893 2011-09-03 15:36:36Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -328,9 +328,7 @@ void DocumentExporter::exportCurrentScene(Scene *sce, const char* filename, bool
 	//scale = RNA_struct_find_property(&unit_settings, "scale_length");
 
 	std::string unitname = "meter";
-	float linearmeasure = 1.0f;
-
-	linearmeasure = RNA_float_get(&unit_settings, "scale_length");
+	float linearmeasure = RNA_float_get(&unit_settings, "scale_length");
 
 	switch(RNA_property_enum_get(&unit_settings, system)) {
 		case USER_UNIT_NONE:
@@ -368,8 +366,7 @@ void DocumentExporter::exportCurrentScene(Scene *sce, const char* filename, bool
 
 	asset.setUnit(unitname, linearmeasure);
 	asset.setUpAxisType(COLLADASW::Asset::Z_UP);
-	// TODO: need an Author field in userpref
-	if(strlen(U.author) > 0) {
+	if(U.author[0] != '\0') {
 		asset.getContributor().mAuthor = U.author;
 	}
 	else {

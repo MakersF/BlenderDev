@@ -1,5 +1,5 @@
 /*
- * $Id: ArmatureImporter.cpp 39820 2011-08-31 09:37:14Z jesterking $
+ * $Id: ArmatureImporter.cpp 39898 2011-09-04 00:15:59Z jesterking $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -87,7 +87,7 @@ void ArmatureImporter::create_unskinned_bone( COLLADAFW::Node *node, EditBone *p
 	if ( it != finished_joints.end()) return; 
 
 	float mat[4][4];
-    float obmat[4][4];
+	float obmat[4][4];
 
 	// object-space
 	get_node_mat(obmat, node, NULL, NULL);
@@ -296,7 +296,7 @@ void ArmatureImporter::add_leaf_bone(float mat[][4], EditBone *bone,  COLLADAFW:
 		et->setData("tip_z",&z);
 		float vec[3] = {x,y,z};
 		copy_v3_v3(leaf.bone->tail, leaf.bone->head);
-	    add_v3_v3v3(leaf.bone->tail, leaf.bone->head, vec);
+		add_v3_v3v3(leaf.bone->tail, leaf.bone->head, vec);
 	}else
 		leaf_bones.push_back(leaf);
 }

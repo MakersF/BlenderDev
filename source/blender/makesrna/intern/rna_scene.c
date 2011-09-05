@@ -1,5 +1,5 @@
 /*
- * $Id: rna_scene.c 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: rna_scene.c 39910 2011-09-04 15:53:12Z nazgul $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -3517,6 +3517,7 @@ void RNA_def_scene(BlenderRNA *brna)
 	RNA_def_property_flag(prop, PROP_EDITABLE);
 	RNA_def_property_struct_type(prop, "GreasePencil");
 	RNA_def_property_ui_text(prop, "Grease Pencil Data", "Grease Pencil datablock");
+	RNA_def_property_update(prop, NC_SCENE, NULL);
 	
 	/* Transform Orientations */
 	prop= RNA_def_property(srna, "orientations", PROP_COLLECTION, PROP_NONE);
