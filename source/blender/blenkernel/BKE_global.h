@@ -1,5 +1,5 @@
 /*
- * $Id: BKE_global.h 38908 2011-08-02 04:28:05Z merwin $ 
+ * $Id: BKE_global.h 39960 2011-09-06 07:59:18Z nazgul $ 
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -111,7 +111,7 @@ typedef struct Global {
 #define G_SCRIPT_OVERRIDE_PREF (1 << 14) /* when this flag is set ignore the userprefs */
 
 /* #define G_NOFROZEN	(1 << 17) also removed */
-#define G_GREASEPENCIL 	(1 << 17)
+/* #define G_GREASEPENCIL 	(1 << 17)   also removed */
 
 /* #define G_AUTOMATKEYS	(1 << 30)   also removed */
 

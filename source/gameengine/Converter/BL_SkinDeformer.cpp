@@ -1,5 +1,5 @@
 /*
- * $Id: BL_SkinDeformer.cpp 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: BL_SkinDeformer.cpp 39946 2011-09-05 23:40:52Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -243,7 +243,6 @@ void BL_SkinDeformer::BGEDeformVerts()
 	for (int i=0; i<m_bmesh->totvert; ++i)
 	{
 		float contrib = 0.f, weight, max_weight=0.f;
-		Bone *bone;
 		bPoseChannel *pchan=NULL;
 		MDeformVert *dvert;
 		Eigen::Map<Eigen::Vector3f> norm(m_transnors[i]);
@@ -266,7 +265,6 @@ void BL_SkinDeformer::BGEDeformVerts()
 			if (index < numGroups && (pchan=m_dfnrToPC[index]))
 			{
 				weight = dvert->dw[j].weight;
-				bone = pchan->bone;
 
 				if (weight)
 				{

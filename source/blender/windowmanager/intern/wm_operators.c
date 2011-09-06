@@ -1,5 +1,5 @@
 /*
- * $Id: wm_operators.c 39865 2011-09-02 08:01:01Z campbellbarton $
+ * $Id: wm_operators.c 39939 2011-09-05 20:41:58Z jesterking $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -2082,7 +2082,9 @@ static int wm_collada_import_exec(bContext *C, wmOperator *op)
 	}
 
 	RNA_string_get(op->ptr, "filepath", filename);
-	collada_import(C, filename);
+	if(collada_import(C, filename)) return OPERATOR_FINISHED;
+	
+	BKE_report(op->reports, RPT_ERROR, "Errors found during parsing COLLADA document. Please see console for error log.");
 	
 	return OPERATOR_FINISHED;
 }

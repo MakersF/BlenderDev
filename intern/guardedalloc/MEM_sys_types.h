@@ -1,5 +1,5 @@
 /*
- * $Id: MEM_sys_types.h 39888 2011-09-03 09:43:20Z campbellbarton $
+ * $Id: MEM_sys_types.h 39964 2011-09-06 11:17:29Z psy-fi $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -98,7 +98,8 @@ typedef unsigned long uintptr_t;
 #include <inttypes.h>
 
 #elif defined(FREE_WINDOWS)
-
+/* define htoln here, there must be a syntax error in winsock2.h in MinGW */
+unsigned long __attribute__((__stdcall__)) htonl(unsigned long);
 #include <stdint.h>
 
 #else
@@ -109,11 +110,13 @@ typedef unsigned long uintptr_t;
 #endif /* ifdef platform for types */
 
 #ifdef _WIN32
+#ifndef FREE_WINDOWS
 #ifndef htonl
 #define htonl(x) correctByteOrder(x)
 #endif
 #ifndef ntohl
 #define ntohl(x) correctByteOrder(x)
+#endif
 #endif
 #elif defined (__FreeBSD__) || defined (__OpenBSD__) 
 #include <sys/param.h>
