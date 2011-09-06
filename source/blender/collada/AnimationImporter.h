@@ -1,5 +1,5 @@
 /*
- * $Id: AnimationImporter.h 39898 2011-09-04 00:15:59Z jesterking $
+ * $Id: AnimationImporter.h 39936 2011-09-05 19:27:21Z blendix $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -159,8 +159,8 @@ public:
 									 const COLLADAFW::AnimationList::AnimationBinding * binding,
 									 std::vector<FCurve*>* curves, bool is_joint, char * joint_path);
 
-	void Assign_color_animations(const COLLADAFW::UniqueId& listid, ListBase *AnimCurves ,char * anim_type);
-	void Assign_float_animations(const COLLADAFW::UniqueId& listid, ListBase *AnimCurves, char * anim_type);
+	void Assign_color_animations(const COLLADAFW::UniqueId& listid, ListBase *AnimCurves, const char * anim_type);
+	void Assign_float_animations(const COLLADAFW::UniqueId& listid, ListBase *AnimCurves, const char * anim_type);
 
 	int setAnimType ( const COLLADAFW::Animatable * prop , int type, int addition);
 	

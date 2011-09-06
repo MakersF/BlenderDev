@@ -1,5 +1,5 @@
 /*
- * $Id: TransformReader.cpp 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: TransformReader.cpp 39936 2011-09-05 19:27:21Z blendix $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -37,7 +37,6 @@ void TransformReader::get_node_mat(float mat[][4], COLLADAFW::Node *node, std::m
 {
 	float cur[4][4];
 	float copy[4][4];
-	float eul[3];
 
 	unit_m4(mat);
 	

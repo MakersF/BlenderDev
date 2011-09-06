@@ -2,7 +2,7 @@
 /*  material.c
  *
  * 
- * $Id: material.c 39744 2011-08-28 05:06:30Z campbellbarton $
+ * $Id: material.c 39941 2011-09-05 21:01:50Z lukastoenne $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -925,7 +925,8 @@ void init_render_material(Material *mat, int r_mode, float *amb)
 	if(mat->nodetree && mat->use_nodes) {
 		init_render_nodetree(mat->nodetree, mat, r_mode, amb);
 		
-		ntreeBeginExecTree(mat->nodetree); /* has internal flag to detect it only does it once */
+		if (!mat->nodetree->execdata)
+			mat->nodetree->execdata = ntreeShaderBeginExecTree(mat->nodetree);
 	}
 }
 
@@ -957,8 +958,10 @@ void init_render_materials(Main *bmain, int r_mode, float *amb)
 /* only needed for nodes now */
 void end_render_material(Material *mat)
 {
-	if(mat && mat->nodetree && mat->use_nodes)
-		ntreeEndExecTree(mat->nodetree); /* has internal flag to detect it only does it once */
+	if(mat && mat->nodetree && mat->use_nodes) {
+		if (mat->nodetree->execdata)
+			ntreeShaderEndExecTree(mat->nodetree->execdata);
+	}
 }
 
 void end_render_materials(Main *bmain)

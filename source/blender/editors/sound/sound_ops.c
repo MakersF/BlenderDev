@@ -1,5 +1,5 @@
 /*
- * $Id: sound_ops.c 39840 2011-09-01 09:46:07Z campbellbarton $
+ * $Id: sound_ops.c 39937 2011-09-05 19:34:27Z blendix $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -119,7 +119,7 @@ static int open_exec(bContext *C, wmOperator *op)
 	info = AUD_getInfo(sound->playback_handle);
 
 	if (info.specs.channels == AUD_CHANNELS_INVALID) {
-		sound_delete(C, sound);
+		sound_delete(bmain, sound);
 		if(op->customdata) MEM_freeN(op->customdata);
 		BKE_report(op->reports, RPT_ERROR, "Unsupported audio format");
 		return OPERATOR_CANCELLED;
