@@ -1,5 +1,5 @@
 /*
- * $Id: BKE_blender.h 39792 2011-08-30 09:15:55Z nexyon $ 
+ * $Id: BKE_blender.h 39941 2011-09-05 21:01:50Z lukastoenne $ 
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -44,7 +44,7 @@ extern "C" {
  * and keep comment above the defines.
  * Use STRINGIFY() rather than defining with quotes */
 #define BLENDER_VERSION			259
-#define BLENDER_SUBVERSION		1
+#define BLENDER_SUBVERSION		2
 
 #define BLENDER_MINVERSION		250
 #define BLENDER_MINSUBVERSION	0

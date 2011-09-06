@@ -1,5 +1,5 @@
 /*
- * $Id: interface_layout.c 39744 2011-08-28 05:06:30Z campbellbarton $
+ * $Id: interface_layout.c 39934 2011-09-05 17:57:04Z blendix $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -1404,7 +1404,7 @@ static void ui_item_menu(uiLayout *layout, const char *name, int icon, uiMenuCre
 
 	if(layout->root->type == UI_LAYOUT_HEADER)
 		uiBlockSetEmboss(block, UI_EMBOSS);
-	else if(layout->root->type == UI_LAYOUT_PANEL) {
+	else if(ELEM(layout->root->type, UI_LAYOUT_PANEL, UI_LAYOUT_TOOLBAR)) {
 		but->type= MENU;
 		but->flag |= UI_TEXT_LEFT;
 	}
@@ -1526,7 +1526,7 @@ static void menu_item_enum_opname_menu(bContext *UNUSED(C), uiLayout *layout, vo
 {
 	MenuItemLevel *lvl= (MenuItemLevel*)(((uiBut*)arg)->func_argN);
 
-	uiLayoutSetOperatorContext(layout, WM_OP_EXEC_REGION_WIN);
+	uiLayoutSetOperatorContext(layout, lvl->opcontext);
 	uiItemsEnumO(layout, lvl->opname, lvl->propname);
 }
 

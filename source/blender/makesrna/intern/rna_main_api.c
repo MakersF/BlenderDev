@@ -1,5 +1,5 @@
 /*
- * $Id: rna_main_api.c 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: rna_main_api.c 39941 2011-09-05 21:01:50Z lukastoenne $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -214,9 +214,7 @@ void rna_Main_materials_remove(Main *bmain, ReportList *reports, struct Material
 
 struct bNodeTree *rna_Main_nodetree_new(Main *UNUSED(bmain), const char *name, int type)
 {
-	bNodeTree *tree = ntreeAddTree(name, type, TRUE);
-
-//	ntreeMakeGroupSockets(tree);
+	bNodeTree *tree = ntreeAddTree(name, type, NODE_GROUP);
 
 	id_us_min(&tree->id);
 	return tree;

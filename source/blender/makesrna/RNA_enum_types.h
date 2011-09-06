@@ -1,5 +1,5 @@
 /*
- * $Id: RNA_enum_types.h 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: RNA_enum_types.h 39941 2011-09-05 21:01:50Z lukastoenne $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -102,10 +102,12 @@ extern EnumPropertyItem transform_mode_types[];
 extern EnumPropertyItem posebone_rotmode_items[];
 
 extern EnumPropertyItem property_type_items[];
+extern EnumPropertyItem property_subtype_items[];
 extern EnumPropertyItem property_unit_items[];
 
 extern EnumPropertyItem viewport_shade_items[];
 
+extern EnumPropertyItem nodetree_type_items[];
 extern EnumPropertyItem node_socket_type_items[];
 
 extern EnumPropertyItem node_math_items[];

@@ -1,5 +1,5 @@
 /*
- * $Id: rna_internal.h 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: rna_internal.h 39963 2011-09-06 10:49:55Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -261,6 +261,7 @@ void RNA_api_wm(struct StructRNA *srna);
 void RNA_api_sensor(struct StructRNA *srna);
 void RNA_api_controller(struct StructRNA *srna);
 void RNA_api_actuator(struct StructRNA *srna);
+void RNA_api_texture(struct StructRNA *srna);
 void RNA_api_environment_map(struct StructRNA *srna);
 
 /* main collection functions */
