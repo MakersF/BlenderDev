@@ -1,5 +1,5 @@
 /*
- * $Id: sequencer_edit.c 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: sequencer_edit.c 39937 2011-09-05 19:34:27Z blendix $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -2174,7 +2174,7 @@ static int sequencer_view_toggle_exec(bContext *C, wmOperator *UNUSED(op))
 	sseq->view++;
 	if (sseq->view > SEQ_VIEW_SEQUENCE_PREVIEW) sseq->view = SEQ_VIEW_SEQUENCE;
 
-	ED_sequencer_update_view(C, sseq->view);
+	ED_area_tag_refresh(CTX_wm_area(C));
 
 	return OPERATOR_FINISHED;
 }

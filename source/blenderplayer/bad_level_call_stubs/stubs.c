@@ -1,5 +1,5 @@
 /*
- * $Id: stubs.c 39792 2011-08-30 09:15:55Z nexyon $
+ * $Id: stubs.c 39943 2011-09-05 22:04:23Z lukastoenne $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -247,6 +247,7 @@ void WM_cursor_wait (int val) {}
 void ED_node_texture_default(struct Tex *tx){}
 void ED_node_changed_update(struct bContext *C, struct bNode *node){}
 void ED_node_generic_update(struct Main *bmain, struct bNodeTree *ntree, struct bNode *node){}
+void ED_node_tree_update(struct SpaceNode *snode, struct Scene *scene){}
 void ED_view3d_scene_layers_update(struct Main *bmain, struct Scene *scene){}
 int ED_view3d_scene_layer_set(int lay, const int *values){return 0;}
 void ED_view3d_quadview_update(struct ScrArea *sa, struct ARegion *ar){}

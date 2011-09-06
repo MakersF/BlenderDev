@@ -1,5 +1,5 @@
 /*
- * $Id: rna_access.c 39870 2011-09-02 10:43:51Z campbellbarton $
+ * $Id: rna_access.c 39959 2011-09-06 07:08:20Z campbellbarton $
  *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
@@ -474,6 +474,17 @@ static const char *rna_ensure_property_name(PropertyRNA *prop)
 }
 
 /* Structs */
+
+StructRNA *RNA_struct_find(const char *identifier)
+{
+	StructRNA *type;
+	if (identifier) {
+		for (type = BLENDER_RNA.structs.first; type; type = type->cont.next)
+			if (strcmp(type->identifier, identifier)==0)
+				return type;
+	}
+	return NULL;
+}
 
 const char *RNA_struct_identifier(StructRNA *type)
 {
@@ -4396,7 +4407,7 @@ char *RNA_property_as_string(bContext *C, PointerRNA *ptr, PropertyRNA *prop)
 		buf= MEM_mallocN(sizeof(char)*(length+1), "RNA_property_as_string");
 		buf_esc= MEM_mallocN(sizeof(char)*(length*2+1), "RNA_property_as_string esc");
 		RNA_property_string_get(ptr, prop, buf);
-		BLI_strescape(buf_esc, buf, length*2);
+		BLI_strescape(buf_esc, buf, length*2+1);
 		MEM_freeN(buf);
 		BLI_dynstr_appendf(dynstr, "\"%s\"", buf_esc);
 		MEM_freeN(buf_esc);

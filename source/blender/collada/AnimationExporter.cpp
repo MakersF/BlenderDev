@@ -1,5 +1,5 @@
 /*
-* $Id: AnimationExporter.cpp 39898 2011-09-04 00:15:59Z jesterking $
+* $Id: AnimationExporter.cpp 39936 2011-09-05 19:27:21Z blendix $
 *
 * ***** BEGIN GPL LICENSE BLOCK *****
 *
@@ -643,6 +643,8 @@ std::string AnimationExporter::create_source_from_fcurve(COLLADASW::InputSemanti
 		case COLLADASW::InputSemantic::OUT_TANGENT:
 			source.setAccessorStride(2);			
 			break;
+		default:
+			break;
 	}
 
 
@@ -913,7 +915,7 @@ std::string AnimationExporter::get_light_param_sid(char *rna_path, int tm_type, 
 	}
 
 	if (tm_name.size()) {
-		if (axis_name != "")
+		if (axis_name[0])
 			return tm_name + "." + std::string(axis_name);
 		else 
 			return tm_name;
@@ -962,7 +964,7 @@ std::string AnimationExporter::get_camera_param_sid(char *rna_path, int tm_type,
 	}
 
 	if (tm_name.size()) {
-		if (axis_name != "")
+		if (axis_name[0])
 			return tm_name + "." + std::string(axis_name);
 		else 
 			return tm_name;
@@ -1041,7 +1043,7 @@ std::string AnimationExporter::get_transform_sid(char *rna_path, int tm_type, co
 		if (is_rotation)
 			return tm_name + std::string(axis_name) + ".ANGLE";
 		else
-			if (axis_name != "")
+			if (axis_name[0])
 				return tm_name + "." + std::string(axis_name);
 			else 
 				return tm_name;
